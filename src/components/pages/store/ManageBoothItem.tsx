@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import TextInput from '@/components/common/inputs/TextInput';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextArea from '@/components/common/inputs/TextArea';
+import TextInput from '@/components/common/inputs/TextInput';
+import { useState } from 'react';
 
 interface Props {
   title: string;
@@ -36,8 +36,8 @@ export default function ManageBoothItem({
   };
 
   return (
-    <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-md">
-      <h2 className="text-st-2 mb-3">{title}</h2>
+    <div className="relative mb-4 rounded-2xl bg-white p-4">
+      <h2 className="text-gray-500-80 mb-3 text-[14px] font-medium">{title}</h2>
 
       {isEditing ? (
         <div className="space-y-3">
@@ -56,19 +56,15 @@ export default function ManageBoothItem({
               limitHide
             />
           )}
-          <div className="flex justify-end gap-2">
-            <CtaButton
-              text="취소"
-              color="white"
-              size="small"
-              onClick={handleCancel}
-            />
-            <CtaButton
-              text="저장"
-              color="green"
-              size="small"
-              onClick={handleSave}
-            />
+          <div className="flex w-full justify-end pt-2">
+            <div className="w-1/3">
+              <CtaButton
+                text="입력 완료"
+                color="yellow"
+                size="small"
+                onClick={handleSave}
+              />
+            </div>
           </div>
         </div>
       ) : (
@@ -77,7 +73,7 @@ export default function ManageBoothItem({
           <div className="absolute top-3 right-4">
             <CtaButton
               text={value ? '수정하기' : '등록하기'}
-              color="white"
+              color="gray"
               size="small"
               width="fit"
               onClick={handleEditClick}

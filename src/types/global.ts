@@ -83,3 +83,13 @@ export interface IUser {
   name: string;
   account: string;
 }
+
+export interface Mission {
+  id: number;
+  title: string;
+  description?: string;
+  reward: string;
+  isActive: boolean;
+  goalCount?: number;
+  createdAt: string;
+}

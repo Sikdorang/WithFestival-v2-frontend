@@ -16,6 +16,7 @@
     "axios": "^1.12.2",
     "browser-image-compression": "^2.0.2",
     "crypto-js": "^4.2.0",
+    "framer-motion": "^12.38.0",
     "lottie-react": "^2.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

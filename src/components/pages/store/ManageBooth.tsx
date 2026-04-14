@@ -1,8 +1,8 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import Navigator from '@/components/common/layouts/Navigator';
-import ManageBoothItem from './ManageBoothItem';
 import { useStore } from '@/hooks/useStore';
 import { useEffect, useState } from 'react';
+import ManageBoothItem from './ManageBoothItem';
 
 const boothManagementConfig = [
   {
@@ -21,12 +21,6 @@ const boothManagementConfig = [
     key: 'notice',
     title: '공지사항',
     placeholder: '공지사항을 입력해주세요.',
-    isTextArea: true,
-  },
-  {
-    key: 'event',
-    title: '이벤트',
-    placeholder: '이벤트를 입력해주세요.',
     isTextArea: true,
   },
 ];
@@ -86,10 +80,10 @@ export default function ManageBooth({ onClose }: Props) {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="bg-gray-500-3 flex h-full flex-col">
       <Navigator
         left={<GoBackIcon />}
-        center={<div className="text-st-1">부스 관리하기</div>}
+        center={'부스 관리하기'}
         onLeftPress={onClose}
       />
 

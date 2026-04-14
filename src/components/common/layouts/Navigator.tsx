@@ -22,13 +22,13 @@ export default function Navigator({
   onRightPress,
 }: Props) {
   return (
-    <div className="grid w-full grid-cols-3 items-center px-4 py-3">
+    <div className="grid w-full grid-cols-3 items-center bg-white px-4 py-3">
       <div onClick={onLeftPress} className="justify-self-start p-1">
         {left || <div></div>}
       </div>
 
       <div onClick={onCenterPress} className="text-center">
-        {center || <div className="text-lg font-extrabold">{title}</div>}
+        {center || <div className="text-[16px] font-medium">{title}</div>}
       </div>
 
       <div onClick={onRightPress} className="justify-self-end p-1">

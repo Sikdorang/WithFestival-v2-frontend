@@ -1,18 +1,18 @@
 import { ROUTES } from '@/constants/routes';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { BottomBar } from './BottomBar';
-import TopBar from './TopBar';
 import { useSocket } from '@/contexts/useSocket';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation, useNavigate, useOutlet } from 'react-router-dom';
+import { BottomBar } from './BottomBar';
 
 export function TabBarLayout() {
   const notification = new Audio('/sounds/effect_notification.mp3');
-
   const socket = useSocket();
-
   const navigate = useNavigate();
   const location = useLocation();
+
+  const currentOutlet = useOutlet();
 
   const [hasNewWaiting, setHasNewWaiting] = useState(false);
   const [hasNewOrder, setHasNewOrder] = useState(false);
@@ -32,7 +32,9 @@ export function TabBarLayout() {
     }
   };
 
-  const handleTabClick = (tabName: 'timer' | 'settings' | 'food' | 'history') => {
+  const handleTabClick = (
+    tabName: 'timer' | 'settings' | 'food' | 'history',
+  ) => {
     if (tabName === 'timer') {
       setHasNewWaiting(false);
       setHasNewOrder(false);
@@ -78,9 +80,25 @@ export function TabBarLayout() {
 
   return (
     <>
-      <TopBar />
-      <main className="pt-12 pb-24">
-        <Outlet />
+      <main>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transitionEnd: { transform: 'none' },
+            }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{
+              duration: 0.25,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {currentOutlet}
+          </motion.div>
+        </AnimatePresence>
       </main>
       <BottomBar
         activeTab={getActiveTab()}

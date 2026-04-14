@@ -1,14 +1,16 @@
+import {
+  default as EmptyPendingIcon,
+  default as EmptySentIcon,
+} from '@/assets/icons/ic_empty_paper.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import { OrderCard } from '@/components/pages/order/OrderCard';
 import OrderTopBar from '@/components/pages/order/OrderTopBar';
-import { useOrder } from '@/hooks/useOrder';
-import { useEffect, useState } from 'react';
-import EmptyPendingIcon from '@/assets/icons/ic_empty_paper.svg?react';
-import EmptySentIcon from '@/assets/icons/ic_empty_paper.svg?react';
-import { OrderSummary } from '@/types/global';
 import ServiceOrderCard from '@/components/pages/order/ServiceOrderCard';
 import { useSocket } from '@/contexts/useSocket';
+import { useOrder } from '@/hooks/useOrder';
+import { OrderSummary } from '@/types/global';
+import { useEffect, useState } from 'react';
 
 const isServiceOrder = (order: OrderSummary): boolean => {
   const singleItem = order.orderUsers?.[0];
@@ -82,7 +84,7 @@ export default function Order() {
   };
 
   return (
-    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-500-5">
+    <div className="bg-gray-500-5 min-h-screen pb-10">
       <OrderTopBar
         orderCount={
           orderType === 'pending'
@@ -93,23 +95,27 @@ export default function Order() {
         onTypeChange={setOrderType}
       />
 
-      <div className="relative flex flex-grow flex-col gap-4 p-4">
+      <div className="relative flex flex-col gap-4 p-4 pt-4">
         {orderType === 'pending' ? (
           pendingOrders?.count && pendingOrders.count > 0 ? (
             renderOrderList(pendingOrders.data)
           ) : (
-            <EmptyPlaceHolder
-              image={<EmptyPendingIcon color="white" />}
-              text="신규 주문이 없습니다."
-            />
+            <div className="flex min-h-[90vh] items-center justify-center pb-20">
+              <EmptyPlaceHolder
+                image={<EmptyPendingIcon color="white" />}
+                text="신규 주문이 없습니다."
+              />
+            </div>
           )
         ) : sentOrders?.count && sentOrders.count > 0 ? (
           renderOrderList(sentOrders.data)
         ) : (
-          <EmptyPlaceHolder
-            image={<EmptySentIcon color="white" />}
-            text="송금 완료된 주문이 없습니다."
-          />
+          <div className="flex min-h-[90vh] items-center justify-center pb-20">
+            <EmptyPlaceHolder
+              image={<EmptySentIcon color="#36383E80" />}
+              text="송금 완료된 주문이 없습니다."
+            />
+          </div>
         )}
         <BottomSpace />
       </div>

@@ -1,11 +1,11 @@
 import EmptyImage from '@/assets/icons/ic_empty_waiting.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
+import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import { WaitingCard } from '@/components/pages/manageWaiting/WaitingCard';
+import WaitingTopBar from '@/components/pages/waiting/WaitingTopBar';
+import { useSocket } from '@/contexts/useSocket';
 import { useEffect } from 'react';
 import { useWaiting } from '../hooks/useWaiting';
-import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
-import TopBar from '@/components/pages/waiting/TopBar';
-import { useSocket } from '@/contexts/useSocket';
 
 export default function ManageWaiting() {
   const socket = useSocket();
@@ -33,14 +33,16 @@ export default function ManageWaiting() {
 
   return (
     <div>
-      <TopBar title="현재 웨이팅" value={waitingList.length} />
+      <WaitingTopBar title="현재 웨이팅" value={waitingList.length} />
 
-      <main className="flex min-h-screen flex-col gap-4 bg-gray-500-5 p-4">
+      <main className="bg-gray-500-5 flex min-h-screen flex-col gap-4 p-4">
         {waitingList.length === 0 ? (
-          <EmptyPlaceHolder
-            image={<EmptyImage color="white" />}
-            text="웨이팅이 없습니다."
-          />
+          <div className="flex min-h-[90vh] items-center justify-center pb-20">
+            <EmptyPlaceHolder
+              image={<EmptyImage color="white" />}
+              text="웨이팅이 없습니다."
+            />
+          </div>
         ) : (
           <>
             {waitingList.map((item) => (
@@ -52,7 +54,6 @@ export default function ManageWaiting() {
             ))}
           </>
         )}
-
         <BottomSpace />
       </main>
     </div>

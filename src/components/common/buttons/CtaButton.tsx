@@ -44,7 +44,7 @@ export default function CtaButton({
   const textColorStyles = {
     yellow: 'text-black',
     gray: 'text-gray-700',
-    red: 'text-white',
+    red: 'text-red-200',
     white: 'text-gray-700',
     black: 'text-white',
     disabled: 'text-white',
@@ -53,7 +53,7 @@ export default function CtaButton({
   const backgroundColorStyles = {
     yellow: 'bg-primary-300',
     gray: 'bg-gray-100',
-    red: 'bg-red-500',
+    red: 'bg-red-100',
     white: 'bg-white',
     black: 'bg-gray-800',
     disabled: 'bg-gray-200',
@@ -62,7 +62,7 @@ export default function CtaButton({
   const hoverColorStyles = {
     yellow: 'hover:bg-primary-300',
     gray: 'hover:bg-gray-200',
-    red: 'hover:bg-red-400',
+    red: 'hover:bg-red-300',
     white: 'hover:bg-gray-100',
     black: 'hover:bg-gray-600',
     disabled: 'hover:bg-gray-200 cursor-not-allowed',

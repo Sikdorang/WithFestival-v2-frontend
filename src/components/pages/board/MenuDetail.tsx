@@ -32,36 +32,36 @@ export default function MenuDetail({ menu, onClose }: Props) {
     <BaseResponsiveLayout>
       <Navigator
         left={<GoBackIcon />}
-        center={<div className="text-st-1">메뉴 상세</div>}
+        center={'메뉴 상세'}
         onLeftPress={onClose}
       />
 
-      <main className="flex flex-grow flex-col">
-        <div className="mb-2 flex w-full flex-col items-center gap-2 px-8">
-          <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 transition-all duration-200 hover:bg-gray-100">
+      <main className="flex flex-grow flex-col gap-8 px-4 pt-4 pb-24">
+        <div className="mb-2 flex w-full flex-col items-center gap-2">
+          <div className="relative flex w-full overflow-hidden rounded-xl bg-gray-100">
             {menu.image ? (
               <img
                 src={`${IMAGE_PREFIX}${menu.image}`}
-                alt="미리보기"
-                className="aspect-square h-full w-full object-cover"
+                alt="메뉴 이미지"
+                className="aspect-[4/3] w-full object-cover"
               />
             ) : (
-              <div className="flex aspect-square w-full flex-col items-center justify-center gap-2 text-gray-400">
-                <EmptyImage className="h-30 w-30" />
+              <div className="flex aspect-[4/3] w-full items-center justify-center text-gray-400">
+                <EmptyImage />
               </div>
             )}
           </div>
         </div>
 
-        <h1 className="text-st-2 px-10">{menu.menu}</h1>
-
-        <p className="text-b-1 mb-2 px-10 text-gray-400">
-          {menu.description || ''}
-        </p>
-
-        <p className="text-st-2 px-10 text-black">
-          {Number(menu.price).toLocaleString()}원
-        </p>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-st-2 text-black">{menu.menu}</h1>
+          {menu.description && (
+            <p className="text-b-1 text-gray-500">{menu.description}</p>
+          )}
+          <p className="text-st-2 mt-2 text-black">
+            {Number(menu.price).toLocaleString()}원
+          </p>
+        </div>
       </main>
 
       {!isPreview && (

@@ -1,10 +1,10 @@
 import EmptyImage from '@/assets/icons/ic_empty_paper.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import HistoryTopBar from '@/components/pages/history/HistoryTopBar';
 import OrderDashBoard from '@/components/pages/history/OrderDashBoard';
 import { OrderBill } from '@/components/pages/order/OrderBill';
 import ServiceOrderHistory from '@/components/pages/order/ServiceOrderHistory';
-import TopBar from '@/components/pages/waiting/TopBar';
 import { useOrder } from '@/hooks/useOrder';
 import { OrderSummary } from '@/types/global';
 import { useEffect } from 'react';
@@ -27,28 +27,32 @@ export default function History() {
   }, [getAllOrders]);
 
   return (
-    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-500-10">
-      <TopBar title="전체 주문 내역" value={allOrders?.count || 0} />
+    <div className="bg-gray-500-10 flex min-h-screen flex-1 flex-col gap-4">
+      <HistoryTopBar title="전체 주문 내역" value={allOrders?.count || 0} />
 
       <div className="relative flex flex-1 flex-col gap-4 p-4">
-        <OrderDashBoard allOrders={allOrders || null} />
-
         {allOrders?.count && allOrders.count > 0 ? (
-          allOrders.data.map((order) =>
-            isServiceOrder(order) ? (
-              <ServiceOrderHistory key={order.id} order={order} />
-            ) : (
-              <OrderBill key={order.id} order={order} />
-            ),
-          )
-        ) : (
-          <EmptyPlaceHolder
-            image={<EmptyImage color="white" />}
-            text="주문 이력이 없습니다."
-          />
-        )}
+          <>
+            <OrderDashBoard allOrders={allOrders} />
 
-        <BottomSpace />
+            {allOrders.data.map((order) =>
+              isServiceOrder(order) ? (
+                <ServiceOrderHistory key={order.id} order={order} />
+              ) : (
+                <OrderBill key={order.id} order={order} />
+              ),
+            )}
+
+            <BottomSpace />
+          </>
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center pb-20">
+            <EmptyPlaceHolder
+              image={<EmptyImage color="white" />}
+              text="주문 이력이 없습니다."
+            />
+          </div>
+        )}
       </div>
     </div>
   );

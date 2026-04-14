@@ -18,7 +18,7 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
   );
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl bg-[#F8F9FA] p-5 shadow-sm">
+    <div className="flex flex-col gap-6 rounded-2xl bg-white p-5 shadow-sm">
       {/* Header: 대기 번호 및 시간 */}
       <div className="flex items-center justify-between">
         <span className="rounded-xl bg-[#EAECEF] px-2 py-1.5 text-base font-semibold text-gray-800">
@@ -30,12 +30,12 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
       {/* Body: 상세 정보 리스트 */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <span className="text-gray-500 font-medium">예약자 이름</span>
+          <span className="font-medium text-gray-500">예약자 이름</span>
           <span className="text-lg font-semibold text-gray-800">{name}</span>
         </div>
-        
+
         <div className="flex items-center justify-between">
-          <span className="text-gray-500 font-medium">전화번호</span>
+          <span className="font-medium text-gray-500">전화번호</span>
           <a
             href={isMobile ? `tel:${formattedPhone}` : undefined}
             className="text-lg font-semibold text-gray-800 underline underline-offset-4"
@@ -46,8 +46,10 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-gray-500 font-medium">인원</span>
-          <span className="text-lg font-semibold text-gray-800">{people}명</span>
+          <span className="font-medium text-gray-500">인원</span>
+          <span className="text-lg font-semibold text-gray-800">
+            {people}명
+          </span>
         </div>
       </div>
 

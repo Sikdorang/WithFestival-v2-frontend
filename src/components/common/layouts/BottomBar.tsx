@@ -1,7 +1,7 @@
 import ClockIcon from '@/assets/icons/ic_clock.svg?react';
+import SettingsIcon from '@/assets/icons/ic_cogwheel.svg?react';
 import FoodIcon from '@/assets/icons/ic_cuisine.svg?react';
 import ReceiptIcon from '@/assets/icons/ic_receipt.svg?react';
-import SettingsIcon from '@/assets/icons/ic_cogwheel.svg?react'
 
 export interface Props {
   activeTab: 'timer' | 'history' | 'food' | 'settings';
@@ -28,19 +28,17 @@ export function BottomBar({
       <div className="flex w-full items-center justify-between gap-10 rounded-full bg-white px-10 py-2 shadow-[0_8px_16px_rgba(0,0,0,0.12)]">
         {TABS.map(({ name, label, Icon }) => {
           const isActive = activeTab === name;
-          const iconColor = isActive ? '#5F616A' : '#C8C9CD'; 
+          const iconColor = isActive ? '#5F616A' : '#C8C9CD';
 
           return (
             <button
               key={name}
               onClick={() => onTabClick(name)}
-              className="relative flex flex-col items-center bg-transparent border-none cursor-pointer"
+              className="relative flex cursor-pointer flex-col items-center border-none bg-transparent"
               aria-label={label}
             >
               <Icon color={iconColor} width={28} height={28} />
-              <span 
-                className={`text-[12px] font-medium text-gray-400`}
-              >
+              <span className={`text-[12px] font-medium text-gray-400`}>
                 {label}
               </span>
 
@@ -48,7 +46,7 @@ export function BottomBar({
               {name === 'timer' && hasNewWaiting && (
                 <div className="absolute top-[-2px] right-[-2px] h-2 w-2 rounded-full bg-[#E5484D]" />
               )}
-              
+
               {/* 주문 알림 표시 */}
               {name === 'food' && hasNewOrder && (
                 <div className="absolute top-[-2px] right-[-2px] h-2 w-2 rounded-full bg-[#E5484D]" />

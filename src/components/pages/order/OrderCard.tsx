@@ -81,14 +81,8 @@ export function OrderCard({
 
         {order.send ? (
           <div className="mt-6 flex flex-col gap-2">
-            {/* <button
-              className="rounded-2xl bg-gray-100 py-3 text-black"
-              onClick={() => handleOrderCardClick()}
-            >
-              전체 보기
-            </button> */}
             <button
-              className="bg-primary-300 text-gray-500-90 rounded-xl py-3 text-[14px]"
+              className="flex-1 rounded-xl bg-[#F5C754] py-4 text-[14px] text-gray-900 transition-colors active:bg-yellow-500"
               onClick={() => {
                 setOrderCooked(order.id);
                 toast.success(SUCCESS_MESSAGES.orderCookingComplete);
