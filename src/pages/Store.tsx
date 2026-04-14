@@ -31,7 +31,19 @@ export default function Store() {
       <div className="p-4">
         <StoreInformation name={name} account={account} />
 
-        <section className="space-y-4">
+        <section className="mb-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900">QR 관리</h2>
+            <CtaButton
+              width="fit"
+              text="+ QR 생성"
+              size="small"
+              onClick={() => navigate(ROUTES.MANAGE_QR)}
+            />
+          </div>
+        </section>
+
+        <section className="mb-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">미션 관리</h2>
             <CtaButton

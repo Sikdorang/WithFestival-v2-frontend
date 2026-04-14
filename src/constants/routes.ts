@@ -25,6 +25,7 @@ export const ROUTES = {
     DETAIL: (missionId: string = ':missionId') =>
       `${ROUTES.MANAGE_MISSIONS.ROOT}/${missionId}`,
   },
+  MANAGE_QR: '/manage-qr',
   ORDER: '/order',
   HISTORY: '/history',
   STORE: '/store',

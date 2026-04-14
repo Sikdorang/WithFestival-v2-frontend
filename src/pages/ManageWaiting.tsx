@@ -37,7 +37,7 @@ export default function ManageWaiting() {
 
       <main className="bg-gray-500-5 flex min-h-screen flex-col gap-4 p-4">
         {waitingList.length === 0 ? (
-          <div className="flex min-h-[90vh] items-center justify-center pb-20">
+          <div className="flex min-h-[95vh] items-center justify-center pb-20">
             <EmptyPlaceHolder
               image={<EmptyImage color="white" />}
               text="웨이팅이 없습니다."

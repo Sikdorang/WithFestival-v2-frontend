@@ -21,6 +21,7 @@ import {
 } from 'react-router-dom';
 import LoveAlarm from '../pages/LoveAlarm';
 import ManageMissionDetail from '../pages/ManageMissionDetail';
+import ManageQr from '../pages/ManageQr';
 import { authLoader } from './authLoader';
 
 function ProtectedLayout() {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MANAGE_MISSIONS.DETAIL(':missionId'),
         element: <ManageMissionDetail />,
+      },
+      {
+        path: ROUTES.MANAGE_QR,
+        element: <ManageQr />,
       },
     ],
   },
