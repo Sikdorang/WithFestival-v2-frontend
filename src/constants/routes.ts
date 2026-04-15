@@ -25,6 +25,11 @@ export const ROUTES = {
     DETAIL: (missionId: string = ':missionId') =>
       `${ROUTES.MANAGE_MISSIONS.ROOT}/${missionId}`,
   },
+  MANAGE_RESERVE: {
+    ROOT: '/manage-reserve',
+    DETAIL_PATH: '/manage-reserve/detail/:slotId',
+    DETAIL: (slotId: string | number) => `/manage-reserve/detail/${slotId}`,
+  },
   MANAGE_QR: '/manage-qr',
   ORDER: '/order',
   HISTORY: '/history',
@@ -32,6 +37,9 @@ export const ROUTES = {
   WAITING: '/waiting',
   MENU_BOARD: '/board',
   LOVE_ALARM: '/alarm',
+  LINKS: '/links',
+  MAP: '/map',
+  RESERVATION: '/reserve',
   NOT_FOUND: '/not-found',
   ORDERING: '/ordering',
 } as const;

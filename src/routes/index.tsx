@@ -2,26 +2,31 @@ import ErrorBoundary from '@/components/common/ErrorBoundary';
 import NotFoundView from '@/components/common/exceptions/NotFoundView';
 import { TabBarLayout } from '@/components/common/layouts/TabBarLayout';
 import { ROUTES } from '@/constants/routes';
-import CheckUserType from '@/pages/CheckUserType';
-import Games from '@/pages/Games';
-import History from '@/pages/History';
-import Login from '@/pages/Login';
-import ManageMenuDetail from '@/pages/ManageMenuDetail';
-import ManageWaiting from '@/pages/ManageWaiting';
-import MenuBoard from '@/pages/MenuBoard';
-import Order from '@/pages/Order';
-import Ordering from '@/pages/Ordering';
-import Store from '@/pages/Store';
-import Waiting from '@/pages/Waiting';
+import History from '@/pages/admin/History';
+import ManageMenuDetail from '@/pages/admin/ManageMenuDetail';
+import ManageMissionDetail from '@/pages/admin/ManageMissionDetail';
+import ManageQr from '@/pages/admin/ManageQr';
+import ManageReserve from '@/pages/admin/ManageReserve';
+import ManageReserveDetail from '@/pages/admin/ManageReserveDetail';
+import ManageWaiting from '@/pages/admin/ManageWaiting';
+import Order from '@/pages/admin/Order';
+import Store from '@/pages/admin/Store';
+import CheckUserType from '@/pages/auth/CheckUserType';
+import Login from '@/pages/auth/Login';
+import BoothMap from '@/pages/client/BoothMap';
+import BoothPortal from '@/pages/client/BoothPortal';
+import Games from '@/pages/client/Games';
+import LoveAlarm from '@/pages/client/LoveAlarm';
+import MenuBoard from '@/pages/client/MenuBoard';
+import Ordering from '@/pages/client/Ordering';
+import Reserve from '@/pages/client/Reserve';
+import Waiting from '@/pages/client/Waiting';
 import {
   createBrowserRouter,
   Navigate,
   Outlet,
   RouterProvider,
 } from 'react-router-dom';
-import LoveAlarm from '../pages/LoveAlarm';
-import ManageMissionDetail from '../pages/ManageMissionDetail';
-import ManageQr from '../pages/ManageQr';
 import { authLoader } from './authLoader';
 
 function ProtectedLayout() {
@@ -108,6 +113,31 @@ const router = createBrowserRouter([
   {
     path: ROUTES.LOVE_ALARM,
     element: <LoveAlarm />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.LINKS,
+    element: <BoothPortal />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.RESERVATION,
+    element: <Reserve />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.MAP,
+    element: <BoothMap />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.MANAGE_RESERVE.ROOT,
+    element: <ManageReserve />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.MANAGE_RESERVE.DETAIL_PATH,
+    element: <ManageReserveDetail />,
     errorElement: <ErrorBoundary />,
   },
   {

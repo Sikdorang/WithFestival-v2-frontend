@@ -1,25 +1,25 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import GoNextIcon from '@/assets/icons/ic_arrow_right.svg?react';
 import CancelIcon from '@/assets/icons/ic_cancel.svg?react';
 import CopyIcon from '@/assets/icons/ic_copy.svg?react';
+import FingerSnapIcon from '@/assets/icons/ic_finger_snapping.svg?react';
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
+import CheckAnimation from '@/assets/lotties/lottie_check.json';
+import CtaButton from '@/components/common/buttons/CtaButton';
+import BottomSpace from '@/components/common/exceptions/BottomSpace';
+import TextInput from '@/components/common/inputs/TextInput';
+import Navigator from '@/components/common/layouts/Navigator';
+import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { SUCCESS_MESSAGES } from '@/constants/message';
+import { ROUTES } from '@/constants/routes';
 import { useOrder } from '@/hooks/useOrder';
+import { useStore } from '@/hooks/useStore';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
+import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
-import CtaButton from '../components/common/buttons/CtaButton';
-import BottomSpace from '../components/common/exceptions/BottomSpace';
-import TextInput from '../components/common/inputs/TextInput';
-import Navigator from '../components/common/layouts/Navigator';
-import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
-import { ROUTES } from '../constants/routes';
-import { useStore } from '../hooks/useStore';
-import Lottie from 'lottie-react';
-import CheckAnimation from '@/assets/lotties/lottie_check.json';
-import FingerSnapIcon from '@/assets/icons/ic_finger_snapping.svg?react';
-import GoNextIcon from '@/assets/icons/ic_arrow_right.svg?react';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -79,7 +79,7 @@ function RemitStep({
           입금해주세요!
         </div>
         <div className="flex w-full flex-col items-center gap-2 rounded-xl bg-gray-100 px-15 py-5">
-          <span className="text-b-2 rounded-sm bg-primary-300-80 px-1.5 py-1 text-gray-500-80">
+          <span className="text-b-2 bg-primary-300-80 text-gray-500-80 rounded-sm px-1.5 py-1">
             계좌번호
           </span>
           <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ function CompleteStep() {
           color="yellow"
           onClick={() => navigate(ROUTES.MENU_BOARD)}
           radius="_2xl"
-        />  
+        />
       </footer>
     </div>
   );

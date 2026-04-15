@@ -1,10 +1,10 @@
 import LoadingView from '@/components/common/exceptions/LoadingView';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { ROUTES } from '@/constants/routes';
+import { KEYS } from '@/constants/storage';
 import { decryptJson } from '@/utils/crypto';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { KEYS } from '../constants/storage';
 
 export default function CheckUserType() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export default function CheckUserType() {
             state: { userData: decryptedData },
           });
         } else {
-          navigate(ROUTES.WAITING, {
+          navigate(ROUTES.LINKS, {
             replace: true,
             state: { userData: decryptedData },
           });

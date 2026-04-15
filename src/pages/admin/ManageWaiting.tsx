@@ -4,8 +4,8 @@ import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import { WaitingCard } from '@/components/pages/manageWaiting/WaitingCard';
 import WaitingTopBar from '@/components/pages/waiting/WaitingTopBar';
 import { useSocket } from '@/contexts/useSocket';
+import { useWaiting } from '@/hooks/useWaiting';
 import { useEffect } from 'react';
-import { useWaiting } from '../hooks/useWaiting';
 
 export default function ManageWaiting() {
   const socket = useSocket();

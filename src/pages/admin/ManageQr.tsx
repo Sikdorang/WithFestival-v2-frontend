@@ -1,4 +1,6 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import CtaButton from '@/components/common/buttons/CtaButton';
+import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
@@ -6,8 +8,6 @@ import { encryptJson } from '@/utils/crypto';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CtaButton from '../components/common/buttons/CtaButton';
-import BottomSpace from '../components/common/exceptions/BottomSpace';
 
 const DOMAIN = 'https://withfestival.com';
 

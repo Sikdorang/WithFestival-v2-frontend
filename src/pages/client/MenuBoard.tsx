@@ -1,16 +1,16 @@
+import BottomSpace from '@/components/common/exceptions/BottomSpace';
+import TopBar from '@/components/common/layouts/TopBar';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import MenuList from '@/components/pages/board/MenuList';
+import StoreBanner from '@/components/pages/board/StoreBanner';
 import { ROUTES } from '@/constants/routes';
+import { KEYS } from '@/constants/storage';
+import { useStore } from '@/hooks/useStore';
 import { useOrderStore } from '@/stores/orderStore';
 import { Menu } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import BottomSpace from '../components/common/exceptions/BottomSpace';
-import TopBar from '../components/common/layouts/TopBar';
-import StoreBanner from '../components/pages/board/StoreBanner';
-import { KEYS } from '../constants/storage';
-import { useStore } from '../hooks/useStore';
 
 export default function MenuBoard() {
   const navigate = useNavigate();

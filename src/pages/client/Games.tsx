@@ -2,12 +2,12 @@ import BulletImage from '@/assets/images/img_bullets.png';
 import GunImage from '@/assets/images/img_gun.png';
 import MagazineImage from '@/assets/images/img_magazine.png';
 import TapAnimation from '@/assets/lotties/lottie_tap.json';
+import CtaButton from '@/components/common/buttons/CtaButton';
+import TextInput from '@/components/common/inputs/TextInput';
+import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CtaButton from '../components/common/buttons/CtaButton';
-import TextInput from '../components/common/inputs/TextInput';
-import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 
 export default function Games() {
   const navigate = useNavigate();
@@ -167,7 +167,7 @@ export default function Games() {
               />
               <CtaButton
                 text="다음으로"
-                color="green"
+                color="yellow"
                 size="small"
                 radius="_2xl"
                 onClick={() => setSetupStep(2)}
@@ -203,7 +203,7 @@ export default function Games() {
               >
                 <CtaButton
                   text="게임 시작"
-                  color="green"
+                  color="yellow"
                   size="small"
                   radius="_2xl"
                 />
