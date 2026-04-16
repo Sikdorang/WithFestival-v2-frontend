@@ -44,7 +44,7 @@ export default function Hero() {
             // 💡 딥 네이비(#11153F) 텍스트 컬러 적용
             className="text-5xl md:text-8xl font-bold tracking-tighter text-[#11153F]"
           >
-            운영은 <span className="text-[#FFD43A]">스마트</span>하게,
+            축제를 <span className="text-[#FFD43A]">더 재미있게,</span>
           </motion.h1>
         </div>
 
@@ -53,7 +53,7 @@ export default function Hero() {
             variants={item}
             className="text-5xl md:text-8xl font-bold tracking-tighter text-[#11153F]"
           >
-            축제는 더 완벽하게.
+            추억이 더 <span className="text-[#FFD43A]">빛이나도록 !</span>
           </motion.h1>
         </div>
 
@@ -62,9 +62,9 @@ export default function Hero() {
           variants={item}
           className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto mb-16 leading-relaxed"
         >
-          실시간 부스 예약부터 인터랙티브 테이블 게임까지.
+          실시간 부스 예약부터 주문, 인터랙티브 테이블 게임까지.
           <br />
-          축제랑이 대학 축제의 새로운 패러다임을 제시합니다.
+          축제랑과 더 행복한 대학 생활의 추억을 함께해요.
         </motion.p>
       </motion.div>
 

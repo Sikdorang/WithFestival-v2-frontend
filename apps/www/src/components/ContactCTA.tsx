@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function About() {
+export default function ContactCTA() {
   // 🌟 애니메이션 설계도 (Variants)
   const container = {
     hidden: { opacity: 0 },
@@ -30,7 +30,7 @@ export default function About() {
 
   return (
     <section
-      id="about"
+      id="contact-cta"
       className="relative w-full flex flex-col items-center justify-center overflow-hidden bg-white py-24 md:py-32"
     >
       <motion.div
@@ -46,7 +46,7 @@ export default function About() {
             variants={item}
             className="text-3xl md:text-5xl font-bold text-[#11153F] tracking-tighter"
           >
-            복잡한 축제 운영은 <span className="text-[#FFBF0B]">가볍게</span>,
+            성공적인 축제의 시작,
           </motion.h2>
         </div>
 
@@ -55,25 +55,34 @@ export default function About() {
             variants={item}
             className="text-3xl md:text-5xl font-bold text-[#11153F] tracking-tighter"
           >
-            참여의 즐거움은 더 크게.
+            <span className="text-[#FFBF0B]">축제랑</span>과 함께 완성하세요.
           </motion.h2>
         </div>
 
         {/* 서브 텍스트 */}
         <motion.p
           variants={item}
-          className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto mb-16 leading-relaxed whitespace-pre-line"
+          className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed whitespace-pre-line"
         >
-          축제랑은 총학생회와 축제 기획단의 끝없는 고민과 밤샘에서 출발했습니다.
+          도입 견적부터 맞춤형 기능 개발 상담까지.
           <br />
-          실시간 부스 웨이팅부터 방문객의 텐션을 올리는 실시간 랭킹 보드까지.
+          기획단의 무거운 짐을 덜고 추억을 만들어드립니다 !
           <br />
-          가장 스마트한 운영 솔루션으로 모두가 온전히 즐길 수 있는 진짜 축제를
-          만듭니다.
+          지금 바로 문의하고 가장 스마트한 축제를 준비해 보세요.
         </motion.p>
+
+        {/* 액션 버튼 */}
+        <motion.div variants={item}>
+          <a
+            href="mailto:info@u.lento25@gmail.com"
+            className="inline-flex items-center justify-center rounded-2xl bg-[#11153F] px-10 py-4 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 md:text-lg"
+          >
+            도입 문의하기
+          </a>
+        </motion.div>
       </motion.div>
 
-      {/* 배경 장식 (축제랑 옐로우 톤의 은은한 글로우) */}
+      {/* 배경 장식 */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#FFD43A]/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
     </section>
   );
