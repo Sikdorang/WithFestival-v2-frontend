@@ -27,6 +27,8 @@ import {
   Outlet,
   RouterProvider,
 } from 'react-router-dom';
+import AiMenuGenerator from '../pages/admin/AiMenuGenerator';
+import ManageWaitingSetting from '../pages/admin/ManageWaitingSetting';
 import { authLoader } from './authLoader';
 
 function ProtectedLayout() {
@@ -138,6 +140,16 @@ const router = createBrowserRouter([
   {
     path: ROUTES.MANAGE_RESERVE.DETAIL_PATH,
     element: <ManageReserveDetail />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.AI_MENU_GENERATOR,
+    element: <AiMenuGenerator />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.MANAGE_WAITING_SETTING,
+    element: <ManageWaitingSetting />,
     errorElement: <ErrorBoundary />,
   },
   {

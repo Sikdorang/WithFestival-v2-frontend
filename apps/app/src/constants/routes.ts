@@ -39,7 +39,9 @@ export const ROUTES = {
   LOVE_ALARM: '/alarm',
   LINKS: '/links',
   MAP: '/map',
+  AI_MENU_GENERATOR: '/ai',
   RESERVATION: '/reserve',
+  MANAGE_WAITING_SETTING: '/manage-waiting-setting',
   NOT_FOUND: '/not-found',
   ORDERING: '/ordering',
 } as const;
