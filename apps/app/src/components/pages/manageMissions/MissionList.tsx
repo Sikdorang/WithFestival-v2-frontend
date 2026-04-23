@@ -19,7 +19,7 @@ export default function MissionList({ onMissionClick }: Props) {
     return <div className="p-4 text-gray-400">미션 불러오는 중...</div>;
 
   return (
-    <div className="flex flex-col divide-y divide-gray-50 rounded-2xl bg-white">
+    <div className="flex flex-col divide-y divide-gray-50 rounded-2xl bg-white px-3">
       {missions.length === 0 ? (
         <div className="py-10 text-center text-gray-400">
           등록된 미션이 없습니다.

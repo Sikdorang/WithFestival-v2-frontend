@@ -1,10 +1,11 @@
 'use client';
 
+import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import Navigator from '@/components/common/layouts/Navigator';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CtaButton from '../../components/common/buttons/CtaButton';
 import TextArea from '../../components/common/inputs/TextArea';
-import TopBar from '../../components/common/layouts/TopBar';
 import { ROUTES } from '../../constants/routes';
 
 interface GeneratedMenu {
@@ -69,7 +70,12 @@ export default function AiMenuGenerator() {
 
   return (
     <div>
-      <TopBar />
+      <Navigator
+        left={<GoBackIcon />}
+        onLeftPress={() => navigate(-1)}
+        title="예약 관리"
+      />
+
       <div className="mx-auto w-full max-w-2xl bg-white p-4 py-12 md:p-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-[#11153F] md:text-3xl">

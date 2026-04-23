@@ -1,14 +1,18 @@
 'use client';
 
+import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
-import TopBar from '@/components/common/layouts/TopBar';
+import Navigator from '@/components/common/layouts/Navigator';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import TextArea from '../../components/common/inputs/TextArea';
 
 export default function ManageWaitingSetting() {
+  const navigate = useNavigate();
+
   const [isWaitEnabled, setIsWaitEnabled] = useState(true);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [notifyStep, setNotifyStep] = useState<number>(0);
@@ -32,7 +36,11 @@ export default function ManageWaitingSetting() {
 
   return (
     <BaseResponsiveLayout>
-      <TopBar />
+      <Navigator
+        left={<GoBackIcon />}
+        onLeftPress={() => navigate(-1)}
+        title="웨이팅 관리"
+      />
 
       <main className="flex min-h-screen flex-col gap-4 bg-white px-4 pt-4">
         {/* 설정 그룹 */}
@@ -107,7 +115,7 @@ export default function ManageWaitingSetting() {
         onOpenChange={setIsMessageModalOpen}
       >
         <Dialog.Portal>
-          <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
+          <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-40 bg-black/25" />
           <Dialog.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-[2rem] bg-white outline-none">
             <div className="flex items-center justify-between p-6 pb-4">
               <span className="text-xl font-bold text-[#11153F]">

@@ -24,7 +24,7 @@ export function BottomBar({
   hasNewOrder,
 }: Props) {
   return (
-    <footer className="fixed right-0 bottom-5 left-0 flex w-full justify-center px-6">
+    <footer className="fixed right-0 bottom-5 left-0 z-50 flex w-full justify-center px-6">
       <div className="flex w-full items-center justify-between gap-10 rounded-full bg-white px-10 py-2 shadow-[0_8px_16px_rgba(0,0,0,0.12)]">
         {TABS.map(({ name, label, Icon }) => {
           const isActive = activeTab === name;

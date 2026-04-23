@@ -93,7 +93,6 @@ export default function OrderDashBoard({ allOrders }: Props) {
     return { totalSales, netProfit, totalOrders, hourlySales };
   }, [allOrders]);
 
-  // API 데이터가 있으면 실제 데이터를, 없으면 더미 데이터를 사용
   const hasActualData = summary.hourlySales.some((data) => data.매출 > 0);
   const chartData = hasActualData ? summary.hourlySales : DUMMY_HOURLY_SALES;
 

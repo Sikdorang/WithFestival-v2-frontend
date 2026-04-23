@@ -10,7 +10,7 @@ export default function MenuList({
 }: {
   onMenuItemClick: (item: Menu) => void;
 }) {
-  const { menus, getMenuByUserId, isLoading } = useMenu();
+  const { menus, getMenuByUserId, isLoading, fetchMenu } = useMenu();
   const location = useLocation();
 
   const userData =
@@ -19,6 +19,7 @@ export default function MenuList({
 
   useEffect(() => {
     getMenuByUserId(userData.userId);
+    fetchMenu();
   }, []);
 
   return (

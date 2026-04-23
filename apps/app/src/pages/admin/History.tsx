@@ -1,6 +1,7 @@
 import EmptyImage from '@/assets/icons/ic_empty_paper.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import ExpertInsightBox from '@/components/pages/history/ExpertInsightBox';
 import HistoryTopBar from '@/components/pages/history/HistoryTopBar';
 import OrderDashBoard from '@/components/pages/history/OrderDashBoard';
 import { OrderBill } from '@/components/pages/order/OrderBill';
@@ -33,6 +34,7 @@ export default function History() {
       <div className="relative flex flex-1 flex-col gap-4 p-4">
         {allOrders?.count && allOrders.count > 0 ? (
           <>
+            <ExpertInsightBox />
             <OrderDashBoard allOrders={allOrders} />
 
             {allOrders.data.map((order) =>
@@ -46,7 +48,7 @@ export default function History() {
             <BottomSpace />
           </>
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center pb-20">
+          <div className="flex flex-1 flex-col items-center justify-center pb-4">
             <EmptyPlaceHolder
               image={<EmptyImage color="white" />}
               text="주문 이력이 없습니다."

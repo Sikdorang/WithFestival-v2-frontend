@@ -71,7 +71,7 @@ export default function ManageQr() {
               className="focus:border-primary-300 w-full rounded-xl border-2 border-gray-100 p-4 text-gray-800 outline-none"
             >
               <option value="table">일반 테이블 QR</option>
-              <option value="waiting">웨이팅 QR</option>
+              <option value="waiting">부스 QR</option>
               <option value="takeout">포장 전용 QR</option>
             </select>
           </div>

@@ -28,6 +28,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import AiMenuGenerator from '../pages/admin/AiMenuGenerator';
+import ManageMission from '../pages/admin/ManageMission';
 import ManageWaitingSetting from '../pages/admin/ManageWaitingSetting';
 import { authLoader } from './authLoader';
 
@@ -150,6 +151,11 @@ const router = createBrowserRouter([
   {
     path: ROUTES.MANAGE_WAITING_SETTING,
     element: <ManageWaitingSetting />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.MANAGE_MISSIONS.ROOT,
+    element: <ManageMission />,
     errorElement: <ErrorBoundary />,
   },
   {
