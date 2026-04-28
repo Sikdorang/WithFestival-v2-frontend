@@ -1,14 +1,9 @@
-import Header from "@/src/components/Header";
+import Ranking from "@/src/components/Ranking";
 
-import BoothRanking from "@/src/components/BoothRanking";
-import Footer from "@/src/components/Footer";
-
-export default function PricingPage() {
+export default function RankingPage() {
   return (
-    <>
-      <Header />
-      <BoothRanking />
-      <Footer />
-    </>
+    <main className="min-h-screen">
+      <Ranking />
+    </main>
   );
 }

@@ -1,24 +1,29 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import Navbar from "@/src/components/Navbar";
 import "./globals.css";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: "축제랑 | 축제는 당연히 !",
-  description: "WithFestival",
+  title: " ",
+  description: "",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" className="bg-gray-100 scroll-smooth">
-      <body
-        className={`${inter.className} bg-gray-100 text-gray-1000 antialiased`}
-      >
+    <html lang="ko" className={cn("scroll-smooth bg-white", "font-sans", geist.variable)}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..700,0..1,-50..200&display=swap"
+        />
+      </head>
+      <body className="bg-white text-[#292a2e] antialiased">
+        <Navbar />
         {children}
       </body>
     </html>

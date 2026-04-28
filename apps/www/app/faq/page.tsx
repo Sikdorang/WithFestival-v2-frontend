@@ -1,13 +1,13 @@
-import Footer from "@/src/components/Footer";
-import FrequentAskedQuestions from "@/src/components/FrequentAskedQuestions";
-import Header from "@/src/components/Header";
+import Faq from "@/src/components/Faq";
+import { listFaq } from "@/src/lib/faq";
 
-export default function FaqPage() {
+export const dynamic = "force-dynamic";
+
+export default async function FaqPage() {
+  const items = await listFaq();
   return (
-    <>
-      <Header />
-      <FrequentAskedQuestions />
-      <Footer />
-    </>
+    <main className="min-h-screen">
+      <Faq items={items} />
+    </main>
   );
 }
