@@ -1,13 +1,13 @@
+import Hero from "@/src/components/Hero";
+import Features from "@/src/components/Features";
 import Footer from "@/src/components/Footer";
-import Header from "@/src/components/Header";
-import FestivalStatusBoard from "../src/components/FestivalStatusBoard";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <>
-      <Header />
-      <FestivalStatusBoard />
+    <main className="min-h-screen">
+      <Hero />
+      <Features />
       <Footer />
-    </>
+    </main>
   );
 }
