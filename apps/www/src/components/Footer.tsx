@@ -41,7 +41,7 @@ export default function Footer() {
             <span>서울특별시 성동구</span>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-1">
-            <span>대표자: 전잔현</span>
+            <span>대표자: 전진현</span>
             <span>대표이메일: u.lento25@gmail.com</span>
           </div>
         </div>
