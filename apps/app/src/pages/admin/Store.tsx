@@ -5,16 +5,18 @@ import MenuList from '@/components/pages/board/MenuList';
 import StoreInformation from '@/components/pages/store/StoreInformation';
 import { ROUTES } from '@/constants/routes';
 import { useStore } from '@/hooks/useStore';
+import { useAuthStore } from '@/stores/authStore';
 import { Menu, Mission } from '@/types/global';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Store() {
   const navigate = useNavigate();
-  const { getUserInfo, account, name } = useStore();
+  const { getMyStoreInfo, account, name } = useStore();
+  const { logout } = useAuthStore();
 
   useEffect(() => {
-    getUserInfo();
+    getMyStoreInfo();
   }, []);
 
   const handleMenuItemClick = (item: Menu) => {
@@ -23,6 +25,11 @@ export default function Store() {
 
   const handleMissionClick = (item: Mission) => {
     navigate(ROUTES.MANAGE_MISSIONS.DETAIL(item.id.toString()));
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate(ROUTES.LOGIN);
   };
 
   return (
@@ -87,6 +94,15 @@ export default function Store() {
             <DepthIcon />
           </div>
           <MenuList onMenuItemClick={handleMenuItemClick} />
+        </section>
+
+        <section className="mt-8 flex justify-center pb-20">
+          <button
+            onClick={handleLogout}
+            className="text-sm font-medium text-gray-400 underline underline-offset-2 hover:text-gray-600"
+          >
+            로그아웃
+          </button>
         </section>
       </div>
 

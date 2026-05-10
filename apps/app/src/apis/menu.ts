@@ -1,24 +1,24 @@
+import axios from 'axios';
 import axiosInstance from '.';
 import { CreateMenuDto } from '../types/payload/menu';
-import axios from 'axios';
 
 export type PresignedResponse = {
   url: string;
 };
 
 export const menuAPI = {
-  getMenu: async () => {
-    const response = await axiosInstance.get('/menu/menus');
+  getMenus: async () => {
+    const response = await axiosInstance.get('/menus');
     return response.data;
   },
 
-  getMenuByUserId: async (userId: number) => {
-    const response = await axiosInstance.get(`/menu/user/${userId}`);
+  getMenusByStoreId: async (storeId: number) => {
+    const response = await axiosInstance.get(`/stores/${storeId}/menus`);
     return response.data;
   },
 
   createMenu: async (menu: CreateMenuDto) => {
-    const response = await axiosInstance.post('/menu', menu);
+    const response = await axiosInstance.post('/menus', menu);
     return response.data;
   },
 
@@ -28,12 +28,12 @@ export const menuAPI = {
   },
 
   updateMenu: async (menuId: number, menu: CreateMenuDto) => {
-    const response = await axiosInstance.patch(`/menu/${menuId}`, menu);
+    const response = await axiosInstance.patch(`/menus/${menuId}`, menu);
     return response.data;
   },
 
   deleteMenu: async (menuId: number) => {
-    const response = await axiosInstance.delete(`/menu/${menuId}`);
+    const response = await axiosInstance.delete(`/menus/${menuId}`);
     return response.data;
   },
 

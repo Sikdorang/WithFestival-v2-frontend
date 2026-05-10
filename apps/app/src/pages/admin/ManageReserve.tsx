@@ -1,12 +1,14 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
+import TextArea from '@/components/common/inputs/TextArea';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
+import { useReserve } from '@/hooks/useReserve';
+import { useStore } from '@/hooks/useStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import TextArea from '../../components/common/inputs/TextArea';
 
 // 💡 1. 모킹 데이터: 시간대 및 예약자 목록
 interface TimeSlot {
@@ -23,66 +25,29 @@ interface Reservation {
   peopleCount: number;
 }
 
-const MOCK_TIME_SLOTS: TimeSlot[] = [
-  { id: '1', timeRange: '17:00 - 18:00', bookedTables: 3, maxTables: 5 },
-  { id: '2', timeRange: '18:00 - 19:00', bookedTables: 5, maxTables: 5 },
-  { id: '3', timeRange: '19:00 - 20:00', bookedTables: 1, maxTables: 5 },
-  { id: '4', timeRange: '20:00 - 21:00', bookedTables: 0, maxTables: 5 },
-];
-
-const MOCK_RESERVATIONS: Record<string, Reservation[]> = {
-  '1': [
-    { id: 'r1', name: '김경희', phone: '010-1234-5678', peopleCount: 4 },
-    { id: 'r2', name: '이축제', phone: '010-8765-4321', peopleCount: 2 },
-    { id: 'r3', name: '박주점', phone: '010-1111-2222', peopleCount: 3 },
-  ],
-  '2': [{ id: 'r4', name: '최어우', phone: '010-3333-4444', peopleCount: 4 }],
-  '3': [{ id: 'r5', name: '정야야', phone: '010-5555-6666', peopleCount: 2 }],
-  '4': [],
-};
-
 export default function AdminReserveManage() {
   const navigate = useNavigate();
-  const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
 
-  // 전역 예약 활성화 상태
-  const [isReservationEnabled, setIsReservationEnabled] = useState(true);
+  // 1. useStore 훅에서 필요한 상태와 함수 추출
+  const { reservationEnabled, updateStoreStatus, getMyStoreInfo, isLoading } =
+    useStore();
 
-  // 모달 상태 1: 예약자 명단 조회
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
+  const { fetchSlots, isLoading: isReserveLoading } = useReserve();
 
-  // 모달 상태 2: 예약 메시지 설정
+  // 모달 상태 관리
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageTime, setMessageTime] = useState<number>(10);
   const [messageContent, setMessageContent] = useState<string>(
     '예약하신 시간이 얼마 남지 않았습니다. 늦지 않게 부스로 와주세요!',
   );
 
-  // 선택된 시간대의 예약자 목록 가져오기
-  const currentReservations = useMemo(() => {
-    if (!selectedSlotId) return [];
-    return MOCK_RESERVATIONS[selectedSlotId] || [];
-  }, [selectedSlotId]);
+  useEffect(() => {
+    getMyStoreInfo();
+    fetchSlots();
+  }, []);
 
-  const currentSlotTime = useMemo(() => {
-    return (
-      MOCK_TIME_SLOTS.find((s) => s.id === selectedSlotId)?.timeRange || ''
-    );
-  }, [selectedSlotId]);
-
-  const handleToggleReservation = () => {
-    setIsReservationEnabled((prev) => !prev);
-    toast.success(
-      isReservationEnabled
-        ? '예약 기능이 비활성화되었습니다.'
-        : '예약 기능이 활성화되었습니다.',
-    );
-  };
-
-  const handleOpenUserModal = (slotId: string) => {
-    setSelectedSlotId(slotId);
-    setIsUserModalOpen(true);
+  const handleToggleReservation = async () => {
+    await updateStoreStatus('reservation', !reservationEnabled);
   };
 
   const handleSaveMessageSettings = () => {
@@ -90,7 +55,6 @@ export default function AdminReserveManage() {
       toast.error('메시지 내용을 입력해주세요.');
       return;
     }
-    // 💡 실무에서는 여기서 API로 설정값을 저장합니다.
     toast.success('예약 메시지 설정이 저장되었습니다.');
     setIsMessageModalOpen(false);
   };
@@ -104,9 +68,7 @@ export default function AdminReserveManage() {
       />
 
       <main className="flex min-h-screen flex-col gap-4 bg-white px-4 pt-4">
-        {/* 상단 설정 그룹 영역 */}
         <div className="flex flex-col gap-2">
-          {/* 1. 예약 전역 설정 토글 */}
           <div className="z-10 flex items-center justify-between rounded-xl bg-white p-5 shadow-[0_2px_8px_rgba(17,21,63,0.04)]">
             <div className="flex flex-col gap-1">
               <span className="text-sm font-bold text-[#11153F]">
@@ -118,13 +80,14 @@ export default function AdminReserveManage() {
             </div>
             <button
               onClick={handleToggleReservation}
+              disabled={isLoading}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 ${
-                isReservationEnabled ? 'bg-[#FFD43A]' : 'bg-gray-300'
+                reservationEnabled ? 'bg-[#FFD43A]' : 'bg-gray-300'
               }`}
             >
               <span
                 className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ${
-                  isReservationEnabled ? 'translate-x-6' : 'translate-x-1'
+                  reservationEnabled ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
             </button>
@@ -133,9 +96,9 @@ export default function AdminReserveManage() {
           {/* 2. 예약 메시지 설정 버튼 (예약 기능이 켜져있을 때만 활성화) */}
           <button
             onClick={() => setIsMessageModalOpen(true)}
-            disabled={!isReservationEnabled}
+            disabled={!reservationEnabled || isLoading}
             className={`z-10 flex w-full items-center justify-between rounded-xl bg-white p-5 text-left shadow-[0_2px_8px_rgba(17,21,63,0.04)] transition-all active:bg-gray-50 ${
-              !isReservationEnabled
+              !reservationEnabled
                 ? 'pointer-events-none opacity-40 grayscale-[30%]'
                 : ''
             }`}

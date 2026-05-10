@@ -1,66 +1,155 @@
+import { handelError } from '@/apis/errorhandler';
+import { missionAPI } from '@/apis/mission';
 import { Mission } from '@/types/global';
-import { useCallback, useState } from 'react';
+import { MissionCreateDTO, MissionUpdateDTO } from '@/types/payload/mission';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
-const MOCK_MISSIONS: Mission[] = [
-  {
-    id: 1,
-    title: '스태프와 가위바위보 이기기',
-    description: '부스 입구 스태프를 찾아가 가위바위보를 해서 이기세요!',
-    reward: '탄산음료 1캔 무료 증정',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    title: '인스타그램 팔로우 이벤트',
-    description: '부스 공식 계정을 팔로우하고 스태프에게 인증하세요.',
-    reward: '꽝 없는 랜덤 뽑기 1회권',
-    isActive: true,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    title: '친구와 함께 방문 인증',
-    description: '친구 3명과 함께 방문하여 단체 사진을 찍어주세요.',
-    reward: '사이드 안주 50% 할인권',
-    isActive: false,
-    createdAt: new Date().toISOString(),
-  },
-];
+const MISSION_SUCCESS_MESSAGES = {
+  createMissionSuccess: '미션이 성공적으로 생성되었습니다.',
+  updateMissionSuccess: '미션 정보가 수정되었습니다.',
+  deleteMissionSuccess: '미션이 삭제되었습니다.',
+  toggleActiveSuccess: '미션 상태가 변경되었습니다.',
+};
 
 export const useMission = () => {
   const [missions, setMissions] = useState<Mission[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentMission, setCurrentMission] = useState<Mission | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // 1. 미션 목록 조회
-  const fetchMissions = useCallback(async () => {
+  const fetchMissions = async () => {
     setIsLoading(true);
+    setError(null);
+
     try {
-      // 0.8초 지연 후 모킹 데이터 반환
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setMissions(MOCK_MISSIONS);
+      const response = await missionAPI.getMissions();
+      setMissions(response.data);
+      return true;
     } catch (err) {
-      console.error('Failed to fetch missions:', err);
+      handelError(err);
+      return false;
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  // 2. 미션 활성화 상태 토글 (Optimistic UI 적용)
-  const toggleMissionStatus = useCallback((missionId: number) => {
-    setMissions((prev) =>
-      prev.map((m) =>
-        m.id === missionId ? { ...m, isActive: !m.isActive } : m,
-      ),
-    );
-  }, []);
+  // 2. 미션 단건 조회
+  const fetchMissionById = async (id: number) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await missionAPI.getMissionById(id);
+      setCurrentMission(response.data);
+      return response.data;
+    } catch (err) {
+      handelError(err);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 3. 미션 생성
+  const createMission = async (missionData: MissionCreateDTO) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await missionAPI.createMission(missionData);
+
+      setMissions((prev) => [...prev, response.data]);
+      toast.success(MISSION_SUCCESS_MESSAGES.createMissionSuccess);
+
+      return response.data;
+    } catch (err) {
+      handelError(err);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 4. 미션 정보 수정
+  const updateMission = async (id: number, missionData: MissionUpdateDTO) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await missionAPI.updateMission(id, missionData);
+
+      // 상태 업데이트: 기존 목록에서 해당 id의 미션 데이터를 교체
+      setMissions((prev) =>
+        prev.map((mission) => (mission.id === id ? response.data : mission)),
+      );
+      toast.success(MISSION_SUCCESS_MESSAGES.updateMissionSuccess);
+
+      return response.data;
+    } catch (err) {
+      handelError(err);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 5. 미션 삭제
+  const deleteMission = async (id: number) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await missionAPI.deleteMission(id);
+
+      // 상태 업데이트: 삭제된 미션을 목록에서 제거
+      setMissions((prev) => prev.filter((mission) => mission.id !== id));
+      toast.success(MISSION_SUCCESS_MESSAGES.deleteMissionSuccess);
+
+      return true;
+    } catch (err) {
+      handelError(err);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 6. 미션 활성화 토글
+  const toggleMissionActive = async (id: number, isActive: boolean) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await missionAPI.toggleMissionActive(id, isActive);
+
+      // 상태 업데이트: 변경된 활성화 상태 반영
+      setMissions((prev) =>
+        prev.map((mission) => (mission.id === id ? response.data : mission)),
+      );
+      toast.success(MISSION_SUCCESS_MESSAGES.toggleActiveSuccess);
+
+      return true;
+    } catch (err) {
+      handelError(err);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return {
     missions,
+    currentMission,
     isLoading,
     error,
     fetchMissions,
-    toggleMissionStatus,
+    fetchMissionById,
+    createMission,
+    updateMission,
+    deleteMission,
+    toggleMissionActive,
+    setMissions, // 필요한 경우 직접 제어하기 위해 노출
   };
 };

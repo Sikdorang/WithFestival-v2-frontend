@@ -1,14 +1,12 @@
-import { SUCCESS_MESSAGES } from '@/constants/message';
 import { IWaitingListItem } from '@/types/global';
 import { useMemo } from 'react';
-import toast from 'react-hot-toast';
 
 interface Props {
   waitingInfo: IWaitingListItem;
-  setWaitingProcessed: (waitingId: number) => void;
+  updateWaitingStatus: (waitingId: number, status: string) => void;
 }
 
-export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
+export function WaitingCard({ waitingInfo, updateWaitingStatus }: Props) {
   const { name, people, phoneNumber, time, id } = waitingInfo;
 
   const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
@@ -19,7 +17,6 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl bg-white p-5 shadow-sm">
-      {/* Header: 대기 번호 및 시간 */}
       <div className="flex items-center justify-between">
         <span className="rounded-xl bg-[#EAECEF] px-2 py-1.5 text-base font-semibold text-gray-800">
           {id}번
@@ -27,7 +24,6 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
         <span className="font-medium text-gray-400">{time}</span>
       </div>
 
-      {/* Body: 상세 정보 리스트 */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span className="font-medium text-gray-500">예약자 이름</span>
@@ -53,23 +49,16 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
         </div>
       </div>
 
-      {/* Footer: 액션 버튼 */}
       <div className="flex gap-3 text-base">
         <button
           className="rounded-xl bg-[#FFF0F0] px-6 py-4 font-bold text-[#DE5252] transition-colors active:bg-red-100"
-          onClick={() => {
-            setWaitingProcessed(id);
-            toast.success(SUCCESS_MESSAGES.waitingCancelSuccess);
-          }}
+          onClick={() => updateWaitingStatus(id, 'CANCELED')}
         >
           취소하기
         </button>
         <button
           className="flex-1 rounded-xl bg-[#FFCC3E] py-4 font-bold text-[#36383E] transition-colors active:bg-yellow-500"
-          onClick={() => {
-            setWaitingProcessed(id);
-            toast.success(SUCCESS_MESSAGES.waitingSuccess);
-          }}
+          onClick={() => updateWaitingStatus(id, 'ENTERED')}
         >
           착석 완료
         </button>

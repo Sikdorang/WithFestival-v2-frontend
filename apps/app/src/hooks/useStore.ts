@@ -9,105 +9,151 @@ export const useStore = () => {
   const [account, setAccount] = useState<string>('');
   const [notice, setNotice] = useState<string>('');
   const [event, setEvent] = useState<string>('');
+  const [waitingsEnabled, setWaitingsEnabled] = useState<boolean>(false);
+  const [reservationEnabled, setReservationEnabled] = useState<boolean>(false);
+  const [missionsEnabled, setMissionsEnabled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const getUserInfo = async () => {
+  // 내 스토어 정보 조회 (관리자용)
+  const getMyStoreInfo = async () => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      const response = await storeAPI.getUserInfo();
-      setName(response.data.name);
-      setAccount(response.data.account);
-      setNotice(response.data.notice);
-      setEvent(response.data.event);
-    } catch (error) {
-      handelError(error);
-      return false;
+      const response = await storeAPI.getStoreMyInfo();
+      setName(response.name);
+      setAccount(response.accountNumber);
+      setNotice(response.notice);
+      setEvent(response.event);
+      setWaitingsEnabled(response.waitingsEnabled);
+      setReservationEnabled(response.reservationEnabled);
+      setMissionsEnabled(response.missionsEnabled);
+      return response;
+    } catch (err) {
+      handelError(err);
+      return null;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getUserInfoByUserId = async (userId: number) => {
+  // 스토어 공개 정보 조회 (고객용)
+  const getStorePublicInfo = async (storeId: number) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
+
     try {
-      const response = await storeAPI.getUserInfoByUserId(userId);
-      setName(response.data.name);
-      setAccount(response.data.account);
-      setNotice(response.data.notice);
-      setEvent(response.data.event);
-    } catch (error) {
-      handelError(error);
-      return false;
+      const response = await storeAPI.getStorePublicInfo(storeId);
+      setName(response.name);
+      setAccount(response.accountNumber);
+      setNotice(response.notice);
+      setEvent(response.event);
+      setWaitingsEnabled(response.waitingsEnabled);
+      setReservationEnabled(response.reservationEnabled);
+      setMissionsEnabled(response.missionsEnabled);
+      return response;
+    } catch (err) {
+      handelError(err);
+      return null;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateStoreAccount = async (account: string) => {
+  // 계좌 번호 수정
+  const updateStoreAccount = async (accountNumber: string) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      await storeAPI.updateStoreInfo(account);
-      setAccount(account);
+      await storeAPI.updateStoreInfo(accountNumber);
+      setAccount(accountNumber);
       toast.success(SUCCESS_MESSAGES.storeAccountUpdateSuccess);
       return true;
-    } catch (error) {
-      handelError(error);
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateStoreName = async (name: string) => {
+  // 이름 수정
+  const updateStoreName = async (newName: string) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      await storeAPI.updateStoreName(name);
-      setName(name);
+      await storeAPI.updateStoreName(newName);
+      setName(newName);
       toast.success(SUCCESS_MESSAGES.storeNameUpdateSuccess);
       return true;
-    } catch (error) {
-      handelError(error);
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateStoreNotice = async (notice: string) => {
+  // 공지 수정
+  const updateStoreNotice = async (newNotice: string) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      await storeAPI.updateStoreNotice(notice);
-      setNotice(notice);
+      await storeAPI.updateStoreNotice(newNotice);
+      setNotice(newNotice);
       toast.success(SUCCESS_MESSAGES.storeNoticeUpdateSuccess);
       return true;
-    } catch (error) {
-      handelError(error);
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateStoreEvent = async (event: string) => {
+  // 이벤트 수정
+  const updateStoreEvent = async (newEvent: string) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
     try {
-      await storeAPI.updateStoreEvent(event);
-      setEvent(event);
+      await storeAPI.updateStoreEvent(newEvent);
+      setEvent(newEvent);
       toast.success(SUCCESS_MESSAGES.storeEventUpdateSuccess);
       return true;
-    } catch (error) {
-      handelError(error);
+    } catch (err) {
+      handelError(err);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 기능(예약/미션/웨이팅) 활성화 상태 토글
+  const updateStoreStatus = async (
+    type: 'reservation' | 'mission' | 'waiting',
+    enabled: boolean,
+  ) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      if (type === 'reservation') {
+        await storeAPI.updateStoreReservationEnabled(enabled);
+        setReservationEnabled(enabled);
+      } else if (type === 'mission') {
+        await storeAPI.updateStoreMissionsEnabled(enabled);
+        setMissionsEnabled(enabled);
+      } else if (type === 'waiting') {
+        await storeAPI.updateStoreWaitingsEnabled(enabled);
+        setWaitingsEnabled(enabled);
+      }
+      toast.success('설정이 변경되었습니다.');
+      return true;
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
@@ -119,13 +165,17 @@ export const useStore = () => {
     account,
     notice,
     event,
-    getUserInfo,
-    getUserInfoByUserId,
+    waitingsEnabled,
+    reservationEnabled,
+    missionsEnabled,
+    getMyStoreInfo,
+    getStorePublicInfo,
     updateStoreAccount,
     updateStoreName,
     updateStoreNotice,
     updateStoreEvent,
+    updateStoreStatus,
     isLoading,
-    loginError,
+    error,
   };
 };

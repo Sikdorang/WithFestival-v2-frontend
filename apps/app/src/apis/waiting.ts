@@ -1,29 +1,36 @@
+import {
+  CreateWaitingDTO,
+  UpdateWaitingStatusDTO,
+} from '@/types/payload/waiting';
 import axiosInstance from '.';
-import { WaitingDTO } from '../types/payload/waiting';
 
 export const waitingAPI = {
-  getWaiting: async () => {
-    const response = await axiosInstance.get('/waiting/unprocessed');
+  // 대기 팀 수 조회 (고객·공개)
+  getActiveWaitingCount: async (storeId: number) => {
+    const response = await axiosInstance.get(
+      `/stores/${storeId}/waitings/active-count`,
+    );
+    return response.data; // { count: number } 반환
+  },
+
+  // 대기 등록 (고객)
+  createWaiting: async (storeId: number, payload: CreateWaitingDTO) => {
+    const response = await axiosInstance.post(
+      `/stores/${storeId}/waitings`,
+      payload,
+    );
     return response.data;
   },
 
-  getWaitingByUserId: async (userId: number) => {
-    const response = await axiosInstance.get(`/waiting/user/${userId}`);
+  // 대기 목록 (부스)
+  getWaitings: async () => {
+    const response = await axiosInstance.get('/waitings');
     return response.data;
   },
 
-  createWaiting: async (waiting: WaitingDTO) => {
-    const response = await axiosInstance.post('/waiting', waiting);
-    return response.data;
-  },
-
-  setWaitingProcessed: async (waitingId: number) => {
-    const response = await axiosInstance.patch(`/waiting/${waitingId}/process`);
-    return response.data;
-  },
-
-  deleteWaiting: async (waitingId: string) => {
-    const response = await axiosInstance.delete(`/waiting/${waitingId}`);
+  // 대기 상태 변경 (부스)
+  updateWaitingStatus: async (id: number, payload: UpdateWaitingStatusDTO) => {
+    const response = await axiosInstance.patch(`/waitings/${id}`, payload);
     return response.data;
   },
 };

@@ -7,37 +7,49 @@ import OrderDashBoard from '@/components/pages/history/OrderDashBoard';
 import { OrderBill } from '@/components/pages/order/OrderBill';
 import ServiceOrderHistory from '@/components/pages/order/ServiceOrderHistory';
 import { useOrder } from '@/hooks/useOrder';
-import { OrderSummary } from '@/types/global';
 import { useEffect } from 'react';
 
-const isServiceOrder = (order: OrderSummary): boolean => {
-  const singleItem = order.orderUsers?.[0];
+const isServiceOrder = (order: any): boolean => {
+  const items = order.items || order.orderUsers;
+  const singleItem = items?.[0];
+
   return (
     order.name === '직원 호출' &&
-    order.orderUsers?.length === 1 &&
+    items?.length === 1 &&
     singleItem?.price === 0 &&
-    singleItem?.count === 0
+    (singleItem?.quantity === 0 || singleItem?.count === 0)
   );
 };
 
 export default function History() {
-  const { getAllOrders, allOrders } = useOrder();
+  const { getOrders, allOrders, isLoading } = useOrder();
 
   useEffect(() => {
-    getAllOrders();
-  }, [getAllOrders]);
+    getOrders();
+  }, [getOrders]);
+
+  const orderList = Array.isArray(allOrders)
+    ? allOrders
+    : allOrders?.data || [];
+  const orderCount = Array.isArray(allOrders)
+    ? allOrders.length
+    : allOrders?.count || 0;
 
   return (
     <div className="bg-gray-500-10 flex min-h-screen flex-1 flex-col gap-4">
-      <HistoryTopBar title="전체 주문 내역" value={allOrders?.count || 0} />
+      <HistoryTopBar title="전체 주문 내역" value={orderCount} />
 
       <div className="relative flex flex-1 flex-col gap-4 p-4">
-        {allOrders?.count && allOrders.count > 0 ? (
+        {isLoading ? (
+          <div className="flex flex-1 items-center justify-center pb-20 text-sm font-medium text-gray-400">
+            주문 내역을 불러오는 중입니다...
+          </div>
+        ) : orderCount > 0 ? (
           <>
             <ExpertInsightBox />
             <OrderDashBoard allOrders={allOrders} />
 
-            {allOrders.data.map((order) =>
+            {orderList.map((order: any) =>
               isServiceOrder(order) ? (
                 <ServiceOrderHistory key={order.id} order={order} />
               ) : (

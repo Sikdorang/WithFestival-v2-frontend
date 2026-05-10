@@ -1,9 +1,9 @@
 export interface Menu {
   id: number;
-  menu: string;
+  name: string;
   price: number;
   description: string;
-  image: string;
+  imageUrl: string;
   margin: number;
 }
 
@@ -79,9 +79,14 @@ export interface IMessage {
 
 export interface IUser {
   id: number;
-  code: string;
   name: string;
-  account: string;
+  accountNumber: string;
+  notice: string;
+  event: string;
+  reservationEnabled: boolean;
+  missionsEnabled: boolean;
+  waitingsEnabled: boolean;
+  createdAt: string;
 }
 
 export interface Mission {

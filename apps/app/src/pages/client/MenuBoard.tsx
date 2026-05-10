@@ -15,7 +15,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 export default function MenuBoard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { getUserInfoByUserId, name, notice } = useStore();
+  const { getStorePublicInfo, name, notice } = useStore();
   const { orderItems } = useOrderStore();
   const isPreview = localStorage.getItem(KEYS.IS_PREVIEW);
 
@@ -37,7 +37,7 @@ export default function MenuBoard() {
   );
 
   useEffect(() => {
-    getUserInfoByUserId(userData.userId);
+    getStorePublicInfo(userData.userId);
   }, []);
 
   if (userData.userId === undefined) {

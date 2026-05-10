@@ -1,9 +1,11 @@
-import { create } from 'zustand';
 import { authAPI } from '@/apis/auth';
 import { handelError } from '@/apis/errorhandler';
+import { storeAPI } from '@/apis/store';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@/constants/message';
-import { toast } from 'react-hot-toast';
+import { KEYS } from '@/constants/storage';
 import { IUser } from '@/types/global';
+import { toast } from 'react-hot-toast';
+import { create } from 'zustand';
 
 interface AuthState {
   user: IUser | null;
@@ -12,10 +14,10 @@ interface AuthState {
   error: string | null;
   login: (code: string) => Promise<boolean>;
   logout: () => void;
-  checkAuthStatus: () => Promise<void>;
+  checkAuthStatus: () => Promise<IUser | void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isLoggedIn: false,
   isLoading: false,
@@ -27,18 +29,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const response = await authAPI.login(code);
 
-      if (!response.success) {
+      if (!response.accessToken) {
         toast.error(ERROR_MESSAGES.invalidCodeError);
         set({ isLoading: false, error: ERROR_MESSAGES.invalidCodeError });
         return false;
       }
 
+      sessionStorage.setItem(KEYS.ACCESS_TOKEN, response.accessToken);
+
+      try {
+        // 로그인 성공 직후 내 스토어 정보를 가져와 상태 동기화
+        await get().checkAuthStatus();
+      } catch (error) {
+        sessionStorage.removeItem(KEYS.ACCESS_TOKEN);
+        throw new Error('스토어 정보를 불러오는데 실패했습니다.');
+      }
+
       toast.success(SUCCESS_MESSAGES.loginSuccess);
-      set({
-        user: response.user,
-        isLoggedIn: true,
-        isLoading: false,
-      });
+      set({ isLoading: false });
       return true;
     } catch (error) {
       handelError(error);
@@ -53,23 +61,30 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    // 로그아웃 API 호출 등...
+    sessionStorage.removeItem(KEYS.ACCESS_TOKEN);
     set({ user: null, isLoggedIn: false });
   },
 
   checkAuthStatus: async () => {
-    try {
-      const response = await authAPI.me();
+    const token = sessionStorage.getItem(KEYS.ACCESS_TOKEN);
+    if (!token) {
+      set({ user: null, isLoggedIn: false });
+      throw new Error('No access token found');
+    }
 
-      if (response && response.success && response.user) {
-        set({ user: response.user, isLoggedIn: true });
-        return response.user; // ✅ 성공 시 user 데이터 반환
+    try {
+      const response = await storeAPI.getStoreMyInfo();
+
+      if (response && response.id) {
+        set({ user: response, isLoggedIn: true });
+        return response;
       } else {
-        throw new Error('Invalid session data');
+        throw new Error('Invalid store data');
       }
     } catch (error) {
+      sessionStorage.removeItem(KEYS.ACCESS_TOKEN);
       set({ user: null, isLoggedIn: false });
-      throw error; // ✅ 실패 시 에러를 던져서 loader가 잡을 수 있도록 함
+      throw error;
     }
   },
 }));

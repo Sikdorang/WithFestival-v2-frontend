@@ -2,13 +2,13 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import Banner from '@/components/pages/waiting/Banner';
 import JoinWaitlistFinish from '@/components/pages/waiting/JoinWaitlistFinish';
+import { useStore } from '@/hooks/useStore';
 import { useWaiting } from '@/hooks/useWaiting';
+import { IWaitingListItem } from '@/types/global';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
-import { IWaitingListItem } from '../../../types/global';
 import NoticeView from '../board/NoticeView';
-import { useStore } from '@/hooks/useStore';
 
 const waitlistSchema = z.object({
   name: z.string().min(1, '예약자 이름은 필수입니다.'),
@@ -19,26 +19,22 @@ const waitlistSchema = z.object({
 });
 
 export default function JoinWaitlistForm() {
-  const { createWaiting, getWaitingByUserId } = useWaiting();
-  const { notice, getUserInfoByUserId } = useStore();
+  const { createWaiting, fetchActiveWaitingCount, activeWaitingCount } =
+    useWaiting();
+  const { name: boothName, notice, getStorePublicInfo } = useStore();
   const location = useLocation();
   const userData =
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
+  const storeId = userData?.userId || userData?.id;
 
   useEffect(() => {
-    const fetchWaitingInfos = async () => {
-      const waitingInfos = await getWaitingByUserId(userData.userId);
-      setWaitingInfos(waitingInfos);
-    };
-    fetchWaitingInfos();
-    getUserInfoByUserId(userData.userId);
-  }, []);
+    if (storeId) {
+      getStorePublicInfo(Number(storeId));
+      fetchActiveWaitingCount(Number(storeId));
+    }
+  }, [storeId]);
 
-  const [waitingInfos, setWaitingInfos] = useState<{
-    name: string;
-    waitingCount: number;
-  }>();
   const [isFinishJoinWaitlist, setIsFinishJoinWaitlist] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
@@ -73,21 +69,25 @@ export default function JoinWaitlistForm() {
   };
 
   const handleSubmit = async () => {
-    const waitingResult: IWaitingListItem = await createWaiting({
+    if (!storeId) return;
+
+    const result = await createWaiting(Number(storeId), {
       name: formData.name,
       phoneNumber: formData.phone,
-      people: Number(formData.partySize),
-      userId: userData.userId,
+      partySize: Number(formData.partySize),
     });
-    setWaitingResult(waitingResult);
-    setIsFinishJoinWaitlist(true);
+
+    if (result) {
+      setWaitingResult(result);
+      setIsFinishJoinWaitlist(true);
+    }
   };
 
   if (isFinishJoinWaitlist) {
     return (
       <JoinWaitlistFinish
-        boothName={waitingInfos?.name ?? ''}
-        waitingListNumber={waitingInfos?.waitingCount ?? 0}
+        boothName={boothName}
+        waitingListNumber={activeWaitingCount}
         waitingNumber={waitingResult?.id ?? 0}
         name={formData.name}
         phone={formData.phone}
@@ -101,8 +101,8 @@ export default function JoinWaitlistForm() {
     <>
       <main className="flex flex-col items-center justify-center gap-6 p-4">
         <Banner
-          boothName={waitingInfos?.name ?? ''}
-          waitingListLength={waitingInfos?.waitingCount ?? 0}
+          boothName={boothName}
+          waitingListLength={activeWaitingCount}
           isFinishJoinWaitlist={false}
         />
 

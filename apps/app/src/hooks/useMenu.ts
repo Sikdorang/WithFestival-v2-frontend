@@ -1,13 +1,13 @@
 import { handelError } from '@/apis/errorhandler';
 import { menuAPI } from '@/apis/menu';
 import { Menu } from '@/types/global';
+import imageCompression from 'browser-image-compression';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { SUCCESS_MESSAGES } from '../constants/message';
 import { ROUTES } from '../constants/routes';
 import { CreateMenuDto } from '../types/payload/menu';
-import imageCompression from 'browser-image-compression';
 
 export const useMenu = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const useMenu = () => {
     setLoginError(null);
 
     try {
-      const response = await menuAPI.getMenu();
+      const response = await menuAPI.getMenus();
       setMenus(response.data);
       return true;
     } catch (error) {
@@ -95,13 +95,14 @@ export const useMenu = () => {
     }
   };
 
-  const getMenuByUserId = async (userId: number) => {
+  const getMenusByStoreId = async (storeId: number) => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      const response = await menuAPI.getMenuByUserId(userId);
-      setMenus(response.data);
+      const response = await menuAPI.getMenusByStoreId(storeId);
+
+      setMenus(response);
 
       return true;
     } catch (error) {
@@ -162,7 +163,7 @@ export const useMenu = () => {
     updateMenu,
     updateMenuImage,
     deleteMenu,
-    getMenuByUserId,
+    getMenusByStoreId,
     isLoading,
     setIsLoading,
     loginError,

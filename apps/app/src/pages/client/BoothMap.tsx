@@ -1,28 +1,30 @@
+import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import MapPinIcon from '@/assets/icons/ic_place_pin.svg?react';
+import BoothIcon from '@/assets/icons/ic_store_gray.svg?react';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
-import TopBar from '@/components/common/layouts/TopBar';
+import Navigator from '@/components/common/layouts/Navigator';
 import { useNavigate } from 'react-router-dom';
 
-// 💡 1. 지도에 표시할 부스 데이터 정의 (위치 및 이름)
 interface BoothLocation {
   id: string;
   name: string;
-  x: number;
-  y: number;
-  isUs?: boolean; // 우리 부스 여부
+  top: string;
+  left?: string;
+  right?: string;
+  isUs?: boolean;
 }
 
 const MOCK_BOOTHS: BoothLocation[] = [
-  // 윗줄 (사회과학대 광장 방면)
-  { id: '11', name: '막걸리나', x: 20, y: 80 },
-  { id: '12', name: '하이볼Z', x: 20, y: 130 },
-  { id: '13', name: '전이랑', x: 20, y: 180 },
-  { id: '14', name: '어우야', x: 20, y: 230, isUs: true }, // 🌟 우리 부스
+  // 왼쪽 줄 (x축 정렬)
+  { id: '11', name: '막걸리나', top: '32%', left: '12%' },
+  { id: '12', name: '하이볼', top: '48%', left: '12%' },
+  { id: '13', name: '전아랑', top: '64%', left: '12%' },
+  { id: '14', name: '어우야', top: '80%', left: '12%', isUs: true }, // 🌟 우리 부스
 
-  // 아랫줄 (정문 방면)
-  { id: '21', name: '소주방', x: 220, y: 100 },
-  { id: '22', name: '청춘일기', x: 220, y: 150 },
-  { id: '23', name: '경희빵집', x: 220, y: 200 },
-  { id: '24', name: '축제야', x: 220, y: 250 },
+  // 오른쪽 줄 (왼쪽 줄과 y축 엇갈림 배치)
+  { id: '21', name: '막걸리나', top: '38%', right: '15%' },
+  { id: '22', name: '하이볼', top: '54%', right: '15%' },
+  { id: '23', name: '전아랑', top: '70%', right: '15%' },
 ];
 
 export default function BoothMap() {
@@ -30,128 +32,53 @@ export default function BoothMap() {
 
   return (
     <BaseResponsiveLayout>
-      <TopBar />
+      <Navigator
+        left={<GoBackIcon />}
+        onLeftPress={() => navigate(-1)}
+        title="부스 맵 보기"
+      />
 
-      <main className="flex min-h-screen flex-col bg-white px-6 pt-8 pb-24">
+      <main className="flex min-h-screen flex-col bg-white px-6 pt-6 pb-24">
         {/* 상단 안내 문구 */}
-        <div className="mb-8 flex flex-col gap-4">
-          <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF9E6] text-xl">
-              📍
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-bold text-gray-400">
-                어우야 부스 위치
-              </span>
-              <span className="text-base font-bold text-[#11153F]">
-                사회과학대학 앞 광장 14번
-              </span>
-            </div>
+        <div className="bg-gray-500-3 mb-6 flex items-center gap-4 rounded-xl p-5">
+          <div className="bg-gray-500-5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[#C85A54]">
+            {/* Map Pin Icon */}
+            <MapPinIcon width={22} height={22} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-[14px] font-medium text-gray-500">
+              {'{부스 이름}'} 부스 위치
+            </span>
+            <span className="text-lg font-bold text-red-200">
+              사회과학대학 앞 광장 14번
+            </span>
           </div>
         </div>
 
-        {/* 인터랙티브 지도 영역 (SVG) */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2.5rem] border border-gray-100 bg-white p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-          <svg
-            viewBox="0 0 300 400"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-full w-full"
-          >
-            {/* 배경 및 길 (회색) */}
-            <path d="M50 0V400" stroke="#F2F4F6" strokeWidth="20" />
-            <path d="M250 0V400" stroke="#F2F4F6" strokeWidth="20" />
-            <path d="M0 200H300" stroke="#F2F4F6" strokeWidth="20" />
-
-            {/* 메인 무대 */}
-            <rect
-              x="100"
-              y="20"
-              width="100"
-              height="40"
-              rx="20"
-              fill="#11153F"
-              fillOpacity="0.1"
-            />
-            <text
-              x="150"
-              y="45"
-              textAnchor="middle"
-              fill="#11153F"
-              fontSize="12"
-              fontWeight="bold"
-            >
-              MAIN STAGE
-            </text>
-
-            {/* 💡 모든 부스 렌더링 */}
-            {MOCK_BOOTHS.map((booth) => {
-              const fill = booth.isUs ? '#FFD43A' : '#E2E8F0'; // 우리 부스는 노란색, 나머지는 회색
-              const fontWeight = booth.isUs ? 'bold' : 'medium';
-
-              return (
-                <g key={booth.id}>
-                  {/* 🌟 우리 부스일 경우에만 바깥쪽에 퍼지는 노란 불빛 효과 추가 */}
-                  {booth.isUs && (
-                    <circle
-                      cx={booth.x + 30}
-                      cy={booth.y + 20}
-                      r="15"
-                      fill="#FFD43A"
-                      fillOpacity="0.4"
-                    >
-                      <animate
-                        attributeName="r"
-                        values="15;35;15"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                      <animate
-                        attributeName="fill-opacity"
-                        values="0.4;0;0.4"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </circle>
-                  )}
-
-                  {/* 부스 사각형 (배경) */}
-                  <rect
-                    x={booth.x}
-                    y={booth.y}
-                    width="60"
-                    height="40"
-                    rx="8"
-                    fill={fill}
-                  />
-
-                  {/* 텍스트: 부스 이름 */}
-                  <text
-                    x={booth.x + 30} // 사각형 중앙 정렬
-                    y={booth.y + 25} // 사각형 중앙 정렬 (Baseline 고려)
-                    textAnchor="middle"
-                    fill="#11153F" // 딥 네이비 컬러로 가독성 확보
-                    fontSize="10"
-                    fontWeight={fontWeight}
-                  >
-                    {booth.name}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* 입구 안내 */}
-            <text
-              x="150"
-              y="380"
-              textAnchor="middle"
-              fill="#11153F"
-              fontSize="10"
-              fillOpacity="0.4"
-            >
-              정문 입구
-            </text>
-          </svg>
+        {/* 인터랙티브 지도 영역 (HTML 절대 좌표 배치) */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem] border border-gray-100 bg-white shadow-sm">
+          {MOCK_BOOTHS.map((booth) => {
+            const isUs = booth.isUs;
+            return (
+              <div
+                key={booth.id}
+                className={`absolute flex h-[55px] w-[75px] flex-col items-center justify-center gap-1.5 rounded-xl transition-transform ${
+                  isUs ? 'bg-red-200 text-white' : 'bg-[#F4F5F7] text-[#11153F]'
+                }`}
+                style={{
+                  top: booth.top,
+                  ...(booth.left ? { left: booth.left } : {}),
+                  ...(booth.right ? { right: booth.right } : {}),
+                }}
+              >
+                {/* Store Icon */}
+                <BoothIcon width={18} height={18} />
+                <span className="text-[12px] font-semibold tracking-tight">
+                  {booth.name}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </main>
     </BaseResponsiveLayout>

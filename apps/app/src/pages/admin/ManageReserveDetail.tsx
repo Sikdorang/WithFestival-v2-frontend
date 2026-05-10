@@ -1,3 +1,5 @@
+'use client';
+
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
@@ -13,19 +15,39 @@ import { useNavigate, useParams } from 'react-router-dom';
 export default function ManageReserveDetail() {
   const navigate = useNavigate();
   const { slotId } = useParams();
-  const isNewSlot = slotId === '0';
+
+  const isNewSlot = slotId === '0' || !slotId;
 
   const [isEditingMode, setIsEditingMode] = useState(isNewSlot);
-  const { deleteSlot } = useReserve();
 
-  // 예약 도메인에 맞춘 커스텀 훅 가정
-  const { formData, handleChange, saveSlot } = useReserveForm(slotId);
+  const { deleteSlot, isLoading: isDeleting } = useReserve();
+
+  const { formData, handleChange, saveSlot, isSaving } = useReserveForm(slotId);
 
   const handleSave = async () => {
-    await saveSlot(isNewSlot);
-    if (isNewSlot) navigate(-1);
-    else setIsEditingMode(false);
+    const success = await saveSlot();
+    if (success) {
+      if (isNewSlot) {
+        navigate(-1);
+      } else {
+        setIsEditingMode(false);
+      }
+    }
   };
+
+  const handleDelete = async () => {
+    if (!slotId) return;
+    const success = await deleteSlot(Number(slotId));
+    if (success) {
+      navigate(-1);
+    }
+  };
+
+  const isSaveDisabled =
+    !formData.startTime ||
+    !formData.endTime ||
+    !formData.availableTables ||
+    isSaving;
 
   return (
     <BaseResponsiveLayout>
@@ -57,9 +79,9 @@ export default function ManageReserveDetail() {
               type="number"
               label="수용 가능 테이블 수"
               placeholder="예: 5"
-              value={formData.maxTables?.toString()}
+              value={formData.availableTables?.toString() || ''}
               limitHide
-              onChange={(e) => handleChange('maxTables', e.target.value)}
+              onChange={(e) => handleChange('availableTables', e.target.value)}
             />
           </div>
         ) : (
@@ -86,7 +108,7 @@ export default function ManageReserveDetail() {
                 최대 수용 가능 테이블
               </p>
               <h1 className="text-2xl font-bold text-[#11153F]">
-                {formData.maxTables}개
+                {formData.availableTables}개
               </h1>
             </div>
           </div>
@@ -94,7 +116,6 @@ export default function ManageReserveDetail() {
         <BottomSpace />
       </main>
 
-      {/* --- Footer 로직 --- */}
       <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 border-t border-gray-100 bg-white p-4">
         {isNewSlot ? (
           <>
@@ -103,39 +124,44 @@ export default function ManageReserveDetail() {
               color="gray"
               width="fit"
               onClick={() => navigate(-1)}
+              disabled={isSaving}
             />
             <CtaButton
               text="시간 추가하기"
               onClick={handleSave}
               className="flex-1"
-              disabled={
-                !formData.startTime || !formData.endTime || !formData.maxTables
-              }
+              disabled={isSaveDisabled}
             />
           </>
         ) : (
           <>
-            <DeleteConfirmModal
-              title={'예약 시간을 삭제할까요?'}
-              description={
-                '삭제 후에는 복구할 수 없으며 기존 예약자 데이터에 영향을 줄 수 있습니다.'
-              }
-              cancelButtonText={'취소'}
-              confirmButtonText={'삭제하기'}
-              onConfirm={() => {
-                if (!slotId) return;
-                deleteSlot(slotId);
-                navigate(-1);
-              }}
-            >
-              <CtaButton text="삭제" radius="xl" color="red" width="fit" />
-            </DeleteConfirmModal>
+            {!isEditingMode && (
+              <DeleteConfirmModal
+                title={'예약 가능 시간대를 삭제할까요?'}
+                description={
+                  '삭제 후에는 복구할 수 없으며 기존 예약자 데이터는 모두 삭제됩니다.'
+                }
+                cancelButtonText={'취소'}
+                confirmButtonText={'삭제하기'}
+                onConfirm={handleDelete}
+              >
+                <CtaButton
+                  text="삭제"
+                  radius="xl"
+                  color="red"
+                  width="fit"
+                  disabled={isDeleting || isSaving}
+                />
+              </DeleteConfirmModal>
+            )}
+
             <CtaButton
               text={isEditingMode ? '저장완료' : '수정하기'}
               onClick={() =>
                 isEditingMode ? handleSave() : setIsEditingMode(true)
               }
               className="flex-1"
+              disabled={isEditingMode && isSaveDisabled}
             />
           </>
         )}

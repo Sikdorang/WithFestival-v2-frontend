@@ -33,7 +33,7 @@ export default function ManageBooth({ onClose }: Props) {
   const {
     updateStoreName,
     updateStoreAccount,
-    getUserInfo,
+    getMyStoreInfo,
     account,
     name,
     notice,
@@ -50,7 +50,7 @@ export default function ManageBooth({ onClose }: Props) {
   });
 
   useEffect(() => {
-    getUserInfo();
+    getMyStoreInfo();
   }, []);
 
   useEffect(() => {

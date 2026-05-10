@@ -1,0 +1,48 @@
+interface StatusCheckIconProps {
+  variant: 'selected' | 'default' | 'disabled';
+  className?: string;
+}
+
+export default function StatusCheckIcon({
+  variant,
+  className = '',
+}: StatusCheckIconProps) {
+  // 상태별 색상 매핑 표 (Design System)
+  const colorMap = {
+    selected: { bg: '#FFD43A', border: 'transparent', check: '#FFFFFF' },
+    default: { bg: 'transparent', border: '#D1D5DB', check: '#D1D5DB' },
+    disabled: { bg: 'transparent', border: '#F3F4F6', check: '#F3F4F6' },
+  };
+
+  const { bg, border, check } = colorMap[variant];
+
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <rect
+        x="1"
+        y="1"
+        width="22"
+        height="22"
+        rx="11"
+        fill={bg}
+        stroke={border}
+        strokeWidth="2"
+        className="transition-colors duration-200"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M18.3639 7.5231C18.5513 7.71063 18.6566 7.96494 18.6566 8.2301C18.6566 8.49526 18.5513 8.74957 18.3639 8.9371L10.8685 16.4324C10.7695 16.5315 10.6519 16.6101 10.5224 16.6637C10.393 16.7173 10.2543 16.7449 10.1142 16.7449C9.97409 16.7449 9.83537 16.7173 9.70594 16.6637C9.57651 16.6101 9.45891 16.5315 9.35985 16.4324L5.63585 12.7091C5.46416 12.5065 5.41175 12.3845 5.41175 12.3845C5.35934 12.2625 5.33176 12.1313 5.3306 11.9985C5.32945 11.8657 5.35475 11.734 5.40503 11.6111C5.45531 11.4882 5.52957 11.3766 5.62346 11.2827C5.71735 11.1888 5.829 11.1146 5.9519 11.0643C6.0748 11.014 6.20648 10.9887 6.33926 10.9898C6.47204 10.991 6.60326 11.0186 6.72526 11.071C6.84726 11.1234 6.95761 11.1996 7.04985 11.2951L10.1139 14.3591L16.9492 7.5231C17.0421 7.43017 17.1523 7.35646 17.2737 7.30616C17.3951 7.25587 17.5251 7.22998 17.6565 7.22998C17.7879 7.22998 17.918 7.25587 18.0394 7.30616C18.1607 7.35646 18.271 7.43017 18.3639 7.5231Z"
+        fill={check}
+        className="transition-colors duration-200"
+      />
+    </svg>
+  );
+}

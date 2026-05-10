@@ -10,44 +10,12 @@ import ReserveSlotList from '@/components/pages/manageWaiting/ReserveSlotList';
 import { WaitingCard } from '@/components/pages/manageWaiting/WaitingCard';
 import WaitingTopBar from '@/components/pages/waiting/WaitingTopBar';
 import { useSocket } from '@/contexts/useSocket';
+import { useReserve } from '@/hooks/useReserve';
+import { useStore } from '@/hooks/useStore';
 import { useWaiting } from '@/hooks/useWaiting';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// 💡 모킹 데이터: 예약용
-interface TimeSlot {
-  id: string;
-  timeRange: string;
-  bookedTables: number;
-  maxTables: number;
-}
-
-interface Reservation {
-  id: string;
-  name: string;
-  phone: string;
-  peopleCount: number;
-}
-
-const MOCK_TIME_SLOTS: TimeSlot[] = [
-  { id: '1', timeRange: '17:00 - 18:00', bookedTables: 3, maxTables: 5 },
-  { id: '2', timeRange: '18:00 - 19:00', bookedTables: 5, maxTables: 5 },
-  { id: '3', timeRange: '19:00 - 20:00', bookedTables: 1, maxTables: 5 },
-  { id: '4', timeRange: '20:00 - 21:00', bookedTables: 0, maxTables: 5 },
-];
-
-const MOCK_RESERVATIONS: Record<string, Reservation[]> = {
-  '1': [
-    { id: 'r1', name: '김경희', phone: '010-1234-5678', peopleCount: 4 },
-    { id: 'r2', name: '이축제', phone: '010-8765-4321', peopleCount: 2 },
-    { id: 'r3', name: '박주점', phone: '010-1111-2222', peopleCount: 3 },
-  ],
-  '2': [{ id: 'r4', name: '최어우', phone: '010-3333-4444', peopleCount: 4 }],
-  '3': [{ id: 'r5', name: '정야야', phone: '010-5555-6666', peopleCount: 2 }],
-  '4': [],
-};
-
-// 🌟 탭 타입 정의
 type TabType = 'WAITING' | 'RESERVE';
 
 export default function ManageWaiting() {
@@ -55,18 +23,36 @@ export default function ManageWaiting() {
   const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
   const [activeTab, setActiveTab] = useState<TabType>('WAITING');
 
-  // ===================== [웨이팅 상태 및 로직] =====================
-  const socket = useSocket();
-  const { waitingList, fetchWaiting, setWaitingProcessed } = useWaiting();
-  const [isWaitEnabled] = useState(false);
+  const {
+    waitingsEnabled,
+    reservationEnabled,
+    getMyStoreInfo,
+    isLoading: isStoreLoading,
+  } = useStore();
 
   useEffect(() => {
-    fetchWaiting();
+    getMyStoreInfo();
+  }, []);
+
+  // ===================== [웨이팅 상태 및 로직] =====================
+  const socket = useSocket();
+  const { waitingList, fetchWaitings, updateWaitingStatus } = useWaiting();
+  const {
+    slots,
+    reservations,
+    fetchSlots,
+    fetchReservationsBySlot,
+    isLoading: isReserveLoading,
+  } = useReserve();
+
+  useEffect(() => {
+    fetchSlots();
+    fetchWaitings();
   }, []);
 
   useEffect(() => {
     const handleRefresh = () => {
-      fetchWaiting();
+      fetchWaitings();
     };
     if (socket) {
       socket.on('waitingProcessed', handleRefresh);
@@ -81,23 +67,17 @@ export default function ManageWaiting() {
   }, [socket]);
 
   // ===================== [예약 상태 및 로직] =====================
-  const [isReservationEnabled] = useState(true);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
-
-  const currentReservations = useMemo(() => {
-    if (!selectedSlotId) return [];
-    return MOCK_RESERVATIONS[selectedSlotId] || [];
-  }, [selectedSlotId]);
+  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
 
   const currentSlotTime = useMemo(() => {
-    return (
-      MOCK_TIME_SLOTS.find((s) => s.id === selectedSlotId)?.timeRange || ''
-    );
-  }, [selectedSlotId]);
+    const targetSlot = slots.find((s) => s.id === selectedSlotId);
+    return targetSlot ? `${targetSlot.startTime} - ${targetSlot.endTime}` : '';
+  }, [selectedSlotId, slots]);
 
-  const handleOpenUserModal = (slotId: string) => {
+  const handleOpenUserModal = async (slotId: number) => {
     setSelectedSlotId(slotId);
+    await fetchReservationsBySlot(slotId);
     setIsUserModalOpen(true);
   };
 
@@ -108,7 +88,7 @@ export default function ManageWaiting() {
       {/* ===================== [웨이팅 탭 컨텐츠] ===================== */}
       {activeTab === 'WAITING' && (
         <main className="bg-gray-500-10 relative flex min-h-screen flex-col gap-4 px-4 pt-4">
-          {!isWaitEnabled && (
+          {!waitingsEnabled && (
             <div className="bg-gray-500-40 absolute inset-0 z-20 flex items-start justify-center pt-60">
               <div className="rounded-full bg-gray-800/80 px-5 py-2.5 text-sm font-semibold text-white shadow-md">
                 웨이팅 접수가 비활성화되었습니다.
@@ -118,7 +98,7 @@ export default function ManageWaiting() {
 
           <div
             className={
-              !isWaitEnabled
+              !waitingsEnabled
                 ? 'pointer-events-none opacity-40 grayscale-[30%] select-none'
                 : ''
             }
@@ -136,7 +116,7 @@ export default function ManageWaiting() {
                   <WaitingCard
                     key={item.id}
                     waitingInfo={item}
-                    setWaitingProcessed={setWaitingProcessed}
+                    updateWaitingStatus={updateWaitingStatus}
                   />
                 ))}
               </div>
@@ -149,7 +129,7 @@ export default function ManageWaiting() {
       {/* ===================== [예약 일정 탭 컨텐츠] ===================== */}
       {activeTab === 'RESERVE' && (
         <main className="bg-gray-500-10 relative flex min-h-screen flex-col gap-4 px-4 pt-4">
-          {!isReservationEnabled && (
+          {!reservationEnabled && (
             <div className="bg-gray-500-40 absolute inset-0 z-20 flex items-start justify-center pt-60">
               <div className="rounded-full bg-gray-800/80 px-5 py-2.5 text-sm font-semibold text-white shadow-md">
                 예약 기능이 비활성화되었습니다.
@@ -158,16 +138,19 @@ export default function ManageWaiting() {
           )}
 
           <div
-            className={`flex flex-col gap-2 ${!isReservationEnabled ? 'pointer-events-none opacity-40 grayscale-[30%] select-none' : ''}`}
+            className={`flex flex-col gap-2 ${!reservationEnabled ? 'pointer-events-none opacity-40 grayscale-[30%] select-none' : ''}`}
           >
-            <ReserveSlotList onOpenUserModal={handleOpenUserModal} />
+            <ReserveSlotList
+              slots={slots}
+              onOpenUserModal={handleOpenUserModal}
+            />
           </div>
           <BottomSpace />
 
           {activeTab === 'RESERVE' && (
             <CtaButton
               text={'예약 시간 추가'}
-              disabled={!isReservationEnabled}
+              disabled={!reservationEnabled}
               onClick={() => navigate('/manage-reserve/detail/0')}
               className="fixed right-4 bottom-24 z-10 px-6 py-3 transition-all active:scale-95 disabled:bg-gray-200 disabled:text-white"
               width="fit"
@@ -181,7 +164,7 @@ export default function ManageWaiting() {
         isOpen={isUserModalOpen}
         onClose={() => setIsUserModalOpen(false)}
         slotTime={currentSlotTime}
-        reservations={currentReservations}
+        reservations={reservations}
         isMobile={isMobile}
       />
     </BaseResponsiveLayout>

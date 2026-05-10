@@ -1,26 +1,40 @@
-import ReserveSlotItem, { TimeSlot } from './ReserveSlotItem';
-
-const MOCK_TIME_SLOTS: TimeSlot[] = [
-  { id: '1', timeRange: '17:00 - 18:00', bookedTables: 3, maxTables: 5 },
-  { id: '2', timeRange: '18:00 - 19:00', bookedTables: 5, maxTables: 5 },
-  { id: '3', timeRange: '19:00 - 20:00', bookedTables: 1, maxTables: 5 },
-  { id: '4', timeRange: '20:00 - 21:00', bookedTables: 0, maxTables: 5 },
-];
+import EmptyImage from '@/assets/icons/ic_empty_waiting.svg?react';
+import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import { TimeSlot } from '@/types/payload/reservation';
+import ReserveSlotItem from './ReserveSlotItem';
 
 interface Props {
-  onOpenUserModal: (id: string) => void;
+  slots?: TimeSlot[];
+  onOpenUserModal: (id: number) => void;
 }
 
-export default function ReserveSlotList({ onOpenUserModal }: Props) {
+export default function ReserveSlotList({
+  slots = [],
+  onOpenUserModal,
+}: Props) {
   return (
     <div className="flex flex-col gap-3 pb-24">
-      {MOCK_TIME_SLOTS.map((slot) => (
-        <ReserveSlotItem
-          key={slot.id}
-          slot={slot}
-          onOpenUserModal={onOpenUserModal}
-        />
-      ))}
+      {slots.length === 0 ? (
+        <div className="flex min-h-[90vh] items-center justify-center pb-20">
+          <EmptyPlaceHolder
+            image={<EmptyImage color="#D1D5DB" />}
+            text="등록된 예약 가능한 시간대가 없습니다."
+          />
+        </div>
+      ) : (
+        slots.map((slot) => (
+          <ReserveSlotItem
+            key={slot.id}
+            slot={
+              {
+                ...slot,
+                timeRange: `${slot.startTime} - ${slot.endTime}`,
+              } as any
+            }
+            onOpenUserModal={onOpenUserModal}
+          />
+        ))
+      )}
     </div>
   );
 }

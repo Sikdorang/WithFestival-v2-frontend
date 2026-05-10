@@ -2,31 +2,33 @@
 
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
+import TextArea from '@/components/common/inputs/TextArea';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
+import { useStore } from '@/hooks/useStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import TextArea from '../../components/common/inputs/TextArea';
 
 export default function ManageWaitingSetting() {
   const navigate = useNavigate();
 
-  const [isWaitEnabled, setIsWaitEnabled] = useState(true);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [notifyStep, setNotifyStep] = useState<number>(0);
   const [messageContent, setMessageContent] = useState<string>(
     '곧 입장 차례입니다! 부스 앞으로 와주세요.',
   );
 
-  const handleToggleWait = () => {
-    setIsWaitEnabled((prev) => !prev);
-    toast.success(
-      isWaitEnabled
-        ? '웨이팅 접수가 중단되었습니다.'
-        : '웨이팅 접수가 시작되었습니다.',
-    );
+  const { waitingsEnabled, updateStoreStatus, getMyStoreInfo, isLoading } =
+    useStore();
+
+  useEffect(() => {
+    getMyStoreInfo();
+  }, []);
+
+  const handleToggleWait = async () => {
+    await updateStoreStatus('waiting', !waitingsEnabled);
   };
 
   const handleSaveSettings = () => {
@@ -57,13 +59,14 @@ export default function ManageWaitingSetting() {
             </div>
             <button
               onClick={handleToggleWait}
+              disabled={isLoading}
               className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 ${
-                isWaitEnabled ? 'bg-[#FFD43A]' : 'bg-gray-300'
+                waitingsEnabled ? 'bg-[#FFD43A]' : 'bg-gray-300'
               }`}
             >
               <span
                 className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ${
-                  isWaitEnabled ? 'translate-x-6' : 'translate-x-1'
+                  waitingsEnabled ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
             </button>
@@ -72,9 +75,9 @@ export default function ManageWaitingSetting() {
           {/* 웨이팅 알림 메시지 설정 버튼 */}
           <button
             onClick={() => setIsMessageModalOpen(true)}
-            disabled={!isWaitEnabled}
+            disabled={!waitingsEnabled}
             className={`z-10 flex w-full items-center justify-between rounded-xl bg-white p-5 text-left shadow-[0_2px_8px_rgba(17,21,63,0.04)] transition-all active:bg-gray-50 ${
-              !isWaitEnabled ? 'pointer-events-none opacity-40 grayscale' : ''
+              !waitingsEnabled ? 'pointer-events-none opacity-40 grayscale' : ''
             }`}
           >
             <div className="flex flex-col gap-1">
@@ -91,7 +94,7 @@ export default function ManageWaitingSetting() {
         </div>
 
         <div
-          className={`mt-2 flex flex-col gap-4 ${!isWaitEnabled ? 'pointer-events-none opacity-40 grayscale' : ''}`}
+          className={`mt-2 flex flex-col gap-4 ${!waitingsEnabled ? 'pointer-events-none opacity-40 grayscale' : ''}`}
         >
           <div className="flex items-center gap-3 rounded-xl bg-[#F0F5FF] p-4 text-[#11153F]">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#1C58D9] text-sm font-bold text-white">

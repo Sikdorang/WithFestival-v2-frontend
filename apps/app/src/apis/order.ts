@@ -1,42 +1,63 @@
-import { CreateOrderDto } from '@/types/payload/order';
+import { CreateOrderPayload } from '@/types/payload/order';
 import axiosInstance from '.';
-interface CreateOrderPayload extends CreateOrderDto {
-  userId: number;
-}
 
 export const orderAPI = {
-  createOrder: async (payload: CreateOrderPayload) => {
-    const response = await axiosInstance.post('/order', payload);
+  // 주문 생성
+  createOrder: async (
+    storeId: number,
+    tableId: number,
+    payload: CreateOrderPayload,
+  ) => {
+    const response = await axiosInstance.post(
+      `/stores/${storeId}/tables/${tableId}/orders`,
+      payload,
+    );
     return response.data;
   },
 
+  // 주문 내역 목록 조회
+  getOrders: async (paid: boolean) => {
+    const response = await axiosInstance.get('/orders', {
+      params: { paid },
+    });
+    return response.data;
+  },
+
+  // 주문 내역 전체 목록 조회
   getAllOrders: async () => {
-    const response = await axiosInstance.get('/order');
+    const response = await axiosInstance.get('/orders/all');
     return response.data;
   },
 
-  deleteOrder: async (orderId: number) => {
-    const response = await axiosInstance.delete(`/order/${orderId}`);
+  // 결제 상태 변경 -> PAID
+  setPaymentPaid: async (orderId: number) => {
+    const response = await axiosInstance.patch(
+      `/orders/${orderId}/payment/paid`,
+    );
     return response.data;
   },
 
-  getPendingOrders: async () => {
-    const response = await axiosInstance.get('/order/pending');
+  // 결제 상태 변경 -> FAILED
+  setPaymentFailed: async (orderId: number) => {
+    const response = await axiosInstance.patch(
+      `/orders/${orderId}/payment/failed`,
+    );
     return response.data;
   },
 
-  getSentOrders: async () => {
-    const response = await axiosInstance.get('/order/sent');
+  // 주문 처리 상태 변경 -> CANCELED
+  setOrderCancelled: async (orderId: number) => {
+    const response = await axiosInstance.patch(
+      `/orders/${orderId}/status/cancelled`,
+    );
     return response.data;
   },
 
-  setOrderSent: async (orderId: number) => {
-    const response = await axiosInstance.patch(`/order/${orderId}/send`);
-    return response.data;
-  },
-
-  setOrderCooked: async (orderId: number) => {
-    const response = await axiosInstance.patch(`/order/${orderId}/cooked`);
+  // 주문 처리 상태 변경 -> COMPLETED
+  setOrderCompleted: async (orderId: number) => {
+    const response = await axiosInstance.patch(
+      `/orders/${orderId}/status/completed`,
+    );
     return response.data;
   },
 };

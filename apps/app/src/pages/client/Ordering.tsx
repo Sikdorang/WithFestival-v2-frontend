@@ -64,10 +64,10 @@ function RemitStep({
 }) {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
 
-  const { getUserInfoByUserId, account } = useStore();
+  const { getStorePublicInfo, account } = useStore();
 
   useEffect(() => {
-    getUserInfoByUserId(userData.userId);
+    getStorePublicInfo(userData.userId);
   }, []);
 
   return (

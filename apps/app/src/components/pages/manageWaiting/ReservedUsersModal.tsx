@@ -1,10 +1,12 @@
+import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import { ReservationInfo } from '@/types/payload/reservation';
 import * as Dialog from '@radix-ui/react-dialog';
 
 interface ReserveUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   slotTime: string;
-  reservations: any[];
+  reservations: ReservationInfo[];
   isMobile: boolean;
 }
 
@@ -39,14 +41,15 @@ export default function ReserveUserModal({
 
           <div className="flex-grow overflow-y-auto p-4 pb-10">
             {reservations.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                <span className="mb-2 text-4xl">📭</span>
-                <p>아직 예약자가 없습니다.</p>
-              </div>
+              <EmptyPlaceHolder
+                image={undefined}
+                text={'현재 예약자가 없습니다.'}
+              />
             ) : (
               <div className="flex flex-col gap-3">
                 {reservations.map((res, idx) => {
-                  const formattedPhone = res.phone.replace(/-/g, '');
+                  const phoneString = res.phoneNumber || '';
+                  const formattedPhone = phoneString.replace(/-/g, '');
 
                   return (
                     <div
@@ -59,23 +62,25 @@ export default function ReserveUserModal({
                         </div>
                         <div className="flex flex-col gap-0.5">
                           <span className="font-bold text-[#11153F]">
-                            {res.name}{' '}
+                            {res.reserverName || '이름 없음'}{' '}
                             <span className="ml-1 text-xs font-normal text-gray-400">
-                              ({res.peopleCount}명)
+                              ({res.partySize || 0}명)
                             </span>
                           </span>
                           <a
                             href={
-                              isMobile ? `tel:${formattedPhone}` : undefined
+                              isMobile && formattedPhone
+                                ? `tel:${formattedPhone}`
+                                : undefined
                             }
                             className={`text-sm font-medium text-gray-500 ${
-                              isMobile
+                              isMobile && formattedPhone
                                 ? 'underline underline-offset-4 active:text-[#11153F]'
                                 : ''
                             }`}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {res.phone}
+                            {phoneString || '연락처 없음'}
                           </a>
                         </div>
                       </div>

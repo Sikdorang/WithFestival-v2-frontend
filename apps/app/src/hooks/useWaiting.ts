@@ -2,89 +2,85 @@ import { handelError } from '@/apis/errorhandler';
 import { waitingAPI } from '@/apis/waiting';
 import { SUCCESS_MESSAGES } from '@/constants/message';
 import { IWaitingListItem } from '@/types/global';
-import { WaitingDTO } from '@/types/payload/waiting';
+import { CreateWaitingDTO } from '@/types/payload/waiting';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 export const useWaiting = () => {
   const [waitingList, setWaitingList] = useState<IWaitingListItem[]>([]);
+  const [activeWaitingCount, setActiveWaitingCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchWaiting = async () => {
+  // 현재 대기 팀 수 조회
+  const fetchActiveWaitingCount = async (storeId: number) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      const response = await waitingAPI.getWaiting();
-      setWaitingList(response.data);
+      const response = await waitingAPI.getActiveWaitingCount(storeId);
+      setActiveWaitingCount(response.count);
       return true;
-    } catch (error) {
-      handelError(error);
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getWaitingByUserId = async (userId: number) => {
+  // 대기 목록 조회 (부스)
+  const fetchWaitings = async () => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      const response = await waitingAPI.getWaitingByUserId(userId);
-
-      return response.data;
-    } catch (error) {
-      handelError(error);
+      const response = await waitingAPI.getWaitings();
+      setWaitingList(response.data || response);
+      return true;
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const createWaiting = async (waiting: WaitingDTO) => {
+  // 대기 등록 (고객)
+  const createWaiting = async (storeId: number, waiting: CreateWaitingDTO) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      const response = await waitingAPI.createWaiting(waiting);
+      const response = await waitingAPI.createWaiting(storeId, waiting);
       toast.success(SUCCESS_MESSAGES.waitingCreateSuccess);
-      return response.data;
-    } catch (error) {
-      handelError(error);
+      return response.data || response;
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const deleteWaiting = async (waitingId: string) => {
+  // 대기 상태 변경 (부스)
+  const updateWaitingStatus = async (waitingId: number, status: string) => {
     setIsLoading(true);
-    setLoginError(null);
+    setError(null);
 
     try {
-      await waitingAPI.deleteWaiting(waitingId);
-      toast.success(SUCCESS_MESSAGES.waitingCancelSuccess);
-      return true;
-    } catch (error) {
-      handelError(error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      await waitingAPI.updateWaitingStatus(waitingId, { status });
 
-  const setWaitingProcessed = async (waitingId: number) => {
-    setIsLoading(true);
-    setLoginError(null);
+      if (status === 'ENTERED') {
+        toast.success('입장 처리되었습니다.');
+      } else if (status === 'CANCELED') {
+        toast.success(SUCCESS_MESSAGES.waitingCancelSuccess);
+      }
 
-    try {
-      await waitingAPI.setWaitingProcessed(waitingId);
-      await Promise.all([fetchWaiting()]);
+      await fetchWaitings();
       return true;
-    } catch (error) {
-      handelError(error);
+    } catch (err) {
+      handelError(err);
       return false;
     } finally {
       setIsLoading(false);
@@ -92,15 +88,15 @@ export const useWaiting = () => {
   };
 
   return {
-    fetchWaiting,
+    fetchActiveWaitingCount,
+    activeWaitingCount,
     waitingList,
+    fetchWaitings,
     createWaiting,
-    setWaitingProcessed,
-    deleteWaiting,
-    getWaitingByUserId,
+    updateWaitingStatus,
     isLoading,
     setIsLoading,
-    loginError,
-    setLoginError,
+    error,
+    setError,
   };
 };

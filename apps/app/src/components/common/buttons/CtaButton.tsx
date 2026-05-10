@@ -44,7 +44,7 @@ export default function CtaButton({
   const textColorStyles = {
     yellow: 'text-black',
     gray: 'text-gray-700',
-    red: 'text-red-200',
+    red: 'text-white',
     white: 'text-gray-700',
     black: 'text-white',
     disabled: 'text-white',
@@ -53,7 +53,7 @@ export default function CtaButton({
   const backgroundColorStyles = {
     yellow: 'bg-primary-300',
     gray: 'bg-gray-100',
-    red: 'bg-red-100',
+    red: 'bg-red-200',
     white: 'bg-white',
     black: 'bg-gray-800',
     disabled: 'bg-gray-200',

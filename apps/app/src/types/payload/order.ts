@@ -1,13 +1,11 @@
-export interface OrderItemDto {
-  menu: string;
+export interface OrderItem {
+  menuId: number;
   price: number;
-  count: number;
-  totalprice: number;
+  quantity: number;
 }
 
-export interface CreateOrderDto {
-  items: OrderItemDto[];
-  name: string;
-  tableNumber: string;
+export interface CreateOrderPayload {
+  items: OrderItem[];
   totalPrice: number;
+  depositorName: string;
 }
