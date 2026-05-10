@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   if (!process.env.NOTION_TOKEN || !DB_ID) {
     return NextResponse.json(
       { error: "서버 설정이 완료되지 않았습니다." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -31,13 +31,13 @@ export async function POST(req: Request) {
   if (!name || !email || !message) {
     return NextResponse.json(
       { error: "이름, 이메일, 메시지는 필수입니다." },
-      { status: 400 }
+      { status: 400 },
     );
   }
   if (type && !ALLOWED_TYPES.includes(type)) {
     return NextResponse.json(
       { error: "허용되지 않은 문의 유형입니다." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
     이름: { title: [{ text: { content: name } }] },
     이메일: { email },
     메시지: { rich_text: [{ text: { content: message } }] },
+
     제출일: { date: { start: new Date().toISOString() } },
   };
   if (phone) properties["연락처"] = { phone_number: phone };
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
     console.error("[notion] create page failed:", msg);
     return NextResponse.json(
       { error: "문의 접수 중 오류가 발생했습니다." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,6 +1,7 @@
 export interface CreateMenuDto {
-  menu: string;
+  name: string;
   price: number;
   description?: string;
-  margin?: number;
+  marginRate?: number;
+  image?: File | null;
 }

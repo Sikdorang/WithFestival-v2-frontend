@@ -1,19 +1,19 @@
+import { CreateMenuDto } from '@/types/payload/menu';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useMenu } from './useMenu';
 
 export const useMenuForm = (menuId: number) => {
-  const { menus, updateMenu, updateMenuImage, createMenu, fetchMenu } =
-    useMenu();
+  const { menus, updateMenu, createMenu, fetchMenu } = useMenu();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const existingMenu = menus.find((m) => m.id === menuId);
   const isNewMenu = menuId === 0;
 
   const [formData, setFormData] = useState({
-    menu: '',
+    name: '',
     description: '',
     price: '',
-    margin: '',
+    marginRate: '',
   });
 
   const [imageState, setImageState] = useState<{
@@ -26,11 +26,13 @@ export const useMenuForm = (menuId: number) => {
     file: null,
   });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
     if (!isNewMenu && menus.length === 0) {
       fetchMenu();
     }
-  }, [isNewMenu, menus.length]);
+  }, [isNewMenu, menus.length, fetchMenu]);
 
   useEffect(() => {
     if (isNewMenu) return;
@@ -39,14 +41,14 @@ export const useMenuForm = (menuId: number) => {
 
     if (existingMenu) {
       setFormData({
-        menu: existingMenu.menu || '',
+        name: existingMenu.name || '',
         description: existingMenu.description || '',
         price: existingMenu.price?.toString() || '',
-        margin: existingMenu.margin?.toString() || '',
+        marginRate: existingMenu.marginRate?.toString() || '',
       });
       setImageState((prev) => ({
         ...prev,
-        original: existingMenu.image || null,
+        original: existingMenu.imageUrl || null,
       }));
     }
   }, [menus, menuId, isNewMenu]);
@@ -57,16 +59,34 @@ export const useMenuForm = (menuId: number) => {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () =>
-        setImageState((prev) => ({
-          ...prev,
-          file,
-          preview: reader.result as string,
-        }));
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // 💡 허용된 MIME 타입 목록 정의
+    const allowedTypes = [
+      'image/jpg',
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('지원하지 않는 형식입니다. (jpg, jpeg, png, webp, gif)');
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onloadend = () =>
+      setImageState((prev) => ({
+        ...prev,
+        file,
+        preview: reader.result as string,
+      }));
+    reader.readAsDataURL(file);
   };
 
   const clearImage = () => {
@@ -74,22 +94,33 @@ export const useMenuForm = (menuId: number) => {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const saveMenu = async (isNew: boolean) => {
-    const payload = {
-      menu: formData.menu,
-      description: formData.description,
-      price: Number(formData.price),
-      margin: Number(formData.margin),
-    };
+  const saveMenu = async () => {
+    if (!formData.name || !formData.price) {
+      toast.error('메뉴명과 가격은 필수입니다.');
+      return false;
+    }
 
-    if (isNew) {
-      const newMenu = await createMenu(payload);
-      if (newMenu && imageState.file)
-        await updateMenuImage(newMenu.id, imageState.file);
-    } else {
-      await updateMenu(menuId, payload);
-      if (imageState.file) await updateMenuImage(menuId, imageState.file);
-      await fetchMenu();
+    setIsSaving(true);
+    try {
+      const payload: CreateMenuDto = {
+        name: formData.name,
+        description: formData.description,
+        price: Number(formData.price),
+        marginRate: Number(formData.marginRate),
+        image: imageState.file,
+      };
+
+      if (isNewMenu) {
+        await createMenu(payload);
+      } else {
+        await updateMenu(menuId, payload);
+        await fetchMenu();
+      }
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -97,6 +128,8 @@ export const useMenuForm = (menuId: number) => {
     formData,
     imageState,
     fileInputRef,
+    isNewMenu,
+    isSaving,
     handleChange,
     handleImageChange,
     clearImage,

@@ -75,7 +75,6 @@ export const useOrder = () => {
     try {
       await orderAPI.setPaymentPaid(orderId);
       await getOrders(currentFilter);
-      toast.success('결제 완료 처리되었습니다.');
     } catch (error) {
       handelError(error);
     }
@@ -86,7 +85,6 @@ export const useOrder = () => {
     try {
       await orderAPI.setPaymentFailed(orderId);
       await getOrders(currentFilter);
-      toast.success('결제 실패 처리되었습니다.');
     } catch (error) {
       handelError(error);
     }

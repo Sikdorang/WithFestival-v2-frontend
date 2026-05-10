@@ -9,16 +9,17 @@ import OrderTopBar from '@/components/pages/order/OrderTopBar';
 import ServiceOrderCard from '@/components/pages/order/ServiceOrderCard';
 import { useSocket } from '@/contexts/useSocket';
 import { useOrder } from '@/hooks/useOrder';
-import { OrderSummary } from '@/types/global';
 import { useEffect, useState } from 'react';
 
-const isServiceOrder = (order: OrderSummary): boolean => {
-  const singleItem = order.orderUsers?.[0];
+const isServiceOrder = (order: any): boolean => {
+  const items = order.items || order.orderUsers;
+  const singleItem = items?.[0];
+
   return (
-    order.name === '직원 호출' &&
-    order.orderUsers?.length === 1 &&
+    (order.name === '직원 호출' || order.totalPrice === 0) &&
+    items?.length === 1 &&
     singleItem?.price === 0 &&
-    singleItem?.count === 0
+    (singleItem?.quantity === 0 || singleItem?.count === 0)
   );
 };
 
@@ -27,25 +28,23 @@ export default function Order() {
   const [orderType, setOrderType] = useState<'pending' | 'sent'>('pending');
 
   const {
-    getPendingOrders,
-    getSentOrders,
-    pendingOrders,
-    sentOrders,
-    setOrderSent,
-    setOrderCooked,
-    deleteOrder,
+    allOrders,
+    getOrders,
+    setPaymentPaid,
+    setOrderCompleted,
+    setOrderCancelled,
+    isLoading,
   } = useOrder();
 
   useEffect(() => {
-    getPendingOrders();
-    getSentOrders();
-  }, []);
+    getOrders(orderType === 'sent');
+  }, [orderType, getOrders]);
 
   useEffect(() => {
     const handleRefresh = () => {
-      getPendingOrders();
-      getSentOrders();
+      getOrders(orderType === 'sent');
     };
+
     if (socket) {
       socket.on('orderSendUpdated', handleRefresh);
       socket.on('orderCookedUpdated', handleRefresh);
@@ -59,25 +58,32 @@ export default function Order() {
         socket.off('orderCreated', handleRefresh);
       };
     }
-  }, [socket]);
+  }, [socket, orderType, getOrders]);
 
-  const renderOrderList = (orders: OrderSummary[]) => {
+  const orderList = Array.isArray(allOrders)
+    ? allOrders
+    : allOrders?.data || [];
+  const orderCount = Array.isArray(allOrders)
+    ? allOrders.length
+    : allOrders?.count || 0;
+
+  const renderOrderList = (orders: any[]) => {
     return orders.map((order) =>
       isServiceOrder(order) ? (
         <ServiceOrderCard
           key={order.id}
           order={order}
-          deleteOrder={deleteOrder}
-          setOrderSent={setOrderSent}
-          setOrderCooked={setOrderCooked}
+          deleteOrder={(id) => setOrderCancelled(id, orderType === 'sent')}
+          setOrderSent={(id) => setPaymentPaid(id, orderType === 'sent')}
+          setOrderCooked={(id) => setOrderCompleted(id, orderType === 'sent')}
         />
       ) : (
         <OrderCard
           key={order.id}
           order={order}
-          setOrderSent={setOrderSent}
-          setOrderCooked={setOrderCooked}
-          deleteOrder={deleteOrder}
+          setOrderSent={(id) => setPaymentPaid(id, orderType === 'sent')}
+          setOrderCooked={(id) => setOrderCompleted(id, orderType === 'sent')}
+          deleteOrder={(id) => setOrderCancelled(id, orderType === 'sent')}
         />
       ),
     );
@@ -86,34 +92,33 @@ export default function Order() {
   return (
     <div className="bg-gray-500-5 min-h-screen pb-10">
       <OrderTopBar
-        orderCount={
-          orderType === 'pending'
-            ? pendingOrders?.count || 0
-            : sentOrders?.count || 0
-        }
+        orderCount={orderCount}
         type={orderType}
         onTypeChange={setOrderType}
       />
 
       <div className="relative flex flex-col gap-4 p-4 pt-4">
-        {orderType === 'pending' ? (
-          pendingOrders?.count && pendingOrders.count > 0 ? (
-            renderOrderList(pendingOrders.data)
-          ) : (
-            <div className="flex min-h-[90vh] items-center justify-center pb-20">
-              <EmptyPlaceHolder
-                image={<EmptyPendingIcon color="white" />}
-                text="신규 주문이 없습니다."
-              />
-            </div>
-          )
-        ) : sentOrders?.count && sentOrders.count > 0 ? (
-          renderOrderList(sentOrders.data)
+        {isLoading ? (
+          <div className="flex min-h-[90vh] items-center justify-center pb-20 text-sm font-medium text-gray-400">
+            주문 내역을 불러오는 중입니다...
+          </div>
+        ) : orderCount > 0 ? (
+          renderOrderList(orderList)
         ) : (
           <div className="flex min-h-[90vh] items-center justify-center pb-20">
             <EmptyPlaceHolder
-              image={<EmptySentIcon color="#36383E80" />}
-              text="송금 완료된 주문이 없습니다."
+              image={
+                orderType === 'pending' ? (
+                  <EmptyPendingIcon color="white" />
+                ) : (
+                  <EmptySentIcon color="#36383E80" />
+                )
+              }
+              text={
+                orderType === 'pending'
+                  ? '입금 대기 중인 주문이 없습니다.'
+                  : '송금 완료된 주문이 없습니다.'
+              }
             />
           </div>
         )}

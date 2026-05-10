@@ -1,9 +1,10 @@
 import StoreIcon from '@/assets/icons/ic_store_gray.svg?react';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import MenuItemSkeleton from '@/components/common/skeletons/MenuItemSkeleton';
-import { useMenu } from '@/hooks/useMenu';
+import { KEYS } from '@/constants/storage';
+import { useAdminMenuQuery, useCustomerMenuQuery } from '@/hooks/useMenuQuery';
 import { Menu } from '@/types/global';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import MenuItem from './MenuListItem';
 
@@ -12,7 +13,6 @@ export default function MenuList({
 }: {
   onMenuItemClick: (item: Menu) => void;
 }) {
-  const { menus, getMenusByStoreId, isLoading } = useMenu();
   const location = useLocation();
 
   const userData = useMemo(
@@ -22,13 +22,18 @@ export default function MenuList({
     [location.state],
   );
 
-  const storeId = userData?.storeId || userData?.id;
+  const storeId = userData?.userId || userData?.id;
 
-  useEffect(() => {
-    if (storeId) {
-      getMenusByStoreId(Number(storeId));
-    }
-  }, [storeId]);
+  const isAdmin = !!sessionStorage.getItem(KEYS.ACCESS_TOKEN);
+  // 관리자용 쿼리
+  const { data: adminMenus, isLoading: isAdminLoading } =
+    useAdminMenuQuery(isAdmin);
+  // 고객용 쿼리
+  const { data: customerMenus, isLoading: isCustomerLoading } =
+    useCustomerMenuQuery(storeId, !isAdmin);
+
+  const menus = isAdmin ? adminMenus : customerMenus;
+  const isLoading = isAdmin ? isAdminLoading : isCustomerLoading;
 
   if (isLoading) {
     return (
@@ -55,7 +60,7 @@ export default function MenuList({
   return (
     <div className="rounded-lg bg-white">
       <div className="flex flex-col">
-        {menus.map((item) => (
+        {menus.map((item: Menu) => (
           <MenuItem
             key={item.id}
             name={item.name}

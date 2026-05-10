@@ -28,7 +28,7 @@ export interface TimeSlot {
   availableTables: number;
   createdAt: string;
   updatedAt: string;
-  bookedTables?: number;
+  reservedTeamCount: number;
 }
 
 export interface ReservationInfo {

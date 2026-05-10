@@ -12,6 +12,11 @@ export const missionAPI = {
     return response.data;
   },
 
+  getMissionsByStoreId: async (storeId: number) => {
+    const response = await axiosInstance.get(`/stores/${storeId}/missions`);
+    return response.data;
+  },
+
   getMissionById: async (id: number) => {
     const response = await axiosInstance.get(`/missions/${id}`);
     return response.data;
