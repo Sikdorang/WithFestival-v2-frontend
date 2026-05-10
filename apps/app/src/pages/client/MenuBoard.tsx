@@ -1,10 +1,11 @@
-import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import TopBar from '@/components/common/layouts/TopBar';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import MenuList from '@/components/pages/board/MenuList';
 import StoreBanner from '@/components/pages/board/StoreBanner';
+import CustomerMissionList from '@/components/pages/menuBoard/CustomerMissionList';
 import { ROUTES } from '@/constants/routes';
 import { KEYS } from '@/constants/storage';
+import { useMission } from '@/hooks/useMission';
 import { useStore } from '@/hooks/useStore';
 import { useOrderStore } from '@/stores/orderStore';
 import { Menu } from '@/types/global';
@@ -16,6 +17,12 @@ export default function MenuBoard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { getStorePublicInfo, name, notice } = useStore();
+  const {
+    missions,
+    isLoading: isMissionsLoading,
+    fetchMissionsByStoreId,
+  } = useMission();
+
   const { orderItems } = useOrderStore();
   const isPreview = localStorage.getItem(KEYS.IS_PREVIEW);
 
@@ -37,8 +44,12 @@ export default function MenuBoard() {
   );
 
   useEffect(() => {
-    getStorePublicInfo(userData.userId);
-  }, []);
+    if (userData.userId !== undefined) {
+      getStorePublicInfo(userData.userId);
+      fetchMissionsByStoreId(userData.userId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData.userId]);
 
   if (userData.userId === undefined) {
     return <Navigate to={ROUTES.NOT_FOUND} replace />;
@@ -57,7 +68,10 @@ export default function MenuBoard() {
               notice={notice || ''}
             />
             <MenuList onMenuItemClick={handleMenuItemClick} />
-            <BottomSpace />
+            <CustomerMissionList
+              missions={missions}
+              isLoading={isMissionsLoading}
+            />
           </main>
         </div>
 

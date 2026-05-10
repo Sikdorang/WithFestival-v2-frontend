@@ -16,7 +16,7 @@ export default function ImageUploader({
   onUploadClick,
   onClear,
 }: Props) {
-  // 1. 조회 모드일 때
+  // 조회 모드일 때
   if (!isEditing) {
     return (
       <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-transparent">
@@ -35,7 +35,7 @@ export default function ImageUploader({
     );
   }
 
-  // 2. 편집/추가 모드일 때
+  // 편집/추가 모드일 때
   return (
     <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 transition-all duration-200 hover:bg-gray-100">
       {imageUrl ? (
@@ -51,6 +51,7 @@ export default function ImageUploader({
             color="white"
             size="small"
             radius="xl"
+            width="fit"
             text="이미지 변경"
           />
           <button
@@ -64,7 +65,6 @@ export default function ImageUploader({
           </button>
         </>
       ) : (
-        // aspect-square -> aspect-[4/3] 로 변경
         <button
           onClick={onUploadClick}
           className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-2xl hover:bg-gray-100"

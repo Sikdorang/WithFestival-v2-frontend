@@ -4,7 +4,8 @@ export interface Menu {
   price: number;
   description: string;
   imageUrl: string;
-  margin: number;
+  marginRate: number;
+  isSoldOut: boolean;
 }
 
 export interface Order {
@@ -41,30 +42,32 @@ export interface OrderedListItem {
   orderId: number;
 }
 
-export interface orderUsers {
+export interface OrderItemSummary {
   id: number;
-  menu: string;
-  price: number;
-  count: number;
   orderId: number;
-  margin: number;
+  menuId: number;
+  quantity: number;
+  price: number;
+  name?: string;
+  margin?: number;
 }
 
 export interface OrderSummary {
   id: number;
-  time: string;
-  send: boolean;
-  cooked: boolean;
+  storeId: number;
+  tableId: number;
   totalPrice: number;
-  name: string;
-  tableNumber: string;
-  userid: number;
-  orderUsers: orderUsers[];
+  status: string;
+  paymentStatus: string;
+  customerName: string;
+  createdAt: string;
+  updatedAt: string;
+  items: OrderItemSummary[];
 }
 
 export interface OrderListApiResponse {
-  success: boolean;
-  message: string;
+  success?: boolean;
+  message?: string;
   data: OrderSummary[];
   count: number;
 }
@@ -91,10 +94,11 @@ export interface IUser {
 
 export interface Mission {
   id: number;
-  title: string;
+  storeId: number;
+  missionName: string;
   description?: string;
   reward: string;
   isActive: boolean;
-  goalCount?: number;
   createdAt: string;
+  updatedAt: string;
 }

@@ -1,13 +1,13 @@
 import EmptyImage from '@/assets/icons/ic_empty_paper.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
-import ExpertInsightBox from '@/components/pages/history/ExpertInsightBox';
 import HistoryTopBar from '@/components/pages/history/HistoryTopBar';
 import OrderDashBoard from '@/components/pages/history/OrderDashBoard';
 import { OrderBill } from '@/components/pages/order/OrderBill';
 import ServiceOrderHistory from '@/components/pages/order/ServiceOrderHistory';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect } from 'react';
+import ExpertInsightBox from '../../components/pages/history/ExpertInsightBox';
 
 const isServiceOrder = (order: any): boolean => {
   const items = order.items || order.orderUsers;
@@ -47,7 +47,7 @@ export default function History() {
         ) : orderCount > 0 ? (
           <>
             <ExpertInsightBox />
-            <OrderDashBoard allOrders={allOrders} />
+            <OrderDashBoard orders={orderList} />
 
             {orderList.map((order: any) =>
               isServiceOrder(order) ? (

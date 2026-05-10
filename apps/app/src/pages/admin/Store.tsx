@@ -84,7 +84,7 @@ export default function Store() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">메뉴 관리</h2>
           </div>
-          <div
+          {/* <div
             className="flex items-center justify-between"
             onClick={() => navigate(ROUTES.AI_MENU_GENERATOR)}
           >
@@ -92,7 +92,7 @@ export default function Store() {
               AI 메뉴 관리
             </div>
             <DepthIcon />
-          </div>
+          </div> */}
           <MenuList onMenuItemClick={handleMenuItemClick} />
         </section>
 

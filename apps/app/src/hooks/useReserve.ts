@@ -115,6 +115,21 @@ export const useReserve = () => {
     }
   };
 
+  const deleteReservation = async (id: number) => {
+    setIsLoading(true);
+    try {
+      await reservationAPI.deleteReservation(id);
+      setReservations((prev) => prev.filter((res) => res.id !== id));
+      toast.success('예약이 거절되었습니다.');
+      return true;
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     slots,
     reservations,
@@ -125,5 +140,6 @@ export const useReserve = () => {
     createSlot,
     updateSlot,
     deleteSlot,
+    deleteReservation,
   };
 };

@@ -5,13 +5,10 @@ import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
-import { ROUTES } from '@/constants/routes';
 import { useMission } from '@/hooks/useMission';
-import { useMissionForm } from '@/hooks/useMissionForm'; // 미션 전용 폼 훅
+import { useMissionForm } from '@/hooks/useMissionForm';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 export default function ManageMissionDetail() {
   const navigate = useNavigate();
@@ -20,24 +17,16 @@ export default function ManageMissionDetail() {
 
   const [isEditingMode, setIsEditingMode] = useState(isNewMission);
   const { deleteMission } = useMission();
-  const {
-    formData,
-    imageState,
-    fileInputRef,
-    handleChange,
-    handleImageChange,
-    clearImage,
-    saveMission,
-  } = useMissionForm(missionId);
 
-  const currentImageUrl =
-    imageState.preview ||
-    (imageState.original ? `${IMAGE_PREFIX}${imageState.original}` : null);
+  const { formData, isSaving, handleChange, saveMission } =
+    useMissionForm(missionId);
 
   const handleSave = async () => {
-    await saveMission(isNewMission);
-    if (isNewMission) navigate(ROUTES.STORE);
-    else setIsEditingMode(false);
+    const success = await saveMission();
+    if (success) {
+      if (isNewMission) navigate(-1);
+      else setIsEditingMode(false);
+    }
   };
 
   return (
@@ -54,9 +43,9 @@ export default function ManageMissionDetail() {
             <TextInput
               label="미션명"
               placeholder="예: 스태프와 가위바위보"
-              value={formData.title}
+              value={formData.missionName}
               limitHide
-              onChange={(e) => handleChange('title', e.target.value)}
+              onChange={(e) => handleChange('missionName', e.target.value)}
             />
             <TextInput
               label="상세 설명"
@@ -75,7 +64,8 @@ export default function ManageMissionDetail() {
           </div>
         ) : (
           <div className="flex flex-col gap-1">
-            <h1 className="text-st-2 text-black">{formData.title}</h1>
+            <h1 className="text-st-2 text-black">{formData.missionName}</h1>{' '}
+            {/* 💡 title -> missionName */}
             {formData.description && (
               <p className="text-b-1 text-gray-500">{formData.description}</p>
             )}
@@ -96,33 +86,45 @@ export default function ManageMissionDetail() {
               color="gray"
               width="fit"
               onClick={() => navigate(-1)}
+              disabled={isSaving}
             />
             <CtaButton
               text="미션 생성하기"
               onClick={handleSave}
               className="flex-1"
+              disabled={isSaving}
             />
           </>
         ) : (
           <>
-            <DeleteConfirmModal
-              title={'미션을 삭제할까요?'}
-              description={'삭제된 미션은 복구할 수 없어요.'}
-              cancelButtonText={'취소'}
-              confirmButtonText={'삭제하기'}
-              onConfirm={() => {
-                deleteMission(missionId);
-                navigate(-1);
-              }}
-            >
-              <CtaButton text="삭제" radius="xl" color="red" width="fit" />
-            </DeleteConfirmModal>
+            {!isEditingMode && (
+              <DeleteConfirmModal
+                title={'미션을 삭제할까요?'}
+                description={'삭제된 미션은 복구할 수 없어요.'}
+                cancelButtonText={'취소'}
+                confirmButtonText={'삭제하기'}
+                onConfirm={async () => {
+                  const success = await deleteMission(missionId);
+                  if (success) navigate(-1);
+                }}
+              >
+                <CtaButton
+                  text="삭제"
+                  radius="xl"
+                  color="red"
+                  width="fit"
+                  disabled={isSaving}
+                />
+              </DeleteConfirmModal>
+            )}
+
             <CtaButton
               text={isEditingMode ? '저장완료' : '수정하기'}
               onClick={() =>
                 isEditingMode ? handleSave() : setIsEditingMode(true)
               }
               className="flex-1"
+              disabled={isSaving}
             />
           </>
         )}

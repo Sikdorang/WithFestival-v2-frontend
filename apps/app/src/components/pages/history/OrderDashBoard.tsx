@@ -1,12 +1,11 @@
-import { OrderListApiResponse } from '@/types/global';
+import { OrderSummary } from '@/types/global';
 import { useMemo } from 'react';
-import HourlySalesChart, { HourlySalesData } from './HourlySalesChart'; // 위에서 만든 컴포넌트 경로에 맞게 수정하세요
+import HourlySalesChart, { HourlySalesData } from './HourlySalesChart';
 
 interface Props {
-  allOrders: OrderListApiResponse | null;
+  orders: OrderSummary[];
 }
 
-// 개발/디자인 확인용 더미 데이터
 const DUMMY_HOURLY_SALES: HourlySalesData[] = [
   { time: '17시', 매출: 0 },
   { time: '18시', 매출: 45000 },
@@ -19,24 +18,15 @@ const DUMMY_HOURLY_SALES: HourlySalesData[] = [
   { time: '01시', 매출: 0 },
 ];
 
-export default function OrderDashBoard({ allOrders }: Props) {
+export default function OrderDashBoard({ orders }: Props) {
   const summary = useMemo(() => {
-    if (!allOrders || !allOrders.data || allOrders.count === 0) {
+    if (!orders || orders.length === 0) {
       return { totalSales: 0, netProfit: 0, totalOrders: 0, hourlySales: [] };
     }
 
-    const filteredOrders = allOrders.data.filter((order) => {
-      if (order.name !== '직원 호출') return true;
-
-      const singleItem = order.orderUsers?.[0];
-      if (
-        order.orderUsers?.length !== 1 ||
-        singleItem?.price !== 0 ||
-        singleItem?.count !== 0
-      ) {
-        return true;
-      }
-      return false;
+    const filteredOrders = orders.filter((order) => {
+      if (order.totalPrice === 0) return false;
+      return true;
     });
 
     let totalSales = 0;
@@ -58,12 +48,13 @@ export default function OrderDashBoard({ allOrders }: Props) {
     filteredOrders.forEach((order) => {
       let orderSales = 0;
 
-      order.orderUsers.forEach((item) => {
-        const itemSales = item.price * item.count;
+      order.items.forEach((item) => {
+        const itemSales = item.price * item.quantity;
         orderSales += itemSales;
         totalSales += itemSales;
         netProfit += itemSales * ((item.margin || 0) / 100);
       });
+
       totalOrders++;
 
       const orderTime = new Date(order.createdAt);
@@ -91,7 +82,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
     );
 
     return { totalSales, netProfit, totalOrders, hourlySales };
-  }, [allOrders]);
+  }, [orders]);
 
   const hasActualData = summary.hourlySales.some((data) => data.매출 > 0);
   const chartData = hasActualData ? summary.hourlySales : DUMMY_HOURLY_SALES;
@@ -119,7 +110,6 @@ export default function OrderDashBoard({ allOrders }: Props) {
         </div>
       </div>
 
-      {/* 분리된 차트 컴포넌트 삽입 */}
       <HourlySalesChart data={chartData} />
     </div>
   );

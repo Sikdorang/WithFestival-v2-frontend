@@ -42,6 +42,7 @@ export default function ManageWaiting() {
     reservations,
     fetchSlots,
     fetchReservationsBySlot,
+    deleteReservation,
     isLoading: isReserveLoading,
   } = useReserve();
 
@@ -79,6 +80,13 @@ export default function ManageWaiting() {
     setSelectedSlotId(slotId);
     await fetchReservationsBySlot(slotId);
     setIsUserModalOpen(true);
+  };
+
+  const handleRejectReservation = async (reservationId: number) => {
+    const success = await deleteReservation(reservationId);
+    if (success) {
+      await fetchSlots();
+    }
   };
 
   return (
@@ -166,6 +174,7 @@ export default function ManageWaiting() {
         slotTime={currentSlotTime}
         reservations={reservations}
         isMobile={isMobile}
+        onReject={handleRejectReservation}
       />
     </BaseResponsiveLayout>
   );

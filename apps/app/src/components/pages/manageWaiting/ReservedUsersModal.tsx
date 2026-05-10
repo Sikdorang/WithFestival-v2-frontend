@@ -1,4 +1,5 @@
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { ReservationInfo } from '@/types/payload/reservation';
 import * as Dialog from '@radix-ui/react-dialog';
 
@@ -8,6 +9,7 @@ interface ReserveUserModalProps {
   slotTime: string;
   reservations: ReservationInfo[];
   isMobile: boolean;
+  onReject: (reservationId: number) => void;
 }
 
 export default function ReserveUserModal({
@@ -16,6 +18,7 @@ export default function ReserveUserModal({
   slotTime,
   reservations,
   isMobile,
+  onReject,
 }: ReserveUserModalProps) {
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -28,12 +31,16 @@ export default function ReserveUserModal({
                 {slotTime}
               </span>
               <span className="text-sm font-medium text-gray-500">
-                현재 예약자 {reservations.length}팀
+                현재 예약{' '}
+                <span className="font-semibold text-[#FFB800]">
+                  {reservations.length}
+                </span>
               </span>
             </div>
+
             <button
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500"
+              className="flex h-8 w-8 items-center justify-center text-gray-500 hover:text-[#11153F]"
             >
               ✕
             </button>
@@ -57,32 +64,48 @@ export default function ReserveUserModal({
                       className="flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFF9E6] font-bold text-[#FFD43A]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 font-bold text-gray-400">
                           {idx + 1}
                         </div>
                         <div className="flex flex-col gap-0.5">
                           <span className="font-bold text-[#11153F]">
-                            {res.reserverName || '이름 없음'}{' '}
-                            <span className="ml-1 text-xs font-normal text-gray-400">
-                              ({res.partySize || 0}명)
-                            </span>
+                            {res.reserverName || '이름 없음'}
                           </span>
-                          <a
-                            href={
-                              isMobile && formattedPhone
-                                ? `tel:${formattedPhone}`
-                                : undefined
-                            }
-                            className={`text-sm font-medium text-gray-500 ${
-                              isMobile && formattedPhone
-                                ? 'underline underline-offset-4 active:text-[#11153F]'
-                                : ''
-                            }`}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {phoneString || '연락처 없음'}
-                          </a>
+
+                          <span className="text-sm text-gray-500">
+                            ({res.partySize || 0}명)
+                          </span>
                         </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <a
+                          href={
+                            isMobile && formattedPhone
+                              ? `tel:${formattedPhone}`
+                              : undefined
+                          }
+                          className={`text-sm font-semibold text-gray-700 underline underline-offset-4 ${
+                            isMobile && formattedPhone
+                              ? 'active:text-[#11153F]'
+                              : ''
+                          }`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {phoneString || '연락처 없음'}
+                        </a>
+
+                        <DeleteConfirmModal
+                          title="해당 손님을 거절할까요?"
+                          description="손님에게 먼저 연락을 취한 뒤 거절 버튼을 눌러주세요. 거절 버튼을 누르면 리스트가 삭제됩니다."
+                          cancelButtonText="취소"
+                          confirmButtonText="거절하기"
+                          onConfirm={() => onReject(res.id)}
+                        >
+                          <button className="rounded-xl bg-red-50 px-4 py-2.5 text-sm font-bold text-red-500 active:bg-red-100">
+                            거절
+                          </button>
+                        </DeleteConfirmModal>
                       </div>
                     </div>
                   );

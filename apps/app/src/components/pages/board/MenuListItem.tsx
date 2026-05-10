@@ -1,7 +1,5 @@
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 
-const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
-
 export default function MenuItem({
   name,
   price,
@@ -29,7 +27,7 @@ export default function MenuItem({
         <div className="aspect-square w-full overflow-hidden rounded-2xl bg-[#F2F4F6]">
           {image ? (
             <img
-              src={`${IMAGE_PREFIX}${image}`}
+              src={`${image}`}
               alt={name}
               className="h-full w-full object-cover"
             />

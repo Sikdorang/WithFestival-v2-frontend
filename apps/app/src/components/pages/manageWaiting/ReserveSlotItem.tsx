@@ -14,7 +14,7 @@ export default function ReserveSlotItem({
 }: ReserveSlotItemProps) {
   const navigate = useNavigate();
 
-  const bookedCount = slot.bookedTables || 0;
+  const bookedCount = slot.reservedTeamCount || 0;
   const totalCount = slot.availableTables;
 
   const percentage = totalCount > 0 ? (bookedCount / totalCount) * 100 : 0;
@@ -25,7 +25,6 @@ export default function ReserveSlotItem({
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-col gap-1">
           <span className="text-lg font-bold text-[#11153F]">
-            {/* timeRange 대신 직접 startTime, endTime 조합 */}
             {slot.startTime} - {slot.endTime}
           </span>
           <span

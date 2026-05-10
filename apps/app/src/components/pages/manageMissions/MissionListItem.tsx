@@ -18,7 +18,9 @@ export default function MissionListItem({ mission, onClick, onToggle }: Props) {
           <div
             className={`h-2 w-2 rounded-full ${mission.isActive ? 'bg-green-500' : 'bg-gray-300'}`}
           />
-          <h3 className="text-st-1 font-bold text-gray-900">{mission.title}</h3>
+          <h3 className="text-st-1 font-bold text-gray-900">
+            {mission.missionName}
+          </h3>
         </div>
         <p className="text-b-2 text-gray-400">보상: {mission.reward}</p>
       </div>

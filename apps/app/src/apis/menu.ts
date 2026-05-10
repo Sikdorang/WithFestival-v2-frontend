@@ -1,6 +1,5 @@
 import axios from 'axios';
 import axiosInstance from '.';
-import { CreateMenuDto } from '../types/payload/menu';
 
 export type PresignedResponse = {
   url: string;
@@ -17,8 +16,12 @@ export const menuAPI = {
     return response.data;
   },
 
-  createMenu: async (menu: CreateMenuDto) => {
-    const response = await axiosInstance.post('/menus', menu);
+  createMenu: async (formData: FormData) => {
+    const response = await axiosInstance.post('/menus', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   },
 
@@ -27,8 +30,12 @@ export const menuAPI = {
     return response.data;
   },
 
-  updateMenu: async (menuId: number, menu: CreateMenuDto) => {
-    const response = await axiosInstance.patch(`/menus/${menuId}`, menu);
+  updateMenu: async (menuId: number, formData: FormData) => {
+    const response = await axiosInstance.patch(`/menus/${menuId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   },
 
@@ -47,5 +54,15 @@ export const menuAPI = {
         'Content-Type': file.type,
       },
     });
+  },
+
+  setMenuSoldOut: async (menuId: number) => {
+    const response = await axiosInstance.post(`/menus/${menuId}/sold-out`);
+    return response.data;
+  },
+
+  setMenuAvailable: async (menuId: number) => {
+    const response = await axiosInstance.post(`/menus/${menuId}/available`);
+    return response.data;
   },
 };
