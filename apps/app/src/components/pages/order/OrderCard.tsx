@@ -37,10 +37,6 @@ export function OrderCard({
 
   const isPaid = order.paymentStatus === 'PAID';
 
-  const handleOrderCardClick = () => {
-    setIsModalOpen(true);
-  };
-
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="space-y-3 rounded-lg bg-white p-4">

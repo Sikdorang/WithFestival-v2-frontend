@@ -6,7 +6,7 @@ import StoreInformation from '@/components/pages/store/StoreInformation';
 import { ROUTES } from '@/constants/routes';
 import { useStore } from '@/hooks/useStore';
 import { useAuthStore } from '@/stores/authStore';
-import { Menu, Mission } from '@/types/global';
+import { Menu } from '@/types/global';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,10 +21,6 @@ export default function Store() {
 
   const handleMenuItemClick = (item: Menu) => {
     navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
-  };
-
-  const handleMissionClick = (item: Mission) => {
-    navigate(ROUTES.MANAGE_MISSIONS.DETAIL(item.id.toString()));
   };
 
   const handleLogout = () => {

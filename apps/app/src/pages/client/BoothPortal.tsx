@@ -22,7 +22,6 @@ export default function BoothPortal() {
     waitingsEnabled,
     reservationEnabled,
     getStorePublicInfo,
-    isLoading,
   } = useStore();
 
   // 2. 추출한 storeId가 있을 경우 정보 조회

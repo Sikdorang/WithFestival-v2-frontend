@@ -21,9 +21,9 @@ export default function MenuDetail({ menu, onClose }: Props) {
   const handleAddItem = () => {
     addItem({
       id: menu.id,
-      name: menu.menu,
+      name: menu.name,
       price: menu.price,
-      image: menu.image || '',
+      image: menu.imageUrl || '',
     });
     onClose();
   };
@@ -39,9 +39,9 @@ export default function MenuDetail({ menu, onClose }: Props) {
       <main className="flex flex-grow flex-col gap-8 px-4 pt-4 pb-24">
         <div className="mb-2 flex w-full flex-col items-center gap-2">
           <div className="relative flex w-full overflow-hidden rounded-xl bg-gray-100">
-            {menu.image ? (
+            {menu.imageUrl ? (
               <img
-                src={`${IMAGE_PREFIX}${menu.image}`}
+                src={`${IMAGE_PREFIX}${menu.imageUrl}`}
                 alt="메뉴 이미지"
                 className="aspect-[4/3] w-full object-cover"
               />
@@ -54,7 +54,7 @@ export default function MenuDetail({ menu, onClose }: Props) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <h1 className="text-st-2 text-black">{menu.menu}</h1>
+          <h1 className="text-st-2 text-black">{menu.name}</h1>
           {menu.description && (
             <p className="text-b-1 text-gray-500">{menu.description}</p>
           )}

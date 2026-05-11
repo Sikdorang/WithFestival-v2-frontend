@@ -65,10 +65,17 @@ export default function HourlySalesChart({ data }: HourlySalesChartProps) {
                 border: 'none',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               }}
-              formatter={(value: number) => [
-                `${value.toLocaleString()}원`,
-                '매출',
-              ]}
+              formatter={(
+                value:
+                  | number
+                  | string
+                  | readonly (number | string)[]
+                  | undefined,
+              ) => {
+                const targetValue = Array.isArray(value) ? value[0] : value;
+                const numericValue = Number(targetValue) || 0;
+                return [`${numericValue.toLocaleString()}원`, '매출'];
+              }}
               labelStyle={{ color: '#8B95A1', marginBottom: '4px' }}
             />
 

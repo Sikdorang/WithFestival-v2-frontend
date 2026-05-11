@@ -22,7 +22,7 @@ export default function AiMenuGenerator() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [isLocked, setIsLocked] = useState(false);
-  const [result, setResult] = useState<GeneratedMenu[]>([]);
+  const [, setResult] = useState<GeneratedMenu[]>([]);
 
   const handleMenuChange = (index: number, value: string) => {
     const newMenus = [...menus];

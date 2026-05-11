@@ -16,7 +16,7 @@ export default function Ordering() {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
   const navigate = useNavigate();
   const { orderItems } = useOrderStore();
-  const { createOrder, isLoading } = useOrder();
+  const { createOrder } = useOrder();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<

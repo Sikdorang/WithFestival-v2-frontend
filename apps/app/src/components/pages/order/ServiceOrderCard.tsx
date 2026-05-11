@@ -1,7 +1,7 @@
-import { OrderSummary } from '@/types/global';
-import { SUCCESS_MESSAGES } from '@/constants/message';
-import toast from 'react-hot-toast';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
+import { SUCCESS_MESSAGES } from '@/constants/message';
+import { OrderSummary } from '@/types/global';
+import toast from 'react-hot-toast';
 
 interface Props {
   order: OrderSummary;
@@ -16,7 +16,7 @@ export default function ServiceOrderCard({
   setOrderSent,
   setOrderCooked,
 }: Props) {
-  const requestMessage = order.orderUsers[0]?.menu || '요청사항 없음';
+  const requestMessage = order.items[0]?.name || '요청사항 없음';
 
   const notification = new Audio('/sounds/effect_notification_2.mp3');
 
@@ -30,19 +30,19 @@ export default function ServiceOrderCard({
           <div className="flex flex-col">
             <span className="text-b-2 text-gray-400">테이블 번호</span>
             <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
-              {order.tableNumber}번
+              {order.tableId}번
             </span>
           </div>
 
           <div className="flex flex-col items-center">
-            <span className="text-gray-400">{order.time}</span>
+            <span className="text-gray-400">{order.createdAt}</span>
           </div>
         </div>
       </div>
 
       <div className="text-b-1">{requestMessage}</div>
 
-      {order.send ? (
+      {order.status ? (
         <div className="flex flex-col gap-2">
           <button
             className="bg-primary-300 rounded-2xl py-3 text-black"

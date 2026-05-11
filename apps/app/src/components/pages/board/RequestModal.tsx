@@ -1,12 +1,12 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import MessageImage from '@/assets/images/img_post.png';
-import CallImage from '@/assets/images/img_bell.png';
-import CtaButton from '@/components/common/buttons/CtaButton';
-import Navigator from '@/components/common/layouts/Navigator';
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import CallImage from '@/assets/images/img_bell.png';
+import MessageImage from '@/assets/images/img_post.png';
+import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
-import { useState } from 'react';
+import Navigator from '@/components/common/layouts/Navigator';
 import { useOrder } from '@/hooks/useOrder';
+import * as Dialog from '@radix-ui/react-dialog';
+import { useState } from 'react';
 
 interface Props {
   type: 'message' | 'call';
@@ -15,15 +15,15 @@ interface Props {
 }
 
 export default function RequestModal({ open, onClose, type }: Props) {
-  const { createMessage, createServiceRequestOrder } = useOrder();
+  const {} = useOrder();
 
   const [inputValue, setInputValue] = useState('');
   const handleSubmit = () => {
-    if (type === 'message') {
-      createMessage(inputValue);
-    } else {
-      createServiceRequestOrder(inputValue);
-    }
+    // if (type === 'message') {
+    //   createMessage(inputValue);
+    // } else {
+    //   createServiceRequestOrder(inputValue);
+    // }
 
     onClose();
     setInputValue('');

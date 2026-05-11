@@ -10,31 +10,14 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-// 💡 1. 모킹 데이터: 시간대 및 예약자 목록
-interface TimeSlot {
-  id: string;
-  timeRange: string;
-  bookedTables: number;
-  maxTables: number;
-}
-
-interface Reservation {
-  id: string;
-  name: string;
-  phone: string;
-  peopleCount: number;
-}
-
 export default function AdminReserveManage() {
   const navigate = useNavigate();
 
-  // 1. useStore 훅에서 필요한 상태와 함수 추출
   const { reservationEnabled, updateStoreStatus, getMyStoreInfo, isLoading } =
     useStore();
 
-  const { fetchSlots, isLoading: isReserveLoading } = useReserve();
+  const { fetchSlots } = useReserve();
 
-  // 모달 상태 관리
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageTime, setMessageTime] = useState<number>(10);
   const [messageContent, setMessageContent] = useState<string>(
@@ -124,7 +107,6 @@ export default function AdminReserveManage() {
         <Dialog.Portal>
           <Dialog.Overlay className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-40 bg-black/25" />
           <Dialog.Content className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-[2rem] bg-white outline-none">
-            {/* 모달 헤더 */}
             <div className="flex items-center justify-between p-6 pb-4">
               <span className="text-xl font-bold text-[#11153F]">
                 예약 메시지 설정
@@ -138,7 +120,6 @@ export default function AdminReserveManage() {
             </div>
 
             <div className="flex flex-col gap-8 overflow-y-auto px-6 pb-24">
-              {/* 알림 전송 시간 선택 */}
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-bold text-[#11153F]">
                   언제 알림을 보낼까요?
@@ -160,7 +141,6 @@ export default function AdminReserveManage() {
                 </div>
               </div>
 
-              {/* 메시지 내용 수정 */}
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-bold text-[#11153F]">
                   메시지 내용
@@ -174,7 +154,6 @@ export default function AdminReserveManage() {
               </div>
             </div>
 
-            {/* 하단 고정 저장 버튼 */}
             <div className="fixed right-0 bottom-0 left-0 border-t border-gray-100 bg-white p-4">
               <CtaButton
                 text="저장하기"

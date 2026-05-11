@@ -35,12 +35,12 @@ export default function OrderDetail({ order, onClose }: OrderDetailProps) {
             <div className="flex flex-col">
               <span className="text-b-2 text-gray-400">테이블 번호</span>
               <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
-                {order.tableNumber}번
+                {order.tableId}번
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-gray-400">{order.time}</span>
+              <span className="text-gray-400">{order.createdAt}</span>
             </div>
           </div>
         </div>
@@ -48,14 +48,14 @@ export default function OrderDetail({ order, onClose }: OrderDetailProps) {
         <div className="mt-4">
           <h3 className="text-b-2 text-gray-500">주문내역</h3>
           <div className="mt-2 flex flex-col">
-            {order.orderUsers.map((item) => (
+            {order.items.map((item) => (
               <div key={item.id} className="flex justify-between py-3">
                 <div>
-                  <p className="text-b-1">{item.menu}</p>
+                  <p className="text-b-1">{item.name}</p>
                 </div>
                 <p className="text-b-1 text-right font-semibold">
                   {item.price.toLocaleString()}원
-                  <p className="text-c-1 text-gray-400">{item.count}개</p>
+                  <p className="text-c-1 text-gray-400">{item.quantity}개</p>
                 </p>
               </div>
             ))}
@@ -69,7 +69,7 @@ export default function OrderDetail({ order, onClose }: OrderDetailProps) {
               {order.totalPrice.toLocaleString()}원
             </p>
             <p className="text-c-1 text-right text-gray-400">
-              총 {order.orderUsers.reduce((acc, item) => acc + item.count, 0)}개
+              총 {order.items.reduce((acc, item) => acc + item.quantity, 0)}개
             </p>
           </div>
         </div>

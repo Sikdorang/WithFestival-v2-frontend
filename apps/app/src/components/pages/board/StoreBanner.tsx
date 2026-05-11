@@ -19,7 +19,7 @@ export default function StoreBanner({
 }: Props) {
   const navigate = useNavigate();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-  const [requestType, setRequestType] = useState<'message' | 'call'>('message');
+  const [requestType] = useState<'message' | 'call'>('message');
 
   return (
     <div>

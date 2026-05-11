@@ -23,12 +23,7 @@ export default function ManageWaiting() {
   const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
   const [activeTab, setActiveTab] = useState<TabType>('WAITING');
 
-  const {
-    waitingsEnabled,
-    reservationEnabled,
-    getMyStoreInfo,
-    isLoading: isStoreLoading,
-  } = useStore();
+  const { waitingsEnabled, reservationEnabled, getMyStoreInfo } = useStore();
 
   useEffect(() => {
     getMyStoreInfo();
@@ -43,7 +38,6 @@ export default function ManageWaiting() {
     fetchSlots,
     fetchReservationsBySlot,
     deleteReservation,
-    isLoading: isReserveLoading,
   } = useReserve();
 
   useEffect(() => {

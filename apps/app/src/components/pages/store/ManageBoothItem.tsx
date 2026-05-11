@@ -26,9 +26,9 @@ export default function ManageBoothItem({
     setIsEditing(true);
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
+  // const handleCancel = () => {
+  //   setIsEditing(false);
+  // };
 
   const handleSave = () => {
     onSave(inputValue);

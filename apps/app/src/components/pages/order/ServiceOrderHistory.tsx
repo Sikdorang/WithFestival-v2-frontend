@@ -16,19 +16,19 @@ export default function ServiceOrderHistory({ order }: Props) {
             <div className="flex flex-col">
               <span className="text-b-2 text-gray-400">테이블 번호</span>
               <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
-                {order.tableNumber}번
+                {order.tableId}번
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-gray-400">{order.time}</span>
+              <span className="text-gray-400">{order.createdAt}</span>
             </div>
           </div>
         </div>
 
         <div className="flex flex-col gap-1">
           <span className="text-c-1 text-gray-400">요청 내역</span>
-          <span className="text-b-1">{order.orderUsers[0].menu}</span>
+          <span className="text-b-1">{order.items[0].name}</span>
         </div>
       </div>
     </Dialog.Root>
