@@ -100,6 +100,19 @@ export const useCoupon = () => {
     }
   };
 
+  // 쿠폰 삭제
+  const deleteCoupon = async (id: number) => {
+    try {
+      await couponAPI.deleteCoupon(id);
+      setCoupons((prev) => prev.filter((coupon) => coupon.id !== id));
+      toast.success('쿠폰이 삭제되었습니다.');
+      return true;
+    } catch (error) {
+      handelError(error);
+      return false;
+    }
+  };
+
   return {
     coupons,
     isLoading,
@@ -108,5 +121,6 @@ export const useCoupon = () => {
     createCoupon,
     toggleCouponUsed,
     updateHolder,
+    deleteCoupon,
   };
 };

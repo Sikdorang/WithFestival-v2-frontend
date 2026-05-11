@@ -1,20 +1,20 @@
 import ManageBooth from '@/components/pages/store/ManageBooth';
+import { useStore } from '@/hooks/useStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface Props {
-  name: string;
-  account: string;
-}
-
-export default function StoreInformation({ name, account }: Props) {
+export default function StoreInformation() {
+  const { name, account, getMyStoreInfo } = useStore();
   const [showManageBooth, setShowManageBooth] = useState(false);
+
+  useEffect(() => {
+    getMyStoreInfo();
+  }, []);
 
   return (
     <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
       <div>
         <div className="bg-gray-500-3 mb-4 rounded-xl p-5">
-          {/* Header 영역 */}
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-bold text-[#191F28]">부스 기본 정보</h2>
             <button
@@ -25,7 +25,6 @@ export default function StoreInformation({ name, account }: Props) {
             </button>
           </div>
 
-          {/* 세부 정보 영역 */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-[15px] font-medium text-[#8B95A1]">
@@ -52,6 +51,7 @@ export default function StoreInformation({ name, account }: Props) {
           <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
             <ManageBooth
               onClose={() => {
+                getMyStoreInfo();
                 setShowManageBooth(false);
               }}
             />

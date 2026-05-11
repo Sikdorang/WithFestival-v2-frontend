@@ -4,20 +4,13 @@ import TopBar from '@/components/common/layouts/TopBar';
 import MenuList from '@/components/pages/board/MenuList';
 import StoreInformation from '@/components/pages/store/StoreInformation';
 import { ROUTES } from '@/constants/routes';
-import { useStore } from '@/hooks/useStore';
 import { useAuthStore } from '@/stores/authStore';
 import { Menu } from '@/types/global';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Store() {
   const navigate = useNavigate();
-  const { getMyStoreInfo, account, name } = useStore();
   const { logout } = useAuthStore();
-
-  useEffect(() => {
-    getMyStoreInfo();
-  }, []);
 
   const handleMenuItemClick = (item: Menu) => {
     navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
@@ -32,7 +25,7 @@ export default function Store() {
     <div className="relative min-h-screen space-y-4 bg-white">
       <TopBar />
       <div className="p-4">
-        <StoreInformation name={name} account={account} />
+        <StoreInformation />
 
         <section className="mb-2 space-y-4 p-1">
           <div

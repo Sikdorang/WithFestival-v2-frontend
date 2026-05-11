@@ -1,26 +1,33 @@
 'use client';
 
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import TrashIcon from '@/assets/icons/ic_cancel.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
+import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { useCoupon } from '@/hooks/useCoupon';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import TextInput from '../../components/common/inputs/TextInput';
 
 export default function ManageCoupon() {
   const navigate = useNavigate();
-  const { coupons, fetchCoupons, toggleCouponUsed, createCoupon, isLoading } =
-    useCoupon();
+  const {
+    coupons,
+    fetchCoupons,
+    toggleCouponUsed,
+    createCoupon,
+    deleteCoupon,
+    isLoading,
+  } = useCoupon();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  // 생성 폼 상태
   const [newCode, setNewCode] = useState('');
   const [newDiscount, setNewDiscount] = useState('');
   const [newHolder, setNewHolder] = useState('');
@@ -29,7 +36,6 @@ export default function ManageCoupon() {
     fetchCoupons();
   }, [fetchCoupons]);
 
-  // 검색 필터링 로직 (쿠폰 번호 또는 사용자 이름)
   const filteredCoupons = useMemo(() => {
     if (!searchQuery.trim()) return coupons;
     const lowerQuery = searchQuery.toLowerCase();
@@ -40,7 +46,6 @@ export default function ManageCoupon() {
     );
   }, [coupons, searchQuery]);
 
-  // 쿠폰 생성 핸들러
   const handleCreateSubmit = async () => {
     if (!newCode.trim() || !newDiscount) {
       toast.error('쿠폰 번호와 할인 금액을 입력해주세요.');
@@ -80,7 +85,6 @@ export default function ManageCoupon() {
           />
         </div>
 
-        {/* 쿠폰 목록 스크롤 영역 */}
         <div className="flex flex-col gap-3 p-4 pb-24">
           {isLoading && coupons.length === 0 ? (
             <div className="py-10 text-center text-sm text-gray-400">
@@ -97,16 +101,36 @@ export default function ManageCoupon() {
             filteredCoupons.map((coupon) => (
               <div
                 key={coupon.id}
-                // 💡 사용 여부에 따른 배경색 및 투명도 변경
-                className={`flex flex-col gap-3 rounded-2xl p-5 shadow-sm transition-all duration-300 ${
+                className={`relative flex flex-col gap-3 rounded-2xl p-5 shadow-sm transition-all duration-300 ${
                   coupon.used ? 'bg-gray-100 opacity-70' : 'bg-white'
                 }`}
               >
+                <div className="absolute top-5 right-5">
+                  <DeleteConfirmModal
+                    title="쿠폰을 삭제하시겠어요?"
+                    description="삭제된 쿠폰은 복구할 수 없습니다."
+                    cancelButtonText="취소"
+                    confirmButtonText="삭제"
+                    onConfirm={() => deleteCoupon(coupon.id)}
+                  >
+                    <button className="text-gray-300 transition-colors hover:text-red-500">
+                      <TrashIcon width={16} height={16} />
+                    </button>
+                  </DeleteConfirmModal>
+                </div>
+
                 <div className="flex items-center justify-between">
-                  <div className="flex flex-col gap-1">
-                    {/* 💡 사용 완료 시 텍스트 회색 처리 및 취소선 */}
+                  <div className="mr-14 flex flex-1 flex-col gap-1.5 pt-1">
                     <span
                       className={`text-lg font-bold ${
+                        coupon.used ? 'text-gray-400' : 'text-primary-500'
+                      }`}
+                    >
+                      {coupon.discountPrice.toLocaleString()}원 할인
+                    </span>
+
+                    <span
+                      className={`text-sm font-semibold break-all ${
                         coupon.used
                           ? 'text-gray-400 line-through'
                           : 'text-gray-900'
@@ -114,16 +138,9 @@ export default function ManageCoupon() {
                     >
                       {coupon.code}
                     </span>
-                    <span
-                      className={`text-sm font-semibold ${
-                        coupon.used ? 'text-gray-400' : 'text-primary-500'
-                      }`}
-                    >
-                      {coupon.discountPrice.toLocaleString()}원 할인
-                    </span>
                   </div>
-                  {/* 사용 여부 토글 버튼 */}
-                  <div className="flex flex-col items-end gap-1">
+
+                  <div className="mr-8 flex shrink-0 flex-col items-center gap-1.5">
                     <span className="text-xs text-gray-400">
                       {coupon.used ? '사용 완료' : '미사용'}
                     </span>
@@ -141,7 +158,7 @@ export default function ManageCoupon() {
                     </button>
                   </div>
                 </div>
-                {/* 사용자 정보 영역 */}
+
                 <div
                   className={`flex items-center gap-2 rounded-lg p-3 text-sm ${
                     coupon.used ? 'bg-gray-200/50' : 'bg-gray-50'
@@ -162,7 +179,6 @@ export default function ManageCoupon() {
         </div>
       </main>
 
-      {/* 하단 고정 생성 버튼 */}
       <div className="fixed right-4 bottom-10 z-10">
         <CtaButton
           text="쿠폰 추가"
@@ -173,7 +189,6 @@ export default function ManageCoupon() {
         />
       </div>
 
-      {/* 쿠폰 생성 모달 (Radix UI) */}
       <Dialog.Root open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/30" />

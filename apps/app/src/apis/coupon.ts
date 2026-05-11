@@ -43,4 +43,10 @@ export const couponAPI = {
     });
     return response.data;
   },
+
+  // 쿠폰 삭제
+  deleteCoupon: async (id: number) => {
+    const response = await axiosInstance.delete(`/coupons/${id}`);
+    return response.data;
+  },
 };
