@@ -4,25 +4,27 @@ class WebSocketManager {
   private socket: Socket | null = null;
   private isConnected: boolean = false;
   private lastRefreshTime: number = 0;
-  private readonly refreshCooldown: number = 2000; // 2초 쿨다운
-  private currentUserId: number | null = null;
+  private readonly refreshCooldown: number = 2000;
 
-  connect(userId?: number) {
+  connect(accessToken?: string, storeId?: number) {
     if (this.socket) {
+      console.log('⚠️ 이미 소켓이 연결되어 있습니다.');
       return;
     }
 
-    this.currentUserId = userId || null;
-    console.log(
-      '🚀 WebSocket 연결 시작...',
-      userId ? `사용자 ID: ${userId}` : '',
-    );
+    const SOCKET_URL =
+      import.meta.env.VITE_SOCKET_URL || 'https://app.withfestival.site';
 
-    this.socket = io('http://localhost:4000', {
-      transports: ['websocket', 'polling'],
-      timeout: 20000,
-      forceNew: true,
-      reconnection: true,
+    console.log('🚀 WebSocket 연결 시작...', {
+      storeId,
+      hasToken: !!accessToken,
+    });
+
+    this.socket = io(SOCKET_URL, {
+      path: '/socket.io',
+      // 💡 백엔드 가이드: 토큰이 있으면 token, 없으면 boothId로 인증
+      auth: accessToken ? { token: accessToken } : { boothId: storeId },
+      transports: ['websocket'], // 💡 중요: 오직 웹소켓만 사용 (Polling 차단)
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });
@@ -33,19 +35,9 @@ class WebSocketManager {
   private setupEventListeners() {
     if (!this.socket) return;
 
-    // 연결 상태
     this.socket.on('connect', () => {
-      console.log('✅ WebSocket 연결됨, ID:', this.socket?.id);
+      console.log('✅ WebSocket 연결 성공! ID:', this.socket?.id);
       this.isConnected = true;
-
-      // 사용자 ID가 있으면 해당 사용자의 방에 입장
-      if (this.currentUserId) {
-        const roomId = `user_${this.currentUserId}`;
-        console.log(`🏠 방 입장 시도: ${roomId}`);
-        this.socket?.emit('joinRoom', { roomId });
-      } else {
-        console.log('⚠️ 사용자 ID가 없어서 방 입장을 건너뜁니다.');
-      }
     });
 
     this.socket.on('disconnect', (reason) => {
@@ -54,81 +46,54 @@ class WebSocketManager {
     });
 
     this.socket.on('connect_error', (error) => {
-      console.log('❌ 연결 오류:', error.message);
+      console.error('❌ 소켓 연결 오류:', error.message);
     });
 
-    // 방 입장 확인
-    this.socket.on('joinedRoom', (data) => {
-      console.log('🏠 방 입장:', data);
-    });
-
-    // 주문 관련 이벤트
-    this.socket.on('orderReceived', (data) => {
-      console.log('📦 주문 수신:', data);
+    // 1. 주문 관련
+    this.socket.on('order.created', (payload) => {
+      console.log('🔔 새 주문 생성:', payload);
       this.refreshScreen();
     });
 
-    this.socket.on('orderCreated', (data) => {
-      console.log('🆕 주문 생성:', data);
+    this.socket.on('order.payment.paid', (payload) => {
+      console.log('💰 결제 완료:', payload);
       this.refreshScreen();
     });
 
-    this.socket.on('orderSendUpdated', (data) => {
-      console.log('💰 주문 송금 완료:', data);
+    this.socket.on('order.status.completed', (payload) => {
+      console.log('🏁 주문 완료:', payload);
       this.refreshScreen();
     });
 
-    this.socket.on('orderCookedUpdated', (data) => {
-      console.log('🍳 주문 조리 완료:', data);
+    // 2. 웨이팅 관련
+    this.socket.on('waiting.created', (payload) => {
+      console.log('🚶 새 웨이팅:', payload);
       this.refreshScreen();
     });
 
-    this.socket.on('orderDeleted', (data) => {
-      console.log('🗑️ 주문 삭제:', data);
+    this.socket.on('waiting.status.entered', (payload) => {
+      console.log('✅ 웨이팅 입장:', payload);
       this.refreshScreen();
     });
 
-    // 대기 관련 이벤트
-    this.socket.on('waitingReceived', (data) => {
-      console.log('⏳ 대기 수신:', data);
+    // 3. 예약 관련
+    this.socket.on('reservation.created', (payload) => {
+      console.log('📅 새 예약:', payload);
       this.refreshScreen();
     });
 
-    this.socket.on('waitingCreated', (data) => {
-      console.log('➕ 대기 생성:', data);
-      this.refreshScreen();
-    });
-
-    this.socket.on('waitingProcessed', (data) => {
-      console.log('✅ 대기 처리:', data);
-      this.refreshScreen();
-    });
-
-    // 화면 새로고침 이벤트
-    this.socket.on('refreshScreen', () => {
-      console.log('🔄 화면 새로고침 이벤트!');
-      this.refreshScreen();
-    });
-
-    // 모든 이벤트 로깅
+    // 모든 이벤트 로깅 (디버깅용)
     this.socket.onAny((eventName, ...args) => {
-      console.log(`📩 이벤트 수신 [${eventName}]:`, args);
+      console.log(`📩 [EVENT]: ${eventName}`, args);
     });
   }
 
   private refreshScreen() {
     const now = Date.now();
+    if (now - this.lastRefreshTime < this.refreshCooldown) return;
 
-    // 쿨다운 체크
-    if (now - this.lastRefreshTime < this.refreshCooldown) {
-      console.log('⏰ 새로고침 쿨다운 중...');
-      return;
-    }
-
-    console.log('🔄 화면 새로고침 실행');
     this.lastRefreshTime = now;
 
-    // 페이지 새로고침
     window.location.reload();
   }
 
@@ -139,16 +104,7 @@ class WebSocketManager {
       this.isConnected = false;
     }
   }
-
-  getConnectionStatus() {
-    return {
-      connected: this.isConnected,
-      socketId: this.socket?.id,
-    };
-  }
 }
 
-// 싱글톤 인스턴스 생성
 const websocketManager = new WebSocketManager();
-
 export default websocketManager;
