@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { type FestivalEvent } from "@/src/data/schedule";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { FESTIVALS, type FestivalEvent } from "@/src/data/schedule";
+import { useFestival } from "../hooks/useFestival"; // 경로 확인 필요
 import Icon from "./Icon";
 
 type Tab = "ongoing" | "upcoming" | "ended";
@@ -51,35 +52,13 @@ function dayMeta(festival: FestivalEvent, tab: Tab) {
 
 export default function Schedule() {
   const [tab, setTab] = useState<Tab>("ongoing");
+  const { ongoing, upcoming, ended, isLoading } = useFestival();
 
-  const { ongoing, upcoming, ended } = useMemo(() => {
-    const o: FestivalEvent[] = [];
-    const u: FestivalEvent[] = [];
-    const e: FestivalEvent[] = [];
-    FESTIVALS.forEach((f) => {
-      const start = parseDate(f.startDate);
-      const end = parseDate(f.endDate);
-      if (start <= TODAY && TODAY <= end) o.push(f);
-      else if (start > TODAY) u.push(f);
-      else e.push(f);
-    });
-    o.sort(
-      (a, b) =>
-        parseDate(a.startDate).getTime() - parseDate(b.startDate).getTime(),
-    );
-    u.sort(
-      (a, b) =>
-        parseDate(a.startDate).getTime() - parseDate(b.startDate).getTime(),
-    );
-    e.sort(
-      (a, b) =>
-        parseDate(b.endDate).getTime() - parseDate(a.endDate).getTime(),
-    );
-    return { ongoing: o, upcoming: u, ended: e };
-  }, []);
-
-  const list =
-    tab === "ongoing" ? ongoing : tab === "upcoming" ? upcoming : ended;
+  const list = useMemo(() => {
+    if (tab === "ongoing") return ongoing;
+    if (tab === "upcoming") return upcoming;
+    return ended;
+  }, [tab, ongoing, upcoming, ended]);
 
   return (
     <section className="relative w-full bg-white pt-32 pb-24 md:pt-36 md:pb-32">
@@ -127,7 +106,12 @@ export default function Schedule() {
               transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col"
             >
-              {list.length === 0 ? (
+              {/* 💡 로딩 상태 대응 추가 */}
+              {isLoading ? (
+                <li className="py-20 text-center text-sm text-[#92949d]">
+                  축제 일정을 불러오는 중입니다...
+                </li>
+              ) : list.length === 0 ? (
                 <li className="py-12 text-center text-sm text-[#92949d]">
                   표시할 일정이 없습니다.
                 </li>

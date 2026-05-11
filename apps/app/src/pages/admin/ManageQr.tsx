@@ -6,12 +6,13 @@ import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayo
 import Navigator from '@/components/common/layouts/Navigator';
 import { encryptJson } from '@/utils/crypto';
 import { QRCodeCanvas } from 'qrcode.react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { storeAPI } from '../../apis/store';
 
-const DOMAIN = 'https://withfestival.site';
+const DOMAIN = 'https://app.withfestival.site';
 
-type QrType = 'table' | 'waiting' | 'takeout';
+type QrType = 'table' | 'booth';
 
 export default function ManageQr() {
   const navigate = useNavigate();
@@ -19,28 +20,42 @@ export default function ManageQr() {
 
   const [qrType, setQrType] = useState<QrType>('table');
   const [tableNum, setTableNum] = useState<string>('');
+  const [userId, setUserId] = useState<string>('0');
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await storeAPI.getStoreMyInfo();
+        setUserId(String(response.id));
+      } catch (error) {
+        console.error('유저 정보를 가져오는데 실패했습니다.', error);
+      }
+    };
 
-  const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-  const userId = userData.userId || '0';
+    fetchUserInfo();
+  }, []);
 
   const { finalQrUrl, currentTableId } = useMemo(() => {
-    let tableId: string | number = tableNum;
-    if (qrType === 'takeout') tableId = 0;
-    else if (qrType === 'waiting') tableId = 'w';
+    const data: { userId: string; tableId?: string | number } = { userId };
 
-    const data = { userId: userId, tableId: tableId };
+    if (qrType === 'table') {
+      data.tableId = tableNum;
+    }
 
     const encrypted = encryptJson(data);
-
     const encoded = encrypted ? encodeURIComponent(encrypted) : '';
 
     return {
       finalQrUrl: `${DOMAIN}/check/${encoded}`,
-      currentTableId: tableId,
+      currentTableId: qrType === 'table' ? tableNum : 'booth',
     };
   }, [qrType, tableNum, userId]);
 
   const handleDownload = () => {
+    if (userId === '0') {
+      alert('부스 정보를 불러오는 중입니다. 잠시만 기다려주세요.');
+      return;
+    }
+
     const canvas = qrRef.current?.querySelector('canvas');
     if (canvas) {
       const url = canvas.toDataURL('image/png');
@@ -70,9 +85,8 @@ export default function ManageQr() {
               onChange={(e) => setQrType(e.target.value as QrType)}
               className="focus:border-primary-300 w-full rounded-xl border-2 border-gray-100 p-4 text-gray-800 outline-none"
             >
-              <option value="table">일반 테이블 QR</option>
-              <option value="waiting">부스 QR</option>
-              <option value="takeout">포장 전용 QR</option>
+              <option value="table">테이블 QR</option>
+              <option value="booth">부스 QR</option>
             </select>
           </div>
 

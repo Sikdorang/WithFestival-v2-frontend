@@ -1,21 +1,24 @@
-import type { Metadata } from "next";
-import Navbar from "@/src/components/Navbar";
-import "./globals.css";
-import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Navbar from "@/src/components/Navbar";
+import type { Metadata } from "next";
+import { Geist } from "next/font/google";
+import "./globals.css";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: " ",
-  description: "",
+  title: "축제랑",
+  description: "With Festival",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" className={cn("scroll-smooth bg-white", "font-sans", geist.variable)}>
+    <html
+      lang="ko"
+      className={cn("scroll-smooth bg-white", "font-sans", geist.variable)}
+    >
       <head>
         <link
           rel="stylesheet"
