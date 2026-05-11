@@ -2,8 +2,9 @@ import { ROUTES } from '@/constants/routes';
 import { KEYS } from '@/constants/storage';
 import axios from 'axios';
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
 const axiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: `${API_BASE}/api`,
 });
 
 axiosInstance.interceptors.request.use(
