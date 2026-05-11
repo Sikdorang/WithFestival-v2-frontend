@@ -105,7 +105,7 @@ export default function ManageCoupon() {
                   coupon.used ? 'bg-gray-100 opacity-70' : 'bg-white'
                 }`}
               >
-                <div className="absolute top-5 right-5">
+                <div className="absolute top-7 right-6">
                   <DeleteConfirmModal
                     title="쿠폰을 삭제하시겠어요?"
                     description="삭제된 쿠폰은 복구할 수 없습니다."
@@ -139,24 +139,6 @@ export default function ManageCoupon() {
                       {coupon.code}
                     </span>
                   </div>
-
-                  <div className="mr-8 flex shrink-0 flex-col items-center gap-1.5">
-                    <span className="text-xs text-gray-400">
-                      {coupon.used ? '사용 완료' : '미사용'}
-                    </span>
-                    <button
-                      onClick={() => toggleCouponUsed(coupon.id, coupon.used)}
-                      className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 ${
-                        coupon.used ? 'bg-primary-300' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ${
-                          coupon.used ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
                 </div>
 
                 <div
@@ -172,6 +154,22 @@ export default function ManageCoupon() {
                   >
                     {coupon.holder || '지정되지 않음'}
                   </span>
+                </div>
+
+                <div className="flex shrink-0 items-center justify-between gap-1.5">
+                  <div className="text-sm text-gray-400">사용 처리</div>
+                  <button
+                    onClick={() => toggleCouponUsed(coupon.id, coupon.used)}
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 ${
+                      coupon.used ? 'bg-primary-300' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ${
+                        coupon.used ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
               </div>
             ))

@@ -32,10 +32,10 @@ export default function Store() {
             className="flex items-center justify-between"
             onClick={() => navigate(ROUTES.MANAGE_WAITING_SETTING)}
           >
-            <div className="text-lg font-semibold text-gray-900">
+            <div className="text-lg font-semibold text-gray-500">
               웨이팅 관리
             </div>
-            <DepthIcon />
+            <DepthIcon width={14} height={14} />
           </div>
         </section>
 
@@ -44,8 +44,8 @@ export default function Store() {
             className="flex items-center justify-between"
             onClick={() => navigate(ROUTES.MANAGE_RESERVE.ROOT)}
           >
-            <div className="text-lg font-semibold text-gray-900">예약 관리</div>
-            <DepthIcon />
+            <div className="text-lg font-semibold text-gray-500">예약 관리</div>
+            <DepthIcon width={14} height={14} />
           </div>
         </section>
 
@@ -54,8 +54,8 @@ export default function Store() {
             className="flex items-center justify-between"
             onClick={() => navigate(ROUTES.MANAGE_QR)}
           >
-            <div className="text-lg font-semibold text-gray-900">QR 관리</div>
-            <DepthIcon />
+            <div className="text-lg font-semibold text-gray-500">QR 관리</div>
+            <DepthIcon width={14} height={14} />
           </div>
         </section>
 
@@ -64,8 +64,8 @@ export default function Store() {
             className="flex items-center justify-between"
             onClick={() => navigate(ROUTES.MANAGE_MISSIONS.ROOT)}
           >
-            <div className="text-lg font-semibold text-gray-900">미션 관리</div>
-            <DepthIcon />
+            <div className="text-lg font-semibold text-gray-500">미션 관리</div>
+            <DepthIcon width={14} height={14} />
           </div>
         </section>
 
@@ -74,14 +74,14 @@ export default function Store() {
             className="flex items-center justify-between"
             onClick={() => navigate(ROUTES.COUPON)}
           >
-            <div className="text-lg font-semibold text-gray-900">쿠폰 관리</div>
-            <DepthIcon />
+            <div className="text-lg font-semibold text-gray-500">쿠폰 관리</div>
+            <DepthIcon width={14} height={14} />
           </div>
         </section>
 
         <section className="mt-5 space-y-4 p-1 pb-20">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">메뉴 관리</h2>
+            <h2 className="text-xl font-bold text-gray-500">메뉴 관리</h2>
           </div>
           {/* <div
             className="flex items-center justify-between"
