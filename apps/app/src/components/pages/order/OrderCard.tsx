@@ -123,7 +123,6 @@ export function OrderCard({
                 confirmButtonText={'주문 취소하기'}
                 onConfirm={() => {
                   deleteOrder(order.id);
-                  toast.success(SUCCESS_MESSAGES.orderCancelSuccess);
                 }}
               >
                 <CtaButton
