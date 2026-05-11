@@ -15,12 +15,15 @@ export default function MenuList({
 }) {
   const location = useLocation();
 
-  const userData = useMemo(
-    () =>
-      location.state?.userData ||
-      JSON.parse(sessionStorage.getItem('userData') || '{}'),
-    [location.state],
-  );
+  const userData = useMemo(() => {
+    if (location.state?.userData) return location.state.userData;
+    try {
+      const stored = sessionStorage.getItem('userData');
+      return stored && stored !== 'undefined' ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  }, [location.state?.userData]);
 
   const storeId = userData?.userId || userData?.id;
 

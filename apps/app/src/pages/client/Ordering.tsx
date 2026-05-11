@@ -9,11 +9,20 @@ import { ROUTES } from '@/constants/routes';
 import { useOrder } from '@/hooks/useOrder';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Ordering() {
-  const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+  const location = useLocation();
+  const userData = useMemo(() => {
+    if (location.state?.userData) return location.state.userData;
+    try {
+      const stored = sessionStorage.getItem('userData');
+      return stored && stored !== 'undefined' ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  }, [location.state?.userData]);
   const navigate = useNavigate();
   const { orderItems } = useOrderStore();
   const { createOrder } = useOrder();

@@ -7,7 +7,6 @@ import { OrderBill } from '@/components/pages/order/OrderBill';
 import ServiceOrderHistory from '@/components/pages/order/ServiceOrderHistory';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect } from 'react';
-import ExpertInsightBox from '../../components/pages/history/ExpertInsightBox';
 
 const isServiceOrder = (order: any): boolean => {
   const items = order.items || order.orderUsers;
@@ -46,7 +45,7 @@ export default function History() {
           </div>
         ) : orderCount > 0 ? (
           <>
-            <ExpertInsightBox />
+            {/* <ExpertInsightBox /> */}
             <OrderDashBoard orders={orderList} />
 
             {orderList.map((order: any) =>

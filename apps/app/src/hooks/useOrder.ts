@@ -2,16 +2,27 @@ import { handelError } from '@/apis/errorhandler';
 import { orderAPI } from '@/apis/order';
 import { useOrderStore } from '@/stores/orderStore';
 import { OrderListApiResponse } from '@/types/global';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
+import { CreateOrderPayload } from '../types/payload/order';
 
 export const useOrder = () => {
+  const location = useLocation();
   const [allOrders, setAllOrders] = useState<OrderListApiResponse>();
   const [isLoading, setIsLoading] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
   const { orderItems, clearOrder } = useOrderStore();
 
-  const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+  const userData = useMemo(() => {
+    if (location.state?.userData) return location.state.userData;
+    try {
+      const stored = sessionStorage.getItem('userData');
+      return stored && stored !== 'undefined' ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  }, [location.state?.userData]);
 
   // 주문 생성
   const createOrder = async (depositorName: string) => {
@@ -36,13 +47,17 @@ export const useOrder = () => {
         0,
       );
 
-      const payload = {
+      const payload: CreateOrderPayload = {
+        storeId: Number(userData.userId),
+        boothId: Number(userData.userId),
+        tableId: userData.tableId,
         items: itemsForApi,
         totalPrice: totalOrderPrice,
         depositorName,
       };
 
-      await orderAPI.createOrder(userData.storeId, userData.tableId, payload);
+      await orderAPI.createOrder(payload);
+
       clearOrder();
       toast.success('주문이 완료되었습니다.');
       return true;
@@ -112,7 +127,6 @@ export const useOrder = () => {
     try {
       await orderAPI.setOrderCompleted(orderId);
       await getOrders(currentFilter);
-      toast.success('주문 처리가 완료되었습니다.');
     } catch (error) {
       handelError(error);
     }

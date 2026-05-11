@@ -10,7 +10,7 @@ import { useStore } from '@/hooks/useStore';
 import { useOrderStore } from '@/stores/orderStore';
 import { Menu } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 export default function MenuBoard() {
@@ -26,12 +26,18 @@ export default function MenuBoard() {
   const { orderItems } = useOrderStore();
   const isPreview = localStorage.getItem(KEYS.IS_PREVIEW);
 
-  const userData =
-    location.state?.userData ||
-    JSON.parse(sessionStorage.getItem('userData') || '{}');
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
+
+  const userData = useMemo(() => {
+    if (location.state?.userData) return location.state.userData;
+    try {
+      const stored = sessionStorage.getItem('userData');
+      return stored && stored !== 'undefined' ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  }, [location.state?.userData]);
 
   const handleMenuItemClick = (menu: Menu) => {
     setSelectedMenu(menu);
@@ -57,26 +63,26 @@ export default function MenuBoard() {
 
   return (
     <>
-      <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <div className="relative min-h-screen space-y-4 bg-white">
-          <TopBar />
-          <main className="p-4 pb-24">
-            <StoreBanner
-              boothName={name}
-              isPreview={isPreview === '1'}
-              tableNumber={userData.tableId}
-              notice={notice || ''}
-            />
-            <MenuList onMenuItemClick={handleMenuItemClick} />
-            <CustomerMissionList
-              missions={missions}
-              isLoading={isMissionsLoading}
-            />
-          </main>
-        </div>
+      <div className="relative min-h-screen space-y-4 bg-white">
+        <TopBar />
+        <main className="p-4 pb-24">
+          <StoreBanner
+            boothName={name}
+            isPreview={isPreview === '1'}
+            tableId={userData.tableId}
+            notice={notice || ''}
+          />
+          <MenuList onMenuItemClick={handleMenuItemClick} />
+          <CustomerMissionList
+            missions={missions}
+            isLoading={isMissionsLoading}
+          />
+        </main>
+      </div>
 
+      <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/30" />
+          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/30" />
           <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
             <Dialog.Title className="sr-only">메뉴 상세 정보</Dialog.Title>
             <Dialog.Description className="sr-only">
@@ -90,23 +96,23 @@ export default function MenuBoard() {
             )}
           </Dialog.Content>
         </Dialog.Portal>
-
-        {orderItems.length > 0 && (
-          <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 p-4">
-            <button
-              onClick={() => navigate(ROUTES.ORDERING)}
-              className="bg-primary-300 flex w-full flex-1 items-center justify-between rounded-2xl px-6 py-4 text-black"
-            >
-              <div className="flex w-full items-center justify-center gap-2">
-                <div className="text-b-1">주문하기</div>
-                <div className="text-c-1 flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">
-                  {totalQuantity}
-                </div>
-              </div>
-            </button>
-          </footer>
-        )}
       </Dialog.Root>
+
+      {orderItems.length > 0 && (
+        <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 p-4">
+          <button
+            onClick={() => navigate(ROUTES.ORDERING)}
+            className="bg-primary-300 flex w-full flex-1 items-center justify-between rounded-2xl px-6 py-4 text-black"
+          >
+            <div className="flex w-full items-center justify-center gap-2">
+              <div className="text-b-1">주문하기</div>
+              <div className="text-c-1 flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">
+                {totalQuantity}
+              </div>
+            </div>
+          </button>
+        </footer>
+      )}
     </>
   );
 }

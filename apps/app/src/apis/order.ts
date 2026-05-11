@@ -3,15 +3,8 @@ import axiosInstance from '.';
 
 export const orderAPI = {
   // 주문 생성
-  createOrder: async (
-    storeId: number,
-    tableId: number,
-    payload: CreateOrderPayload,
-  ) => {
-    const response = await axiosInstance.post(
-      `/stores/${storeId}/tables/${tableId}/orders`,
-      payload,
-    );
+  createOrder: async (payload: CreateOrderPayload) => {
+    const response = await axiosInstance.post('/orders', payload);
     return response.data;
   },
 

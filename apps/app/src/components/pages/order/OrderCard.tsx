@@ -25,6 +25,7 @@ export function OrderCard({
 
   const orderItems = order.items || [];
   const tableNum = order.tableId || '-';
+
   const depositorName = order.customerName || '알 수 없음';
 
   const timeString = order.createdAt || '';
@@ -67,8 +68,9 @@ export function OrderCard({
 
           {orderItems.map((item: any, index: number) => {
             const quantity = item.quantity ?? item.count ?? 0;
-            const itemName = item.name ?? item.menu ?? '메뉴명 없음';
-            const itemTotal = item.price * quantity;
+            const itemName = item.menu.name || '메뉴명 없음';
+
+            const itemTotal = (item.price || 0) * quantity;
 
             return (
               <div

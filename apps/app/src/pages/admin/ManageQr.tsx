@@ -9,7 +9,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const DOMAIN = 'https://withfestival.com';
+const DOMAIN = 'https://withfestival.site';
 
 type QrType = 'table' | 'waiting' | 'takeout';
 

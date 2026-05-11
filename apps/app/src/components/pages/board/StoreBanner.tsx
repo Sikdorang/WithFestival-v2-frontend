@@ -7,19 +7,26 @@ import RequestModal from './RequestModal';
 interface Props {
   boothName: string;
   isPreview: boolean;
-  tableNumber?: number;
+  tableId?: string | number;
   notice: string;
 }
 
 export default function StoreBanner({
   boothName,
   isPreview,
-  tableNumber,
+  tableId,
   notice,
 }: Props) {
   const navigate = useNavigate();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
+
+  const renderStatusText = () => {
+    if (isPreview) return '메뉴판 미리보기';
+    if (tableId === 'w') return '웨이팅 고객';
+    if (tableId === 0 || tableId === '0') return '포장 주문';
+    return `테이블 번호 ${tableId}`;
+  };
 
   return (
     <div>
@@ -34,9 +41,7 @@ export default function StoreBanner({
           <div className="flex w-full justify-between">
             <div>
               <div className="text-b-2 text-gray-300">{boothName}</div>
-              <div className="text-st-2 text-black">
-                {isPreview ? '메뉴판 미리보기' : `테이블 번호 ${tableNumber}`}
-              </div>
+              <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
             <CtaButton
               width="fit"

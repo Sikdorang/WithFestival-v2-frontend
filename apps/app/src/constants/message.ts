@@ -1,5 +1,5 @@
 export const ERROR_MESSAGES = {
-  sessionRequired: '세션이 만료되었습니다.',
+  sessionRequired: '유효하지 않은 인증번호입니다.',
   serverError: '서버에 문제가 발생했습니다.',
   unexpectedError: '알 수 없는 오류가 발생했습니다.',
   invalidCodeError: '유효하지 않은 인증번호입니다.',
