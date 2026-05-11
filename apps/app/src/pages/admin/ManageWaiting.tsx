@@ -46,20 +46,31 @@ export default function ManageWaiting() {
   }, []);
 
   useEffect(() => {
-    const handleRefresh = () => {
+    if (!socket) return;
+
+    const handleWaitingRefresh = () => {
       fetchWaitings();
     };
-    if (socket) {
-      socket.on('waitingProcessed', handleRefresh);
-      socket.on('waitingCreated', handleRefresh);
-    }
-    return () => {
-      if (socket) {
-        socket.off('waitingProcessed', handleRefresh);
-        socket.off('waitingCreated', handleRefresh);
-      }
+
+    const handleReservationRefresh = () => {
+      fetchSlots();
     };
-  }, [socket]);
+
+    socket.on('waiting.created', handleWaitingRefresh);
+    socket.on('waiting.status.canceled', handleWaitingRefresh);
+    socket.on('waiting.status.entered', handleWaitingRefresh);
+
+    socket.on('reservation.created', handleReservationRefresh);
+    socket.on('reservation.rejected', handleReservationRefresh);
+
+    return () => {
+      socket.off('waiting.created', handleWaitingRefresh);
+      socket.off('waiting.status.canceled', handleWaitingRefresh);
+      socket.off('waiting.status.entered', handleWaitingRefresh);
+      socket.off('reservation.created', handleReservationRefresh);
+      socket.off('reservation.rejected', handleReservationRefresh);
+    };
+  }, [socket, fetchWaitings, fetchSlots]);
 
   // ===================== [예약 상태 및 로직] =====================
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);

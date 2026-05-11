@@ -46,16 +46,16 @@ export default function Order() {
     };
 
     if (socket) {
-      socket.on('orderSendUpdated', handleRefresh);
-      socket.on('orderCookedUpdated', handleRefresh);
-      socket.on('orderDeleted', handleRefresh);
-      socket.on('orderCreated', handleRefresh);
+      socket.on('order.created', handleRefresh);
+      socket.on('order.payment.paid', handleRefresh);
+      socket.on('order.status.canceled', handleRefresh);
+      socket.on('order.status.completed', handleRefresh);
 
       return () => {
-        socket.off('orderSendUpdated', handleRefresh);
-        socket.off('orderCookedUpdated', handleRefresh);
-        socket.off('orderDeleted', handleRefresh);
-        socket.off('orderCreated', handleRefresh);
+        socket.off('order.created', handleRefresh);
+        socket.off('order.payment.paid', handleRefresh);
+        socket.off('order.status.canceled', handleRefresh);
+        socket.off('order.status.completed', handleRefresh);
       };
     }
   }, [socket, orderType, getOrders]);

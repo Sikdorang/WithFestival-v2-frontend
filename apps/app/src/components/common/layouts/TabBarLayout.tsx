@@ -60,21 +60,31 @@ export function TabBarLayout() {
     if (!socket) return;
 
     const handleOrderCreated = () => {
-      toast.success('새 주문이 들어왔어요 !');
-      notification.play();
+      toast.success('새 주문이 들어왔어요!');
+      notification.play().catch(() => {});
       setHasNewOrder(true);
     };
 
     const handleWaitingCreated = () => {
+      toast.success('새 웨이팅이 등록되었습니다.');
+      notification.play().catch(() => {});
       setHasNewWaiting(true);
     };
 
-    socket.on('orderCreated', handleOrderCreated);
-    socket.on('waitingCreated', handleWaitingCreated);
+    const handleReservationCreated = () => {
+      toast.success('새 예약이 접수되었습니다.');
+      notification.play().catch(() => {});
+      setHasNewWaiting(true);
+    };
+
+    socket.on('order.created', handleOrderCreated);
+    socket.on('waiting.created', handleWaitingCreated);
+    socket.on('reservation.created', handleReservationCreated);
 
     return () => {
-      socket.off('orderCreated', handleOrderCreated);
-      socket.off('waitingCreated', handleWaitingCreated);
+      socket.off('order.created', handleOrderCreated);
+      socket.off('waiting.created', handleWaitingCreated);
+      socket.off('reservation.created', handleReservationCreated);
     };
   }, [socket]);
 

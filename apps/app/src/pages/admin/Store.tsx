@@ -76,6 +76,16 @@ export default function Store() {
           </div>
         </section>
 
+        <section className="mb-2 space-y-4 p-1">
+          <div
+            className="flex items-center justify-between"
+            onClick={() => navigate(ROUTES.COUPON)}
+          >
+            <div className="text-lg font-semibold text-gray-900">쿠폰 관리</div>
+            <DepthIcon />
+          </div>
+        </section>
+
         <section className="mt-5 space-y-4 p-1 pb-20">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">메뉴 관리</h2>
