@@ -48,25 +48,33 @@ function formatRange(startStr: string, endStr: string) {
 function dayMeta(festival: FestivalEvent, tab: Tab) {
   const start = parseDate(festival.startDate);
   const end = parseDate(festival.endDate);
-
-  // 💡 실시간 '오늘' 재계산 (컴포넌트 호출 시점 기준)
   const now = getSeoulToday();
 
   if (tab === "ongoing") {
-    // 오늘이 5/11이고 시작이 5/10이면 daysBetween은 1. 1 + 1 = 2일차.
     const dayNum = daysBetween(now, start) + 1;
     const total = daysBetween(end, start) + 1;
-    return { label: `${dayNum}/${total}일차`, tone: "live" as const };
+    return {
+      label: `${dayNum}/${total}일차`,
+      tone: "live" as const, // 명시적 리터럴 타입 지정
+    };
   }
 
   if (tab === "upcoming") {
     const d = daysBetween(start, now);
     if (d <= 0) return { label: "오늘 시작", tone: "live" as const };
-    return { label: `D-${d}`, tone: d <= 3 ? "live" : "future" };
+
+    return {
+      label: `D-${d}`,
+      // 💡 여기서 'as const'를 붙여 string이 아닌 리터럴 타입임을 알려줍니다.
+      tone: (d <= 3 ? "live" : "future") as "live" | "future",
+    };
   }
 
   const d = daysBetween(now, end);
-  return { label: `${d}일 전`, tone: "past" as const };
+  return {
+    label: `${d}일 전`,
+    tone: "past" as const,
+  };
 }
 
 export default function Schedule() {
