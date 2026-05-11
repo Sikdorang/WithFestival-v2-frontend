@@ -28,6 +28,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import AiMenuGenerator from '../pages/admin/AiMenuGenerator';
+import ManageCoupon from '../pages/admin/ManageCoupon';
 import ManageMission from '../pages/admin/ManageMission';
 import ManageWaitingSetting from '../pages/admin/ManageWaitingSetting';
 import { authLoader } from './authLoader';
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MANAGE_QR,
         element: <ManageQr />,
+      },
+      {
+        path: ROUTES.COUPON,
+        element: <ManageCoupon />,
       },
     ],
   },
