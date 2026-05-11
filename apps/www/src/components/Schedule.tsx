@@ -8,14 +8,27 @@ import Icon from "./Icon";
 
 type Tab = "ongoing" | "upcoming" | "ended";
 
-const TODAY = new Date("2026-04-28T00:00:00+09:00");
+const getSeoulToday = () => {
+  const now = new Date();
+  // Intl을 사용하여 서울의 현재 날짜(YYYY-MM-DD)만 추출
+  const seoulDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+
+  return new Date(`${seoulDate}T00:00:00+09:00`);
+};
+
+const TODAY = getSeoulToday();
 
 function parseDate(s: string) {
   return new Date(`${s}T00:00:00+09:00`);
 }
 
-function daysBetween(a: Date, b: Date) {
-  const ms = a.getTime() - b.getTime();
+function daysBetween(target: Date, base: Date) {
+  const ms = target.getTime() - base.getTime();
   return Math.round(ms / (1000 * 60 * 60 * 24));
 }
 
@@ -35,18 +48,24 @@ function formatRange(startStr: string, endStr: string) {
 function dayMeta(festival: FestivalEvent, tab: Tab) {
   const start = parseDate(festival.startDate);
   const end = parseDate(festival.endDate);
+
+  // 💡 실시간 '오늘' 재계산 (컴포넌트 호출 시점 기준)
+  const now = getSeoulToday();
+
   if (tab === "ongoing") {
-    const dayNum = daysBetween(TODAY, start) + 1;
+    // 오늘이 5/11이고 시작이 5/10이면 daysBetween은 1. 1 + 1 = 2일차.
+    const dayNum = daysBetween(now, start) + 1;
     const total = daysBetween(end, start) + 1;
     return { label: `${dayNum}/${total}일차`, tone: "live" as const };
   }
+
   if (tab === "upcoming") {
-    const d = daysBetween(start, TODAY);
+    const d = daysBetween(start, now);
     if (d <= 0) return { label: "오늘 시작", tone: "live" as const };
-    if (d <= 3) return { label: `D-${d}`, tone: "live" as const };
-    return { label: `D-${d}`, tone: "future" as const };
+    return { label: `D-${d}`, tone: d <= 3 ? "live" : "future" };
   }
-  const d = daysBetween(TODAY, end);
+
+  const d = daysBetween(now, end);
   return { label: `${d}일 전`, tone: "past" as const };
 }
 

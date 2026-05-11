@@ -9,8 +9,18 @@ export type FestivalEvent = RawFestival & {
   abbr: string;
 };
 
+const getSeoulDateString = () => {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+};
+
+const TODAY = new Date(`${getSeoulDateString()}T00:00:00+09:00`);
+
 const parseDate = (s: string) => new Date(`${s}T00:00:00+09:00`);
-const TODAY = new Date("2026-04-28T00:00:00+09:00");
 
 export const useFestival = () => {
   const [rawFestivals, setRawFestivals] = useState<RawFestival[]>([]);
@@ -68,7 +78,7 @@ export const useFestival = () => {
     upcoming.sort(sortFn);
     ended.sort(
       (a, b) => parseDate(b.endDate).getTime() - parseDate(a.endDate).getTime(),
-    ); // 종료는 최신순
+    );
 
     return { ongoing, upcoming, ended };
   }, [rawFestivals]);
