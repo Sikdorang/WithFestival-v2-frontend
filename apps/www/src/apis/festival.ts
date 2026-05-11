@@ -1,10 +1,19 @@
 import { type FestivalEvent } from "@/src/data/schedule";
 import axiosInstance from "./index";
 
+export interface RawFestival {
+  id: string;
+  university: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+}
+
 export const festivalAPI = {
   // 축제 목록 조회
   getFestivals: async () => {
-    const response = await axiosInstance.get<FestivalEvent[]>("/festivals");
+    const response = await axiosInstance.get<RawFestival[]>("/festivals");
     return response.data;
   },
 

@@ -3,7 +3,7 @@
 import { type FestivalEvent } from "@/src/data/schedule";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { useFestival } from "../hooks/useFestival"; // 경로 확인 필요
+import { useFestival } from "../hooks/useFestival";
 import Icon from "./Icon";
 
 type Tab = "ongoing" | "upcoming" | "ended";
