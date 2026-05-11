@@ -24,12 +24,15 @@ export function SocketProvider({ children }: Props) {
       const newSocket = io(SOCKET_URL, {
         path: '/socket.io',
         transports: ['websocket'],
-        auth: accessToken ? { token: accessToken } : { boothId: user.id },
-        reconnectionAttempts: 5,
+        auth: accessToken ? { token: accessToken } : { boothId: user?.id },
       });
 
       newSocket.on('connect', () => {
-        console.log('✅ 소켓 연결 ID:', newSocket.id);
+        console.log('socket connected');
+      });
+
+      newSocket.on('connect_error', () => {
+        console.error('socket rejected');
       });
 
       setSocket(newSocket);

@@ -57,6 +57,15 @@ export function TabBarLayout() {
   };
 
   useEffect(() => {
+    if (location.pathname === ROUTES.MANAGE_WAITING) {
+      setHasNewWaiting(false);
+    }
+    if (location.pathname === ROUTES.ORDER) {
+      setHasNewOrder(false);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
     if (!socket) return;
 
     const handleOrderCreated = () => {
