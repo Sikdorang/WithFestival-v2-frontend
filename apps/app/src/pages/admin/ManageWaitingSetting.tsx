@@ -149,7 +149,7 @@ export default function ManageWaitingSetting() {
                           : 'bg-gray-100 text-gray-500'
                       }`}
                     >
-                      {step === 0 ? '직전(다음 차례)' : `${step}명 전`}
+                      {step === 0 ? '직전(다음 차례)' : `${step}팀 전`}
                     </button>
                   ))}
                 </div>
