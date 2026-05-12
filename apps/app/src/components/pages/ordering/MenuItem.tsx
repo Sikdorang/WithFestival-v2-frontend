@@ -1,7 +1,5 @@
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 
-const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
-
 interface MenuItemProps {
   name: string;
   price: number;
@@ -20,7 +18,7 @@ export default function MenuItem({
       {image ? (
         <img
           className="flex aspect-square max-w-[180px] flex-1 rounded-2xl bg-gray-100 object-cover"
-          src={`${IMAGE_PREFIX}${image}`}
+          src={`${image}`}
           alt={name}
         />
       ) : (

@@ -25,7 +25,7 @@ export const useOrder = () => {
   }, [location.state?.userData]);
 
   // 주문 생성
-  const createOrder = async (depositorName: string) => {
+  const createOrder = async (depositorName: string, phoneNumber: string) => {
     setIsLoading(true);
     setOrderError(null);
 
@@ -52,11 +52,11 @@ export const useOrder = () => {
       const payload: CreateOrderPayload = {
         storeId: Number(userData.userId),
         boothId: Number(userData.userId),
-
         ...(parsedTableId >= 1 ? { tableId: parsedTableId } : {}),
         items: itemsForApi,
         totalPrice: totalOrderPrice,
         depositorName,
+        phoneNumber: phoneNumber,
       };
 
       await orderAPI.createOrder(payload);

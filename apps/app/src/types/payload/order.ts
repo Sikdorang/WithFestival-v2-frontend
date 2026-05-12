@@ -11,4 +11,5 @@ export interface CreateOrderPayload {
   items: OrderItem[];
   totalPrice: number;
   depositorName: string;
+  phoneNumber: string;
 }

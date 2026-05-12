@@ -32,6 +32,7 @@ export default function Ordering() {
     'remit' | 'depositor' | 'complete'
   >('remit');
   const [depositorName, setDepositorName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const totalAmount = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -39,10 +40,11 @@ export default function Ordering() {
   );
 
   const handleFinalSubmit = async () => {
-    const isSuccess = await createOrder(depositorName);
+    const isSuccess = await createOrder(depositorName, phoneNumber);
     if (isSuccess) {
       setModalStep('complete');
       setDepositorName('');
+      setPhoneNumber('');
     }
   };
 
@@ -116,6 +118,8 @@ export default function Ordering() {
               onSubmit={handleFinalSubmit}
               depositorName={depositorName}
               setDepositorName={setDepositorName}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
             />
           ) : (
             <CompleteStep />

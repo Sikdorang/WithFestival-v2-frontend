@@ -1,7 +1,7 @@
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { OrderSummary } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { SUCCESS_MESSAGES } from '../../../constants/message';
 import CtaButton from '../../common/buttons/CtaButton';
@@ -37,6 +37,16 @@ export function OrderCard({
     : '';
 
   const isPaid = order.paymentStatus === 'PAID';
+
+  const isMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return /Mobi/i.test(window.navigator.userAgent);
+  }, []);
+
+  const formattedPhone = useMemo(
+    () => order.phoneNumber?.replace(/-/g, '') || '',
+    [order.phoneNumber],
+  );
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -97,6 +107,24 @@ export function OrderCard({
           <p>입금자명: {depositorName}</p>
           <div className="text-right">
             <p>{(order.totalPrice || 0).toLocaleString()}원</p>
+            <span className="text-sm font-medium text-gray-400"></span>
+          </div>
+        </div>
+
+        <div className="font-regular text-gray-500-50 flex items-center justify-between text-[14px]">
+          <p>전화번호</p>
+          <div className="text-gray-500-90 text-right">
+            {order.phoneNumber ? (
+              <a
+                href={isMobile ? `tel:${formattedPhone}` : undefined}
+                className="text-gray-500-90 text-[14px] font-semibold underline underline-offset-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {order.phoneNumber}
+              </a>
+            ) : (
+              <span className="text-sm text-gray-400">번호 없음</span>
+            )}
             <span className="text-sm font-medium text-gray-400"></span>
           </div>
         </div>

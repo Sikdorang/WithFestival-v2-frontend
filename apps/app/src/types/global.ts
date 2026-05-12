@@ -60,6 +60,7 @@ export interface OrderSummary {
   status: string;
   paymentStatus: string;
   customerName: string;
+  phoneNumber: string;
   createdAt: string;
   updatedAt: string;
   items: OrderItemSummary[];

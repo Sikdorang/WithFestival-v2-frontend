@@ -1,5 +1,6 @@
 import { OrderSummary } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useMemo } from 'react';
 
 interface Props {
   order: OrderSummary | any;
@@ -20,6 +21,16 @@ export function OrderBill({ order }: Props) {
 
   const depositorName =
     order.customerName || order.depositorName || order.name || '알 수 없음';
+
+  const isMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return /Mobi/i.test(window.navigator.userAgent);
+  }, []);
+
+  const formattedPhone = useMemo(
+    () => order.phoneNumber?.replace(/-/g, '') || '',
+    [order.phoneNumber],
+  );
 
   return (
     <Dialog.Root open={true} onOpenChange={() => {}}>
@@ -78,10 +89,24 @@ export function OrderBill({ order }: Props) {
           </div>
         </div>
 
-        <div>
-          <div className="flex items-center gap-4 rounded-xl bg-gray-100 p-3 px-8">
-            <span className="text-sm text-gray-400">입금자명</span>
+        <div className="flex flex-col gap-2 rounded-xl bg-gray-100 px-7 py-3">
+          <div className="flex items-center gap-4">
+            <span className="w-16 text-sm text-gray-400">입금자명</span>
             <p className="text-gray-black">{depositorName}</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="w-16 text-sm text-gray-400">전화번호</span>
+            {order.phoneNumber ? (
+              <a
+                href={isMobile ? `tel:${formattedPhone}` : undefined}
+                className="text-gray-black underline underline-offset-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {order.phoneNumber}
+              </a>
+            ) : (
+              <span className="text-sm text-gray-400">번호 없음</span>
+            )}
           </div>
         </div>
       </div>
