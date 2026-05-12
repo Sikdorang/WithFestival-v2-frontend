@@ -52,6 +52,7 @@ export default function ManageMissionDetail() {
               placeholder="미션 달성 방법을 입력해주세요."
               value={formData.description}
               limitHide
+              maxLength={100}
               onChange={(e) => handleChange('description', e.target.value)}
             />
             <TextInput
@@ -65,7 +66,6 @@ export default function ManageMissionDetail() {
         ) : (
           <div className="flex flex-col gap-1">
             <h1 className="text-st-2 text-black">{formData.missionName}</h1>{' '}
-            {/* 💡 title -> missionName */}
             {formData.description && (
               <p className="text-b-1 text-gray-500">{formData.description}</p>
             )}

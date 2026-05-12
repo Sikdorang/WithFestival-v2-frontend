@@ -77,7 +77,7 @@ export default function AdminReserveManage() {
           </div>
 
           {/* 2. 예약 메시지 설정 버튼 (예약 기능이 켜져있을 때만 활성화) */}
-          <button
+          {/* <button
             onClick={() => setIsMessageModalOpen(true)}
             disabled={!reservationEnabled || isLoading}
             className={`z-10 flex w-full items-center justify-between rounded-xl bg-white p-5 text-left shadow-[0_2px_8px_rgba(17,21,63,0.04)] transition-all active:bg-gray-50 ${
@@ -95,7 +95,7 @@ export default function AdminReserveManage() {
               </span>
             </div>
             <span className="text-xl font-light text-gray-300">›</span>
-          </button>
+          </button> */}
         </div>
       </main>
 

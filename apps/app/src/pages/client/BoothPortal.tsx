@@ -24,14 +24,12 @@ export default function BoothPortal() {
     getStorePublicInfo,
   } = useStore();
 
-  // 2. 추출한 storeId가 있을 경우 정보 조회
   useEffect(() => {
     if (storeId) {
       getStorePublicInfo(Number(storeId));
     }
   }, [storeId]);
 
-  // 3. 필터링된 링크 목록 생성
   const visibleLinks = getBoothLinks({
     waitingsEnabled,
     reservationEnabled,

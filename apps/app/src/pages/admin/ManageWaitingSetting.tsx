@@ -73,7 +73,7 @@ export default function ManageWaitingSetting() {
           </div>
 
           {/* 웨이팅 알림 메시지 설정 버튼 */}
-          <button
+          {/* <button
             onClick={() => setIsMessageModalOpen(true)}
             disabled={!waitingsEnabled}
             className={`z-10 flex w-full items-center justify-between rounded-xl bg-white p-5 text-left shadow-[0_2px_8px_rgba(17,21,63,0.04)] transition-all active:bg-gray-50 ${
@@ -90,10 +90,10 @@ export default function ManageWaitingSetting() {
               </span>
             </div>
             <span className="text-xl font-light text-gray-300">›</span>
-          </button>
+          </button> */}
         </div>
 
-        <div
+        {/* <div
           className={`mt-2 flex flex-col gap-4 ${!waitingsEnabled ? 'pointer-events-none opacity-40 grayscale' : ''}`}
         >
           <div className="flex items-center gap-3 rounded-xl bg-[#F0F5FF] p-4 text-[#11153F]">
@@ -109,7 +109,7 @@ export default function ManageWaitingSetting() {
               </span>
             </div>
           </div>
-        </div>
+        </div> */}
       </main>
 
       {/* 설정 모달 */}
