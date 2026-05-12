@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
 
@@ -16,7 +16,7 @@ export default function StoreBanner({
   tableId,
   notice,
 }: Props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
 
