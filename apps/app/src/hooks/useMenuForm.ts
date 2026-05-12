@@ -61,7 +61,6 @@ export const useMenuForm = (menuId: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 💡 허용된 MIME 타입 목록 정의
     const allowedTypes = [
       'image/jpg',
       'image/jpeg',
@@ -72,10 +71,15 @@ export const useMenuForm = (menuId: number) => {
 
     if (!allowedTypes.includes(file.type)) {
       toast.error('지원하지 않는 형식입니다. (jpg, jpeg, png, webp, gif)');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
 
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+    if (file.size > MAX_SIZE) {
+      toast.error('이미지 크기가 너무 큽니다. (최대 10MB)');
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
