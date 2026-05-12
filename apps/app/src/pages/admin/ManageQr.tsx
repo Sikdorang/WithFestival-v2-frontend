@@ -35,10 +35,14 @@ export default function ManageQr() {
   }, []);
 
   const { finalQrUrl, currentTableId } = useMemo(() => {
-    const data: { userId: string; tableId?: string | number } = { userId };
+    const data: { userId: string; tableId?: number } = { userId };
 
     if (qrType === 'table') {
-      data.tableId = tableNum;
+      const num = Number(tableNum);
+
+      if (!isNaN(num) && num > 0) {
+        data.tableId = num;
+      }
     }
 
     const encrypted = encryptJson(data);
@@ -92,6 +96,7 @@ export default function ManageQr() {
 
           {qrType === 'table' && (
             <TextInput
+              type="number"
               label="테이블 번호"
               placeholder="테이블 번호를 입력하세요"
               value={tableNum}
