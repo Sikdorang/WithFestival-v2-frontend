@@ -49,7 +49,7 @@ export default function TextInput({
         }`}
       >
         {!isLoading ? (
-          <div>
+          <div className="w-full">
             <input
               value={value}
               onChange={onChange}
