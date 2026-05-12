@@ -7,7 +7,7 @@ export interface OrderItem {
 export interface CreateOrderPayload {
   storeId: number;
   boothId: number;
-  tableId: number | string;
+  tableId?: number;
   items: OrderItem[];
   totalPrice: number;
   depositorName: string;

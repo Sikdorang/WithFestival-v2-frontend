@@ -47,10 +47,13 @@ export const useOrder = () => {
         0,
       );
 
+      const parsedTableId = Number(userData.tableId);
+
       const payload: CreateOrderPayload = {
         storeId: Number(userData.userId),
         boothId: Number(userData.userId),
-        tableId: userData.tableId,
+
+        ...(parsedTableId >= 1 ? { tableId: parsedTableId } : {}),
         items: itemsForApi,
         totalPrice: totalOrderPrice,
         depositorName,
