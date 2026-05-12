@@ -3,6 +3,7 @@ import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayo
 import TopBar from '@/components/common/layouts/TopBar';
 import { getBoothLinks } from '@/constants/BoothPortal';
 import { useStore } from '@/hooks/useStore';
+import { encryptJson } from '@/utils/crypto';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -35,6 +36,23 @@ export default function BoothPortal() {
     reservationEnabled,
   }).filter((link) => link.enabled);
 
+  const handleLinkClick = (link: any) => {
+    if (link.id === 'takeout') {
+      const data = { userId: String(storeId), tableId: 0 };
+      const encrypted = encryptJson(data);
+      const encoded = encrypted ? encodeURIComponent(encrypted) : '';
+
+      navigate(`/check/${encoded}`);
+      return;
+    }
+
+    if (link.path.startsWith('http')) {
+      window.open(link.path, '_blank', 'noopener,noreferrer');
+    } else {
+      navigate(link.path);
+    }
+  };
+
   return (
     <BaseResponsiveLayout>
       <TopBar />
@@ -57,7 +75,7 @@ export default function BoothPortal() {
           {visibleLinks.map((link) => (
             <button
               key={link.id}
-              onClick={() => navigate(link.path)}
+              onClick={() => handleLinkClick(link)}
               className="bg-gray-500-3 flex w-full items-center gap-4 rounded-[1.25rem] p-5 text-left transition-all active:scale-[0.98] active:bg-gray-100"
             >
               <div

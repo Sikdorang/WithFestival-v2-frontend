@@ -1,3 +1,5 @@
+import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
+import Navigator from '@/components/common/layouts/Navigator';
 import TopBar from '@/components/common/layouts/TopBar';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import MenuList from '@/components/pages/board/MenuList';
@@ -64,7 +66,15 @@ export default function MenuBoard() {
   return (
     <>
       <div className="relative min-h-screen space-y-4 bg-white">
-        <TopBar />
+        {userData.tableId == 0 ? (
+          <Navigator
+            left={<GoBackIcon />}
+            onLeftPress={() => navigate(-1)}
+            center={<div className="text-st-1">포장 주문하기</div>}
+          />
+        ) : (
+          <TopBar />
+        )}
         <main className="p-4 pb-24">
           <StoreBanner
             boothName={name}
