@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   CartesianGrid,
   Line,
@@ -18,6 +19,24 @@ interface HourlySalesChartProps {
 }
 
 export default function HourlySalesChart({ data }: HourlySalesChartProps) {
+  const maxSales = useMemo(() => {
+    if (!data || data.length === 0) return 0;
+    return Math.max(...data.map((d) => d.매출));
+  }, [data]);
+
+  const formatYAxis = (value: number) => {
+    if (value === 0) return '0';
+
+    if (maxSales >= 10000) {
+      const manValue = value / 10000;
+      return Number.isInteger(manValue)
+        ? `${manValue}만`
+        : `${manValue.toFixed(1)}만`;
+    }
+
+    return value.toLocaleString();
+  };
+
   if (!data || data.length === 0) return null;
 
   return (
@@ -45,13 +64,11 @@ export default function HourlySalesChart({ data }: HourlySalesChartProps) {
             />
 
             <YAxis
-              tickFormatter={(value) =>
-                value === 0 ? '0' : `${value / 10000}만`
-              }
+              tickFormatter={formatYAxis}
               tick={{ fontSize: 12, fill: '#8B95A1' }}
               axisLine={false}
               tickLine={false}
-              width={45}
+              width={maxSales >= 10000 ? 45 : 55}
             />
 
             <Tooltip

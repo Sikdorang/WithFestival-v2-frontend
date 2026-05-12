@@ -26,10 +26,6 @@ export default function ManageBoothItem({
     setIsEditing(true);
   };
 
-  // const handleCancel = () => {
-  //   setIsEditing(false);
-  // };
-
   const handleSave = () => {
     onSave(inputValue);
     setIsEditing(false);
@@ -37,7 +33,9 @@ export default function ManageBoothItem({
 
   return (
     <div className="relative mb-4 rounded-2xl bg-white p-4">
-      <h2 className="text-gray-500-80 mb-3 text-[14px] font-medium">{title}</h2>
+      <h2 className="text-gray-500-80 mb-3 pt-1 text-[14px] font-medium">
+        {title}
+      </h2>
 
       {isEditing ? (
         <div className="space-y-3">
@@ -69,7 +67,9 @@ export default function ManageBoothItem({
         </div>
       ) : (
         <div>
-          <div className="text-b-1">{value || '등록된 이름이 없습니다.'}</div>
+          <div className="text-b-1 pt-4">
+            {value || '등록된 이름이 없습니다.'}
+          </div>
           <div className="absolute top-3 right-4">
             <CtaButton
               text={value ? '수정하기' : '등록하기'}

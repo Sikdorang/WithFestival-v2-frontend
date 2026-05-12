@@ -7,7 +7,7 @@ interface Props {
 }
 
 export function WaitingCard({ waitingInfo, updateWaitingStatus }: Props) {
-  const { name, people, phoneNumber, time, id } = waitingInfo;
+  const { name, partySize, phoneNumber, time, id } = waitingInfo;
 
   const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
   const formattedPhone = useMemo(
@@ -44,7 +44,7 @@ export function WaitingCard({ waitingInfo, updateWaitingStatus }: Props) {
         <div className="flex items-center justify-between">
           <span className="font-medium text-gray-500">인원</span>
           <span className="text-lg font-semibold text-gray-800">
-            {people}명
+            {partySize}명
           </span>
         </div>
       </div>

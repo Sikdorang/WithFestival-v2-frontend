@@ -19,7 +19,7 @@ export interface Order {
 export interface WaitingDTO {
   name: string;
   phoneNumber: string;
-  people: number;
+  partySize: number;
 }
 
 export interface IWaitingListItem extends WaitingDTO {

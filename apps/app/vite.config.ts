@@ -31,11 +31,6 @@ export default defineConfig({
 
         icons: [
           {
-            src: '/icons/android-icon-36x36.png',
-            sizes: '36x36',
-            type: 'image/png',
-          },
-          {
             src: '/icons/android-icon-48x48.png',
             sizes: '48x48',
             type: 'image/png',
