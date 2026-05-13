@@ -1,9 +1,11 @@
+import axiosInstance from '@/apis/index';
 import StoreIcon from '@/assets/icons/ic_store.svg?react';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import TopBar from '@/components/common/layouts/TopBar';
 import { getBoothLinks } from '@/constants/BoothPortal';
 import { useStore } from '@/hooks/useStore';
 import { encryptJson } from '@/utils/crypto';
+import { getOrCreateDeviceId } from '@/utils/deviceId';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -15,7 +17,7 @@ export default function BoothPortal() {
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
 
-  const storeId = userData?.userId || userData?.id;
+  const storeId = userData?.userId;
 
   const {
     name,
@@ -36,7 +38,26 @@ export default function BoothPortal() {
     reservationEnabled,
   }).filter((link) => link.enabled);
 
+  const sendClickLog = (linkId: string) => {
+    if (!storeId) return;
+
+    const identifier = getOrCreateDeviceId();
+    const action = `portal.click.${linkId}`;
+
+    axiosInstance
+      .post('/logs', {
+        identifier,
+        action,
+        storeId: Number(storeId),
+      })
+      .catch((error) => {
+        console.error(`로그 전송 실패 (${action}):`, error);
+      });
+  };
+
   const handleLinkClick = (link: any) => {
+    sendClickLog(link.id);
+
     if (link.id === 'takeout') {
       const data = { userId: String(storeId), tableId: 0 };
       const encrypted = encryptJson(data);

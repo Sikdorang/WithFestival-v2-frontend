@@ -1,13 +1,17 @@
 import CherryBlossom from '@/assets/icons/ic_clock.svg?react';
+import CtaButton from '@/components/common/buttons/CtaButton';
+import TextInput from '@/components/common/inputs/TextInput';
 import { useState } from 'react';
-import CtaButton from '../../common/buttons/CtaButton';
-import TextInput from '../../common/inputs/TextInput';
+
+interface NicknameSetupProps {
+  onSubmit: (name: string) => void;
+  isLoading?: boolean;
+}
 
 export default function NicknameSetup({
   onSubmit,
-}: {
-  onSubmit: (name: string) => void;
-}) {
+  isLoading = false,
+}: NicknameSetupProps) {
   const [input, setInput] = useState('');
 
   return (
@@ -31,13 +35,14 @@ export default function NicknameSetup({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           limitHide
+          disabled={isLoading}
         />
       </div>
 
       <CtaButton
         onClick={() => input && onSubmit(input)}
-        disabled={!input}
-        text="시작하기"
+        disabled={!input || isLoading}
+        text={isLoading ? '설정 중...' : '시작하기'}
         radius="_2xl"
       />
     </div>
