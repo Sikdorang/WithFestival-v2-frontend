@@ -3,7 +3,7 @@ import {
   StoreTableLikeResponse,
   TableLikePayload,
   TableLikeResponse,
-} from '@/apis/LoveAlarm';
+} from '@/apis/loveAlarm';
 import { useCallback, useState } from 'react';
 
 export const useLoveAlarm = () => {
