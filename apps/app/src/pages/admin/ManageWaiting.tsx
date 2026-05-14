@@ -96,7 +96,11 @@ export default function ManageWaiting() {
 
   return (
     <BaseResponsiveLayout>
-      <WaitingTopBar value={0} type={activeTab} onTypeChange={setActiveTab} />
+      <WaitingTopBar
+        value={waitingList.length}
+        type={activeTab}
+        onTypeChange={setActiveTab}
+      />
 
       {/* ===================== [웨이팅 탭 컨텐츠] ===================== */}
       {activeTab === 'WAITING' && (
