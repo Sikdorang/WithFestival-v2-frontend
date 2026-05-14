@@ -5,7 +5,7 @@ import JoinWaitlistFinish from '@/components/pages/waiting/JoinWaitlistFinish';
 import { useStore } from '@/hooks/useStore';
 import { useWaiting } from '@/hooks/useWaiting';
 import { IWaitingListItem } from '@/types/global';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
 import NoticeView from '../board/NoticeView';
@@ -19,6 +19,7 @@ const waitlistSchema = z.object({
 });
 
 export default function JoinWaitlistForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const { createWaiting, fetchActiveWaitingCount, activeWaitingCount } =
     useWaiting();
   const { name: boothName, notice, getStorePublicInfo } = useStore();
@@ -27,6 +28,7 @@ export default function JoinWaitlistForm() {
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
   const storeId = userData?.userId || userData?.id;
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (storeId) {
@@ -69,19 +71,37 @@ export default function JoinWaitlistForm() {
   };
 
   const handleSubmit = async () => {
-    if (!storeId) return;
+    if (!storeId || isLoading) return;
 
-    const result = await createWaiting(Number(storeId), {
-      name: formData.name,
-      phoneNumber: formData.phone,
-      partySize: Number(formData.partySize),
-    });
-
-    if (result) {
-      setWaitingResult(result);
-      setIsFinishJoinWaitlist(true);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
     }
+
+    timerRef.current = setTimeout(async () => {
+      setIsLoading(true);
+      try {
+        const result = await createWaiting(Number(storeId), {
+          name: formData.name,
+          phoneNumber: formData.phone,
+          partySize: Number(formData.partySize),
+        });
+
+        if (result) {
+          setWaitingResult(result);
+          setIsFinishJoinWaitlist(true);
+        }
+      } finally {
+        setIsLoading(false);
+        timerRef.current = null;
+      }
+    }, 300);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   if (isFinishJoinWaitlist) {
     return (
