@@ -1,0 +1,30 @@
+{
+  "customer": {
+    "portal": {
+      "noName": "No booth information",
+      "noEvent": "No ongoing events.",
+      "links": {
+        "waiting": {
+          "title": "Register for Waiting",
+          "sub": "Join the queue for this booth"
+        },
+        "reserve": {
+          "title": "Reserve Booth",
+          "sub": "Book in advance for your desired time"
+        },
+        "takeout": {
+          "title": "Order Takeout",
+          "sub": "Pick up immediately without waiting"
+        },
+        "schedule": {
+          "title": "Other Univ. Festivals",
+          "sub": "Check the status of other festivals"
+        },
+        "ranking": {
+          "title": "Real-time Pub Ranking",
+          "sub": "Check rankings by pub"
+        }
+      }
+    }
+  }
+}

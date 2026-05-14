@@ -1,13 +1,13 @@
 import CopyIcon from '@/assets/icons/ic_copy.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
+import TextInput from '@/components/common/inputs/TextInput';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { SUCCESS_MESSAGES } from '@/constants/message';
+import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
 import { useCoupon } from '@/hooks/useCoupon';
 import { useStore } from '@/hooks/useStore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import scrollIntoView from 'scroll-into-view-if-needed';
-import TextInput from '../../common/inputs/TextInput';
 
 interface RemitStepProps {
   totalAmount: number;
@@ -16,10 +16,10 @@ interface RemitStepProps {
 
 export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-  const couponAreaRef = useRef<HTMLDivElement>(null);
   const { getStorePublicInfo, account } = useStore();
-
   const { validateCoupon } = useCoupon();
+  const { targetRef, handleFocus, handleBlur } =
+    useKeyboardScroll<HTMLDivElement>();
 
   const [couponCode, setCouponCode] = useState('');
   const [isCouponApplied, setIsCouponApplied] = useState(false);
@@ -29,24 +29,6 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
     getStorePublicInfo(userData.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleInputFocus = () => {
-    setTimeout(() => {
-      if (couponAreaRef.current) {
-        scrollIntoView(couponAreaRef.current, {
-          scrollMode: 'if-needed',
-          block: 'center',
-          behavior: 'smooth',
-        });
-      }
-    }, 350);
-  };
-
-  const handleInputBlur = () => {
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 100);
-  };
 
   const handleToggleCoupon = async () => {
     if (isCouponApplied) {
@@ -108,10 +90,7 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
           </div>
         </div>
 
-        <div
-          ref={couponAreaRef}
-          className="flex w-full flex-col gap-2 text-left"
-        >
+        <div ref={targetRef} className="flex w-full flex-col gap-2 text-left">
           <div className="flex w-full items-end gap-2">
             <div className="flex-1">
               <TextInput
@@ -121,8 +100,8 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
                 onChange={(e) => setCouponCode(e.target.value)}
                 placeholder="쿠폰 번호를 입력하세요"
                 disabled={isCouponApplied}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
               />
             </div>
             <div className="flex flex-col justify-end">

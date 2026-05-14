@@ -4,13 +4,23 @@ import TopBar from '@/components/common/layouts/TopBar';
 import MenuList from '@/components/pages/board/MenuList';
 import StoreInformation from '@/components/pages/store/StoreInformation';
 import { ROUTES } from '@/constants/routes';
+import { STORE_MANAGEMENT_MENUS } from '@/constants/storeMenu';
+import { AdminMenuId, useLogs } from '@/hooks/common/useLogs';
 import { useAuthStore } from '@/stores/authStore';
 import { Menu } from '@/types/global';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../hooks/useStore';
 
 export default function Store() {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const { sendAdminSettingsClickLog } = useLogs();
+  const { storeId, getMyStoreInfo } = useStore();
+
+  useEffect(() => {
+    getMyStoreInfo();
+  }, []);
 
   const handleMenuItemClick = (item: Menu) => {
     navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
@@ -21,63 +31,28 @@ export default function Store() {
     navigate(ROUTES.LOGIN);
   };
 
+  const handleAdminMenuClick = (id: string, route: string) => {
+    sendAdminSettingsClickLog(id as AdminMenuId, storeId);
+    navigate(route);
+  };
+
   return (
     <div className="relative min-h-screen space-y-4 bg-white">
       <TopBar />
       <div className="p-4">
         <StoreInformation />
 
-        <section className="mb-2 space-y-4 p-1">
-          <div
-            className="flex items-center justify-between"
-            onClick={() => navigate(ROUTES.MANAGE_WAITING_SETTING)}
-          >
-            <div className="text-lg font-semibold text-gray-500">
-              웨이팅 관리
+        {STORE_MANAGEMENT_MENUS.map(({ id, label, route }) => (
+          <section key={id} className="mb-2 space-y-4 p-1">
+            <div
+              className="flex cursor-pointer items-center justify-between"
+              onClick={() => handleAdminMenuClick(id, route)}
+            >
+              <div className="text-lg font-semibold text-gray-500">{label}</div>
+              <DepthIcon width={14} height={14} />
             </div>
-            <DepthIcon width={14} height={14} />
-          </div>
-        </section>
-
-        <section className="mb-2 space-y-4 p-1">
-          <div
-            className="flex items-center justify-between"
-            onClick={() => navigate(ROUTES.MANAGE_RESERVE.ROOT)}
-          >
-            <div className="text-lg font-semibold text-gray-500">예약 관리</div>
-            <DepthIcon width={14} height={14} />
-          </div>
-        </section>
-
-        <section className="mb-2 space-y-4 p-1">
-          <div
-            className="flex items-center justify-between"
-            onClick={() => navigate(ROUTES.MANAGE_QR)}
-          >
-            <div className="text-lg font-semibold text-gray-500">QR 관리</div>
-            <DepthIcon width={14} height={14} />
-          </div>
-        </section>
-
-        <section className="mb-2 space-y-4 p-1">
-          <div
-            className="flex items-center justify-between"
-            onClick={() => navigate(ROUTES.MANAGE_MISSIONS.ROOT)}
-          >
-            <div className="text-lg font-semibold text-gray-500">미션 관리</div>
-            <DepthIcon width={14} height={14} />
-          </div>
-        </section>
-
-        <section className="mb-2 space-y-4 p-1">
-          <div
-            className="flex items-center justify-between"
-            onClick={() => navigate(ROUTES.COUPON)}
-          >
-            <div className="text-lg font-semibold text-gray-500">쿠폰 관리</div>
-            <DepthIcon width={14} height={14} />
-          </div>
-        </section>
+          </section>
+        ))}
 
         <section className="mt-5 space-y-4 p-1 pb-20">
           <div className="flex items-center justify-between">

@@ -1,17 +1,20 @@
-import axiosInstance from '@/apis/index';
 import StoreIcon from '@/assets/icons/ic_store.svg?react';
+import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import TopBar from '@/components/common/layouts/TopBar';
 import { getBoothLinks } from '@/constants/BoothPortal';
+import { useLogs } from '@/hooks/common/useLogs';
 import { useStore } from '@/hooks/useStore';
 import { encryptJson } from '@/utils/crypto';
-import { getOrCreateDeviceId } from '@/utils/deviceId';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function BoothPortal() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
+  const { sendBoothPortalClickLog } = useLogs();
 
   const userData =
     location.state?.userData ||
@@ -36,27 +39,11 @@ export default function BoothPortal() {
   const visibleLinks = getBoothLinks({
     waitingsEnabled,
     reservationEnabled,
+    t,
   }).filter((link) => link.enabled);
 
-  const sendClickLog = (linkId: string) => {
-    if (!storeId) return;
-
-    const identifier = getOrCreateDeviceId();
-    const action = `portal.click.${linkId}`;
-
-    axiosInstance
-      .post('/logs', {
-        identifier,
-        action,
-        storeId: Number(storeId),
-      })
-      .catch((error) => {
-        console.error(`로그 전송 실패 (${action}):`, error);
-      });
-  };
-
   const handleLinkClick = (link: any) => {
-    sendClickLog(link.id);
+    sendBoothPortalClickLog(link.id);
 
     if (link.id === 'takeout') {
       const data = { userId: String(storeId), tableId: 0 };
@@ -76,7 +63,13 @@ export default function BoothPortal() {
 
   return (
     <BaseResponsiveLayout>
-      <TopBar />
+      <div className="relative w-full">
+        <TopBar />
+        <div className="absolute top-1/2 right-2 z-50 -translate-y-1/2">
+          <LanguageSelector />
+        </div>
+      </div>
+
       <div className="flex min-h-screen flex-col items-center bg-white px-6 pt-12">
         <div className="mb-10 flex flex-col items-center gap-4 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#FFF9E6]">
@@ -84,10 +77,10 @@ export default function BoothPortal() {
           </div>
           <div className="flex flex-col gap-1.5">
             <h1 className="text-gray-500-90 text-xl font-semibold">
-              {name || '부스 정보 없음'}
+              {name || t('customer.portal.noName')}
             </h1>
             <p className="text-gray-500-60 font-regualar text-[15px]">
-              {event || '진행 중인 이벤트가 없습니다.'}
+              {event || t('customer.portal.noEvent')}
             </p>
           </div>
         </div>

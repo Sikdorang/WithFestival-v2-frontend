@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 export const useStore = () => {
+  const [storeId, setStoreId] = useState<number | undefined>(undefined);
   const [name, setName] = useState<string>('');
   const [account, setAccount] = useState<string>('');
   const [notice, setNotice] = useState<string>('');
@@ -22,6 +23,7 @@ export const useStore = () => {
 
     try {
       const response = await storeAPI.getStoreMyInfo();
+      setStoreId(response.id);
       setName(response.name);
       setAccount(response.accountNumber);
       setNotice(response.notice);
@@ -45,6 +47,7 @@ export const useStore = () => {
 
     try {
       const response = await storeAPI.getStorePublicInfo(storeId);
+      setStoreId(storeId);
       setName(response.name);
       setAccount(response.accountNumber);
       setNotice(response.notice);
@@ -161,6 +164,7 @@ export const useStore = () => {
   };
 
   return {
+    storeId,
     name,
     account,
     notice,
