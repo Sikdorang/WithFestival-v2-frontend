@@ -4,20 +4,23 @@ import ShoppingBagIcon from '@/assets/icons/ic_speed_bag.svg?react';
 import TimerIcon from '@/assets/icons/ic_timer.svg?react';
 import SchoolIcon from '@/assets/icons/ic_university.svg?react';
 import { ROUTES } from '@/constants/routes';
+import { TFunction } from 'i18next';
 
 interface BoothLinkParams {
   waitingsEnabled: boolean;
   reservationEnabled: boolean;
+  t: TFunction;
 }
 
 export const getBoothLinks = ({
   waitingsEnabled,
   reservationEnabled,
+  t,
 }: BoothLinkParams) => [
   {
     id: 'waiting',
-    title: '웨이팅 등록하기',
-    subtitle: '현재 부스 앞 대기줄 서기',
+    title: t('customer.portal.links.waiting.title'),
+    subtitle: t('customer.portal.links.waiting.sub'),
     icon: <TimerIcon width={20} height={20} />,
     path: ROUTES.WAITING,
     iconBg: 'bg-gray-500-5',
@@ -26,8 +29,8 @@ export const getBoothLinks = ({
   },
   {
     id: 'reservation',
-    title: '부스 예약하기',
-    subtitle: '원하는 시간에 미리 예약하기',
+    title: t('customer.portal.links.reserve.title'),
+    subtitle: t('customer.portal.links.reserve.sub'),
     icon: <CalendarIcon width={20} height={20} />,
     path: ROUTES.RESERVATION,
     iconBg: 'bg-gray-500-5',
@@ -36,8 +39,8 @@ export const getBoothLinks = ({
   },
   {
     id: 'takeout',
-    title: '포장 주문하기',
-    subtitle: '기다림 없이 바로 픽업하기',
+    title: t('customer.portal.links.takeout.title'),
+    subtitle: t('customer.portal.links.takeout.sub'),
     icon: <ShoppingBagIcon width={20} height={20} />,
     path: ROUTES.MENU_BOARD,
     iconBg: 'bg-gray-500-5',
@@ -46,8 +49,8 @@ export const getBoothLinks = ({
   },
   {
     id: 'festival-schedule',
-    title: '타 대학 축제 현황',
-    subtitle: '다른 대학의 축제 현황보기',
+    title: t('customer.portal.links.schedule.title'),
+    subtitle: t('customer.portal.links.schedule.sub'),
     icon: <SchoolIcon width={20} height={20} />,
     path: 'https://withfestival.site/schedule',
     iconBg: 'bg-gray-500-5',
@@ -56,8 +59,8 @@ export const getBoothLinks = ({
   },
   {
     id: 'pub-ranking',
-    title: '실시간 학교 주점 랭킹',
-    subtitle: '주점 별로 순위 확인해보기',
+    title: t('customer.portal.links.ranking.title'),
+    subtitle: t('customer.portal.links.ranking.sub'),
     icon: <RankingIcon width={20} height={20} />,
     path: 'https://withfestival.site/ranking',
     iconBg: 'bg-gray-500-5',

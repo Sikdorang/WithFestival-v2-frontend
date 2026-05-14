@@ -1,0 +1,30 @@
+{
+  "customer": {
+    "portal": {
+      "noName": "无展位信息",
+      "noEvent": "目前没有进行中的活动。",
+      "links": {
+        "waiting": {
+          "title": "登记等候",
+          "sub": "在当前展位前排队"
+        },
+        "reserve": {
+          "title": "预约展位",
+          "sub": "提前预约您想要的时间"
+        },
+        "takeout": {
+          "title": "打包点餐",
+          "sub": "无需等待，直接取餐"
+        },
+        "schedule": {
+          "title": "其他大学庆典现状",
+          "sub": "查看其他大学的庆典现状"
+        },
+        "ranking": {
+          "title": "实时酒馆排名",
+          "sub": "查看各酒馆的排名"
+        }
+      }
+    }
+  }
+}

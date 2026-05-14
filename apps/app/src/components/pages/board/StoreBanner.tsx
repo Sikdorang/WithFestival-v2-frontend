@@ -1,5 +1,5 @@
+import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
 
@@ -16,7 +16,6 @@ export default function StoreBanner({
   tableId,
   notice,
 }: Props) {
-  // const navigate = useNavigate();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
 
@@ -42,13 +41,16 @@ export default function StoreBanner({
               <div className="text-b-2 text-gray-300">{boothName}</div>
               <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
-            {/* <CtaButton
-              width="fit"
-              color="red"
-              text="좋아하면 울리는"
-              size="small"
-              onClick={() => navigate('/alarm')}
-            /> */}
+            <div className="mr-2 flex items-center gap-4">
+              {/* <CtaButton
+                width="fit"
+                color="red"
+                text="좋아하면 울리는"
+                size="small"
+                onClick={() => {}}
+              /> */}
+              <LanguageSelector />
+            </div>
           </div>
           {isPreview && (
             <div className="text-c-1 flex text-gray-200">

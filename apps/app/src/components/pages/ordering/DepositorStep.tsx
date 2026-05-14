@@ -1,5 +1,6 @@
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
+import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
 
 interface DepositorStepProps {
   onSubmit: () => void;
@@ -18,6 +19,8 @@ export default function DepositorStep({
   setPhoneNumber,
   isLoading = false,
 }: DepositorStepProps) {
+  const { targetRef, handleFocus, handleBlur } = useKeyboardScroll();
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawNumbers = e.target.value.replace(/[^0-9]/g, '');
     let formatted = rawNumbers;
@@ -36,7 +39,10 @@ export default function DepositorStep({
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
-      <div className="flex w-full flex-col items-center gap-4 px-8">
+      <div
+        ref={targetRef}
+        className="flex w-full flex-col items-center gap-4 px-8"
+      >
         <div className="text-t-1 mb-2">
           입금하신 분의
           <br />
@@ -47,6 +53,8 @@ export default function DepositorStep({
           placeholder="입금자명을 입력해주세요."
           value={depositorName}
           onChange={(e) => setDepositorName(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           limitHide
         />
         <TextInput
@@ -57,6 +65,8 @@ export default function DepositorStep({
           limitHide
           type="tel"
           maxLength={13}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
       </div>
 

@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
@@ -11,6 +12,12 @@ export default defineConfig({
     tsconfigPaths(),
     svgr(),
     tailwindcss(),
+    sentryVitePlugin({
+      org: '여러분의-sentry-조직명',
+      project: '여러분의-sentry-프로젝트명',
+      // SENTRY_AUTH_TOKEN은 절대 코드에 하드코딩하지 말고 환경 변수로 주입하세요.
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
@@ -72,6 +79,23 @@ export default defineConfig({
       },
     }),
   ],
+
+  build: {
+    sourcemap: 'hidden',
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id
+              .toString()
+              .split('node_modules/')[1]
+              .split('/')[0]
+              .toString();
+          }
+        },
+      },
+    },
+  },
 
   server: {
     proxy: {
