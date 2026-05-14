@@ -1,4 +1,3 @@
-import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import { useState } from 'react';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
@@ -49,7 +48,7 @@ export default function StoreBanner({
                 size="small"
                 onClick={() => {}}
               /> */}
-              <LanguageSelector />
+              {/* <LanguageSelector /> */}
             </div>
           </div>
           {isPreview && (
