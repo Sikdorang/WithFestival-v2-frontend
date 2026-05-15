@@ -18,11 +18,20 @@ interface HourlySalesChartProps {
   data: HourlySalesData[];
 }
 
+const DEFAULT_EMPTY_DATA: HourlySalesData[] = [
+  { time: '17시', 매출: 0 },
+  { time: '20시', 매출: 0 },
+  { time: '23시', 매출: 0 },
+  { time: '02시', 매출: 0 },
+  { time: '05시', 매출: 0 },
+];
+
 export default function HourlySalesChart({ data }: HourlySalesChartProps) {
+  const chartData = data && data.length > 0 ? data : DEFAULT_EMPTY_DATA;
+
   const maxSales = useMemo(() => {
-    if (!data || data.length === 0) return 0;
-    return Math.max(...data.map((d) => d.매출));
-  }, [data]);
+    return Math.max(...chartData.map((d) => d.매출));
+  }, [chartData]);
 
   const formatYAxis = (value: number) => {
     if (value === 0) return '0';
@@ -37,8 +46,6 @@ export default function HourlySalesChart({ data }: HourlySalesChartProps) {
     return value.toLocaleString();
   };
 
-  if (!data || data.length === 0) return null;
-
   return (
     <div className="mt-4">
       <div className="text-st-2 mb-4 text-gray-800">시간대별 매출</div>
@@ -46,7 +53,7 @@ export default function HourlySalesChart({ data }: HourlySalesChartProps) {
       <div className="h-[250px] w-full focus:outline-none">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={data}
+            data={chartData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
             <CartesianGrid
@@ -68,7 +75,9 @@ export default function HourlySalesChart({ data }: HourlySalesChartProps) {
               tick={{ fontSize: 12, fill: '#8B95A1' }}
               axisLine={false}
               tickLine={false}
-              width={maxSales >= 10000 ? 45 : 55}
+              width={
+                50
+              } /* 중요: 동적 넓이(45 or 55) 제거하고 50px로 완전 고정 */
             />
 
             <Tooltip

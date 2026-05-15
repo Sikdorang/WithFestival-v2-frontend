@@ -6,44 +6,38 @@ interface Props {
   orders: OrderSummary[];
 }
 
-const DUMMY_HOURLY_SALES: HourlySalesData[] = [
+const DEFAULT_HOURLY_SALES: HourlySalesData[] = [
   { time: '17시', 매출: 0 },
-  { time: '18시', 매출: 45000 },
-  { time: '19시', 매출: 150000 },
-  { time: '20시', 매출: 320000 },
-  { time: '21시', 매출: 280000 },
-  { time: '22시', 매출: 190000 },
-  { time: '23시', 매출: 85000 },
-  { time: '00시', 매출: 20000 },
+  { time: '18시', 매출: 0 },
+  { time: '19시', 매출: 0 },
+  { time: '20시', 매출: 0 },
+  { time: '21시', 매출: 0 },
+  { time: '22시', 매출: 0 },
+  { time: '23시', 매출: 0 },
+  { time: '00시', 매출: 0 },
   { time: '01시', 매출: 0 },
 ];
 
 export default function OrderDashBoard({ orders }: Props) {
   const summary = useMemo(() => {
     if (!orders || orders.length === 0) {
-      return { totalSales: 0, netProfit: 0, totalOrders: 0, hourlySales: [] };
+      return {
+        totalSales: 0,
+        netProfit: 0,
+        totalOrders: 0,
+        hourlySales: DEFAULT_HOURLY_SALES,
+      };
     }
 
-    const filteredOrders = orders.filter((order) => {
-      if (order.totalPrice === 0) return false;
-      return true;
-    });
+    const filteredOrders = orders.filter((order) => order.totalPrice > 0);
 
     let totalSales = 0;
     let netProfit = 0;
     let totalOrders = 0;
 
-    const hourlySalesMap = new Map<string, number>([
-      ['17시', 0],
-      ['18시', 0],
-      ['19시', 0],
-      ['20시', 0],
-      ['21시', 0],
-      ['22시', 0],
-      ['23시', 0],
-      ['00시', 0],
-      ['01시', 0],
-    ]);
+    const hourlySalesMap = new Map<string, number>(
+      DEFAULT_HOURLY_SALES.map((item) => [item.time, 0]),
+    );
 
     filteredOrders.forEach((order) => {
       let orderSales = 0;
@@ -84,9 +78,6 @@ export default function OrderDashBoard({ orders }: Props) {
     return { totalSales, netProfit, totalOrders, hourlySales };
   }, [orders]);
 
-  const hasActualData = summary.hourlySales.some((data) => data.매출 > 0);
-  const chartData = hasActualData ? summary.hourlySales : DUMMY_HOURLY_SALES;
-
   return (
     <div className="flex flex-col gap-4 rounded-lg bg-white p-4 shadow-sm">
       <div className="flex flex-col">
@@ -110,7 +101,7 @@ export default function OrderDashBoard({ orders }: Props) {
         </div>
       </div>
 
-      <HourlySalesChart data={chartData} />
+      <HourlySalesChart data={summary.hourlySales} />
     </div>
   );
 }
