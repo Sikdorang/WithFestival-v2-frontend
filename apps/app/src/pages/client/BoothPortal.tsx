@@ -46,7 +46,7 @@ export default function BoothPortal() {
     sendBoothPortalClickLog(link.id);
 
     if (link.id === 'takeout') {
-      const data = { userId: String(storeId), tableId: 0 };
+      const data = { userId: String(storeId), tableId: 9999 };
       const encrypted = encryptJson(data);
       const encoded = encrypted ? encodeURIComponent(encrypted) : '';
 
