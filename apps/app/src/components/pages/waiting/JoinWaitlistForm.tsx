@@ -7,6 +7,7 @@ import { useWaiting } from '@/hooks/useWaiting';
 import { IWaitingListItem } from '@/types/global';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 import NoticeView from '../board/NoticeView';
 
@@ -70,32 +71,25 @@ export default function JoinWaitlistForm() {
     setFormData((prev) => ({ ...prev, phone: formatted }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = useDebouncedCallback(async () => {
     if (!storeId || isLoading) return;
 
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    setIsLoading(true);
+    try {
+      const result = await createWaiting(Number(storeId), {
+        name: formData.name,
+        phoneNumber: formData.phone,
+        partySize: Number(formData.partySize),
+      });
 
-    timerRef.current = setTimeout(async () => {
-      setIsLoading(true);
-      try {
-        const result = await createWaiting(Number(storeId), {
-          name: formData.name,
-          phoneNumber: formData.phone,
-          partySize: Number(formData.partySize),
-        });
-
-        if (result) {
-          setWaitingResult(result);
-          setIsFinishJoinWaitlist(true);
-        }
-      } finally {
-        setIsLoading(false);
-        timerRef.current = null;
+      if (result) {
+        setWaitingResult(result);
+        setIsFinishJoinWaitlist(true);
       }
-    }, 300);
-  };
+    } finally {
+      setIsLoading(false);
+    }
+  }, 300);
 
   useEffect(() => {
     return () => {

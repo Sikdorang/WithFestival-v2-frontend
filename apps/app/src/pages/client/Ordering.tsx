@@ -11,6 +11,7 @@ import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useMemo, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Ordering() {
   const location = useLocation();
@@ -39,14 +40,15 @@ export default function Ordering() {
     0,
   );
 
-  const handleFinalSubmit = async () => {
+  const handleFinalSubmit = useDebouncedCallback(async () => {
     const isSuccess = await createOrder(depositorName, phoneNumber);
+
     if (isSuccess) {
       setModalStep('complete');
       setDepositorName('');
       setPhoneNumber('');
     }
-  };
+  }, 300);
 
   if (userData.userId === undefined) {
     return <Navigate to={ROUTES.NOT_FOUND} replace />;
@@ -54,13 +56,13 @@ export default function Ordering() {
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <div className="relative min-h-screen bg-white px-4">
-        <Navigator
-          left={<GoBackIcon />}
-          onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
-          center={<div className="text-st-1">주문하기</div>}
-        />
+      <Navigator
+        left={<GoBackIcon />}
+        onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
+        center={<div className="text-st-1">주문하기</div>}
+      />
 
+      <div className="relative min-h-screen bg-white px-4">
         <main className="pb-24">
           <h2 className="text-st-2 mt-6 mb-2">주문 내역</h2>
           <OrderingMenuList items={orderItems} />

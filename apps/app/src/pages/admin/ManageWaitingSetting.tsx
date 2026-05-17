@@ -10,6 +10,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function ManageWaitingSetting() {
   const navigate = useNavigate();
@@ -20,15 +21,38 @@ export default function ManageWaitingSetting() {
     '곧 입장 차례입니다! 부스 앞으로 와주세요.',
   );
 
-  const { waitingsEnabled, updateStoreStatus, getMyStoreInfo, isLoading } =
-    useStore();
+  const {
+    setWaitingsEnabled,
+    waitingsEnabled,
+    updateStoreStatus,
+    getMyStoreInfo,
+    isLoading,
+  } = useStore();
 
   useEffect(() => {
     getMyStoreInfo();
   }, []);
 
-  const handleToggleWait = async () => {
-    await updateStoreStatus('waiting', !waitingsEnabled);
+  const syncWaitingStatus = useDebouncedCallback(
+    async (targetState: boolean) => {
+      const success = await updateStoreStatus('waiting', targetState);
+
+      if (!success && setWaitingsEnabled) {
+        setWaitingsEnabled(!targetState);
+        toast.error('상태 변경에 실패했습니다. 네트워크를 확인해주세요.');
+      }
+    },
+    300,
+  );
+
+  const handleToggleWait = () => {
+    if (isLoading) return;
+
+    const nextState = !waitingsEnabled;
+    if (setWaitingsEnabled) {
+      setWaitingsEnabled(nextState);
+    }
+    syncWaitingStatus(nextState);
   };
 
   const handleSaveSettings = () => {

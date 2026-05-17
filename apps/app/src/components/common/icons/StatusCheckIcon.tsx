@@ -7,7 +7,6 @@ export default function StatusCheckIcon({
   variant,
   className = '',
 }: StatusCheckIconProps) {
-  // 상태별 색상 매핑 표 (Design System)
   const colorMap = {
     selected: { bg: '#FFD43A', border: 'transparent', check: '#FFFFFF' },
     default: { bg: 'transparent', border: '#D1D5DB', check: '#D1D5DB' },

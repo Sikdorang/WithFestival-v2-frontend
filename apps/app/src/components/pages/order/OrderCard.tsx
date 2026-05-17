@@ -1,3 +1,4 @@
+import StatusCheckIcon from '@/components/common/icons/StatusCheckIcon';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { OrderSummary } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -21,6 +22,8 @@ export function OrderCard({
   deleteOrder,
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [servedItems, setServedItems] = useState<Set<number>>(new Set());
+
   const notification = new Audio('/sounds/effect_notification_2.mp3');
 
   const orderItems = order.items || [];
@@ -37,6 +40,8 @@ export function OrderCard({
     : '';
 
   const isPaid = order.paymentStatus === 'PAID';
+  const isAllServed =
+    servedItems.size === orderItems.length && orderItems.length > 0;
 
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
@@ -47,6 +52,18 @@ export function OrderCard({
     () => order.phoneNumber?.replace(/-/g, '') || '',
     [order.phoneNumber],
   );
+
+  const handleToggleServe = (itemId: number) => {
+    setServedItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(itemId)) {
+        next.delete(itemId);
+      } else {
+        next.add(itemId);
+      }
+      return next;
+    });
+  };
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -70,7 +87,7 @@ export function OrderCard({
           </div>
         </div>
 
-        <div className="space-y-2 border-t border-b border-gray-200 py-3">
+        <div className="space-y-2 border-y border-gray-200 py-3">
           <div className="flex justify-between">
             <p className="text-c-1 text-gray-400">메뉴명</p>
             <p className="text-c-1 text-gray-400">수량</p>
@@ -79,19 +96,50 @@ export function OrderCard({
           {orderItems.map((item: any, index: number) => {
             const quantity = item.quantity ?? item.count ?? 0;
             const itemName = item.menu.name || '메뉴명 없음';
-
             const itemTotal = (item.price || 0) * quantity;
+            const itemId = item.id || index;
+            const isServed = servedItems.has(itemId);
 
             return (
               <div
-                key={`${order.id}-${item.id || index}`}
-                className="flex justify-between"
+                key={`${order.id}-${itemId}`}
+                className="flex items-center justify-between"
               >
-                <p className="text-gray-500-90 text-[14px] font-bold">
-                  {itemName}
-                </p>
-                <div className="text-right">
-                  <span className="text-gray-500-90 text-[14px] font-bold">
+                <div className="flex items-center gap-2">
+                  {isPaid && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleServe(itemId);
+                      }}
+                      className="flex shrink-0 items-center justify-center focus:outline-none"
+                    >
+                      <StatusCheckIcon
+                        variant={isServed ? 'selected' : 'default'}
+                      />
+                    </button>
+                  )}
+                  <p
+                    className={`text-[14px] font-bold transition-all ${
+                      isServed
+                        ? 'text-gray-400 line-through'
+                        : 'text-gray-500-90'
+                    }`}
+                  >
+                    {itemName}
+                  </p>
+                </div>
+                <div
+                  className={`text-right transition-all ${
+                    isServed ? 'opacity-50' : 'opacity-100'
+                  }`}
+                >
+                  <span
+                    className={`text-[14px] font-bold ${
+                      isServed ? 'text-gray-400' : 'text-gray-500-90'
+                    }`}
+                  >
                     {quantity}개
                   </span>
                   <p className="text-gray-500-50 text-[12px] font-bold">
@@ -138,7 +186,7 @@ export function OrderCard({
                 toast.success(SUCCESS_MESSAGES.orderCookingComplete);
               }}
             >
-              조리 완료
+              주문 처리 완료
             </button>
           </div>
         ) : (
