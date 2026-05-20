@@ -9,12 +9,18 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function AdminReserveManage() {
   const navigate = useNavigate();
 
-  const { reservationEnabled, updateStoreStatus, getMyStoreInfo, isLoading } =
-    useStore();
+  const {
+    setReservationEnabled,
+    reservationEnabled,
+    updateStoreStatus,
+    getMyStoreInfo,
+    isLoading,
+  } = useStore();
 
   const { fetchSlots } = useReserve();
 
@@ -29,8 +35,26 @@ export default function AdminReserveManage() {
     fetchSlots();
   }, []);
 
-  const handleToggleReservation = async () => {
-    await updateStoreStatus('reservation', !reservationEnabled);
+  const syncReservationStatus = useDebouncedCallback(
+    async (targetState: boolean) => {
+      const success = await updateStoreStatus('reservation', targetState);
+
+      if (!success && setReservationEnabled) {
+        setReservationEnabled(!targetState);
+        toast.error('상태 변경에 실패했습니다. 네트워크를 확인해주세요.');
+      }
+    },
+    300,
+  );
+
+  const handleToggleReservation = () => {
+    if (isLoading) return;
+
+    const nextState = !reservationEnabled;
+    if (setReservationEnabled) {
+      setReservationEnabled(nextState);
+    }
+    syncReservationStatus(nextState);
   };
 
   const handleSaveMessageSettings = () => {

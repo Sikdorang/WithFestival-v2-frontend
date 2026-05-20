@@ -6,8 +6,9 @@ import Navigator from '@/components/common/layouts/Navigator';
 import { useMission } from '@/hooks/useMission';
 import { useStore } from '@/hooks/useStore';
 import { Mission } from '@/types/global';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 import CtaButton from '../../components/common/buttons/CtaButton';
 import MissionList from '../../components/pages/manageMissions/MissionList';
 import { ROUTES } from '../../constants/routes';
@@ -21,7 +22,6 @@ export default function ManageMission() {
   const { getMyStoreInfo, updateStoreStatus } = useStore();
 
   const [isMissionEnabled, setIsMissionEnabled] = useState(false);
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -36,22 +36,22 @@ export default function ManageMission() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const syncMissionStatus = useDebouncedCallback(
+    async (targetState: boolean) => {
+      const success = await updateStoreStatus('mission', targetState);
+
+      if (!success) {
+        setIsMissionEnabled(!targetState);
+      }
+    },
+    300,
+  );
+
   const handleToggleMissionFeature = () => {
     const nextState = !isMissionEnabled;
 
     setIsMissionEnabled(nextState);
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    debounceTimerRef.current = setTimeout(async () => {
-      const success = await updateStoreStatus('mission', nextState);
-
-      if (!success) {
-        setIsMissionEnabled(!nextState);
-      }
-    }, 500);
+    syncMissionStatus(nextState);
   };
 
   const handleMissionClick = (item: Mission) => {

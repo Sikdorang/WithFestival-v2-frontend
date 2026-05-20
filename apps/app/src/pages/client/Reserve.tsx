@@ -16,7 +16,6 @@ export default function Reserve() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. 스토어 식별자(storeId) 추출
   const userData = useMemo(
     () =>
       location.state?.userData ||

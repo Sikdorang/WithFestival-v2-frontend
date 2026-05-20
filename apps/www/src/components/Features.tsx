@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import Icon from "./Icon";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import Icon from "./Icon";
 
 type FeatureRowProps = {
   eyebrowIcon: string;
@@ -193,108 +193,105 @@ function MockDepositConfirm() {
       </div>
 
       <div className="rounded-3xl bg-white p-7 shadow-[0_12px_40px_rgba(54,56,62,0.08)]">
-      <div className="flex items-center justify-between">
-        <span className="rounded-xl bg-[#f0f1f3] px-3 py-1.5 text-sm font-semibold text-[#292a2e]">
-          테이블 번호 1
-        </span>
-        <span className="text-sm text-[#9b9da3]">
-          주문번호 001 · 2026-04-10 17:46
-        </span>
-      </div>
-
-      <div className="mt-6 flex items-center justify-between text-sm text-[#9b9da3]">
-        <span>메뉴명</span>
-        <span>수량</span>
-      </div>
-
-      <div className="mt-4 flex flex-col gap-4">
-        <div className="flex items-start justify-between">
-          <span className="text-base font-bold text-[#292a2e]">
-            매콤달콤 떡볶이
+        <div className="flex items-center justify-between">
+          <span className="rounded-xl bg-[#f0f1f3] px-3 py-1.5 text-sm font-semibold text-[#292a2e]">
+            테이블 번호 1
           </span>
-          <div className="text-right">
-            <div className="text-base font-bold text-[#292a2e]">1개</div>
-            <div className="text-sm text-[#9b9da3]">4,500원</div>
+        </div>
+
+        <div className="mt-6 flex items-center justify-between text-sm text-[#9b9da3]">
+          <span>메뉴명</span>
+          <span>수량</span>
+        </div>
+
+        <div className="mt-4 flex flex-col gap-4">
+          <div className="flex items-start justify-between">
+            <span className="text-base font-bold text-[#292a2e]">
+              매콤달콤 떡볶이
+            </span>
+            <div className="text-right">
+              <div className="text-base font-bold text-[#292a2e]">1개</div>
+              <div className="text-sm text-[#9b9da3]">4,500원</div>
+            </div>
+          </div>
+          <div className="flex items-start justify-between">
+            <span className="text-base font-bold text-[#292a2e]">
+              모짜렐라 듬뿍 치즈피자
+            </span>
+            <div className="text-right">
+              <div className="text-base font-bold text-[#292a2e]">1개</div>
+              <div className="text-sm text-[#9b9da3]">7,000원</div>
+            </div>
           </div>
         </div>
-        <div className="flex items-start justify-between">
+
+        <div className="my-6 h-px bg-[#e5e6e8]" />
+
+        <div className="flex items-center justify-between">
           <span className="text-base font-bold text-[#292a2e]">
-            모짜렐라 듬뿍 치즈피자
+            입금자명: 김축제
           </span>
-          <div className="text-right">
-            <div className="text-base font-bold text-[#292a2e]">1개</div>
-            <div className="text-sm text-[#9b9da3]">7,000원</div>
-          </div>
+          <span className="text-base font-bold text-[#292a2e]">11,500원</span>
         </div>
-      </div>
 
-      <div className="my-6 h-px bg-[#e5e6e8]" />
-
-      <div className="flex items-center justify-between">
-        <span className="text-base font-bold text-[#292a2e]">
-          입금자명: 김축제
-        </span>
-        <span className="text-base font-bold text-[#292a2e]">11,500원</span>
-      </div>
-
-      <div className="mt-6 flex gap-2">
-        <button
-          type="button"
-          className="rounded-2xl bg-[#fde8e8] px-6 py-3.5 text-sm font-semibold text-[#dc2626]"
-        >
-          취소하기
-        </button>
-        <div className="relative flex-1">
-          <motion.button
+        <div className="mt-6 flex gap-2">
+          <button
             type="button"
-            className="w-full rounded-2xl bg-[#ffd761] px-6 py-3.5 text-sm font-semibold text-[#292a2e]"
-            animate={{
-              scale: [1, 0.94, 1],
-              backgroundColor: ["#ffd761", "#f0b90b", "#ffd761"],
-            }}
-            transition={{
-              duration: 1.4,
-              times: [0, 0.45, 0.9],
-              repeat: Infinity,
-              repeatDelay: 1.6,
-              ease: "easeInOut",
-            }}
+            className="rounded-2xl bg-[#fde8e8] px-6 py-3.5 text-sm font-semibold text-[#dc2626]"
           >
-            입금 확인
-          </motion.button>
+            취소하기
+          </button>
+          <div className="relative flex-1">
+            <motion.button
+              type="button"
+              className="w-full rounded-2xl bg-[#ffd761] px-6 py-3.5 text-sm font-semibold text-[#292a2e]"
+              animate={{
+                scale: [1, 0.94, 1],
+                backgroundColor: ["#ffd761", "#f0b90b", "#ffd761"],
+              }}
+              transition={{
+                duration: 1.4,
+                times: [0, 0.45, 0.9],
+                repeat: Infinity,
+                repeatDelay: 1.6,
+                ease: "easeInOut",
+              }}
+            >
+              입금 확인
+            </motion.button>
 
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
-            animate={{
-              scale: [0, 0.7, 1.4],
-              opacity: [0, 0.65, 0],
-            }}
-            transition={{
-              duration: 1.4,
-              times: [0.2, 0.45, 1],
-              repeat: Infinity,
-              repeatDelay: 1.6,
-              ease: "easeOut",
-            }}
-          />
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#292a2e] shadow-[0_0_0_3px_rgba(255,255,255,0.7)]"
-            animate={{
-              scale: [0, 1, 1, 0],
-              opacity: [0, 1, 1, 0],
-            }}
-            transition={{
-              duration: 1.4,
-              times: [0.25, 0.4, 0.55, 0.75],
-              repeat: Infinity,
-              repeatDelay: 1.6,
-              ease: "easeOut",
-            }}
-          />
+            <motion.span
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
+              animate={{
+                scale: [0, 0.7, 1.4],
+                opacity: [0, 0.65, 0],
+              }}
+              transition={{
+                duration: 1.4,
+                times: [0.2, 0.45, 1],
+                repeat: Infinity,
+                repeatDelay: 1.6,
+                ease: "easeOut",
+              }}
+            />
+            <motion.span
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#292a2e] shadow-[0_0_0_3px_rgba(255,255,255,0.7)]"
+              animate={{
+                scale: [0, 1, 1, 0],
+                opacity: [0, 1, 1, 0],
+              }}
+              transition={{
+                duration: 1.4,
+                times: [0.25, 0.4, 0.55, 0.75],
+                repeat: Infinity,
+                repeatDelay: 1.6,
+                ease: "easeOut",
+              }}
+            />
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
@@ -347,9 +344,7 @@ function MockOrderFlow() {
           </span>
         </div>
 
-        {showSegmentTouch && (
-          <TouchPoint className="right-[68px] top-1/2" />
-        )}
+        {showSegmentTouch && <TouchPoint className="right-[68px] top-1/2" />}
       </div>
 
       <motion.div
@@ -358,73 +353,66 @@ function MockOrderFlow() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="rounded-3xl bg-white p-7 shadow-[0_12px_40px_rgba(54,56,62,0.08)]"
       >
-            <div className="flex items-center justify-between">
-              <span className="rounded-xl bg-[#f0f1f3] px-3 py-1.5 text-sm font-semibold text-[#292a2e]">
-                테이블 번호 1
-              </span>
-              <span className="text-sm text-[#9b9da3]">
-                주문번호 001 · 2026-04-10 17:46
-              </span>
-            </div>
+        <div className="flex items-center justify-between">
+          <span className="rounded-xl bg-[#f0f1f3] px-3 py-1.5 text-sm font-semibold text-[#292a2e]">
+            테이블 번호 1
+          </span>
+        </div>
 
-            <div className="mt-6 flex items-center justify-between text-sm text-[#9b9da3]">
-              <span>메뉴명</span>
-              <span>수량</span>
-            </div>
+        <div className="mt-6 flex items-center justify-between text-sm text-[#9b9da3]">
+          <span>메뉴명</span>
+          <span>수량</span>
+        </div>
 
-            <div className="mt-4 flex flex-col gap-4">
-              <div className="flex items-start justify-between">
-                <span className="text-base font-bold text-[#292a2e]">
-                  매콤달콤 떡볶이
-                </span>
-                <div className="text-right">
-                  <div className="text-base font-bold text-[#292a2e]">1개</div>
-                  <div className="text-sm text-[#9b9da3]">4,500원</div>
-                </div>
-              </div>
-              <div className="flex items-start justify-between">
-                <span className="text-base font-bold text-[#292a2e]">
-                  모짜렐라 듬뿍 치즈피자
-                </span>
-                <div className="text-right">
-                  <div className="text-base font-bold text-[#292a2e]">1개</div>
-                  <div className="text-sm text-[#9b9da3]">7,000원</div>
-                </div>
-              </div>
+        <div className="mt-4 flex flex-col gap-4">
+          <div className="flex items-start justify-between">
+            <span className="text-base font-bold text-[#292a2e]">
+              매콤달콤 떡볶이
+            </span>
+            <div className="text-right">
+              <div className="text-base font-bold text-[#292a2e]">1개</div>
+              <div className="text-sm text-[#9b9da3]">4,500원</div>
             </div>
-
-            <div className="my-6 h-px bg-[#e5e6e8]" />
-
-            <div className="flex justify-end">
-              <span className="text-base font-bold text-[#292a2e]">
-                11,500원
-              </span>
+          </div>
+          <div className="flex items-start justify-between">
+            <span className="text-base font-bold text-[#292a2e]">
+              모짜렐라 듬뿍 치즈피자
+            </span>
+            <div className="text-right">
+              <div className="text-base font-bold text-[#292a2e]">1개</div>
+              <div className="text-sm text-[#9b9da3]">7,000원</div>
             </div>
+          </div>
+        </div>
 
-            <div className="relative mt-6">
-              <motion.button
-                type="button"
-                className="w-full rounded-2xl bg-[#ffd761] px-6 py-3.5 text-sm font-semibold text-[#292a2e]"
-                animate={
-                  cookPress
-                    ? {
-                        scale: [1, 0.94, 1],
-                        backgroundColor: ["#ffd761", "#f0b90b", "#ffd761"],
-                      }
-                    : { scale: 1, backgroundColor: "#ffd761" }
-                }
-                transition={{
-                  duration: 1,
-                  times: [0, 0.45, 0.9],
-                  ease: "easeInOut",
-                }}
-              >
-                조리 완료
-              </motion.button>
-              {showCookTouch && (
-                <TouchPoint className="left-1/2 top-1/2" />
-              )}
-            </div>
+        <div className="my-6 h-px bg-[#e5e6e8]" />
+
+        <div className="flex justify-end">
+          <span className="text-base font-bold text-[#292a2e]">11,500원</span>
+        </div>
+
+        <div className="relative mt-6">
+          <motion.button
+            type="button"
+            className="w-full rounded-2xl bg-[#ffd761] px-6 py-3.5 text-sm font-semibold text-[#292a2e]"
+            animate={
+              cookPress
+                ? {
+                    scale: [1, 0.94, 1],
+                    backgroundColor: ["#ffd761", "#f0b90b", "#ffd761"],
+                  }
+                : { scale: 1, backgroundColor: "#ffd761" }
+            }
+            transition={{
+              duration: 1,
+              times: [0, 0.45, 0.9],
+              ease: "easeInOut",
+            }}
+          >
+            조리 완료
+          </motion.button>
+          {showCookTouch && <TouchPoint className="left-1/2 top-1/2" />}
+        </div>
       </motion.div>
     </div>
   );
@@ -532,5 +520,3 @@ function MockStoreManagement() {
     </>
   );
 }
-
-

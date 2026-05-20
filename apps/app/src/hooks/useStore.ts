@@ -171,6 +171,8 @@ export const useStore = () => {
     event,
     waitingsEnabled,
     reservationEnabled,
+    setReservationEnabled,
+    setWaitingsEnabled,
     missionsEnabled,
     getMyStoreInfo,
     getStorePublicInfo,
