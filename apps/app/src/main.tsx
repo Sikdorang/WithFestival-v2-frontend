@@ -6,14 +6,13 @@ import './i18n';
 import './index.css';
 
 Sentry.init({
-  dsn: 'https://<key>@<organization>.ingest.sentry.io/<project>',
+  dsn: 'https://0d18615ccfc2e68edc6f69b4f31d9c6d@o4511387162771456.ingest.us.sentry.io/4511387171225600',
   integrations: [
     Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
+    Sentry.consoleLoggingIntegration({ levels: ['log', 'error'] }),
   ],
-  tracesSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
+
+  tracesSampleRate: 0.5,
 });
 
 createRoot(document.getElementById('root')!).render(
