@@ -40,8 +40,6 @@ export function OrderCard({
     : '';
 
   const isPaid = order.paymentStatus === 'PAID';
-  const isAllServed =
-    servedItems.size === orderItems.length && orderItems.length > 0;
 
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
