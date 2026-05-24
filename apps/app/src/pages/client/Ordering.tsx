@@ -4,6 +4,7 @@ import Navigator from '@/components/common/layouts/Navigator';
 import CompleteStep from '@/components/pages/ordering/CompleteStep';
 import DepositorStep from '@/components/pages/ordering/DepositorStep';
 import OrderingMenuList from '@/components/pages/ordering/OrderingMenuList';
+import PaymentProgress from '@/components/pages/ordering/PaymentProgress';
 import RemitStep from '@/components/pages/ordering/RemitStep';
 import { ROUTES } from '@/constants/routes';
 import { useOrder } from '@/hooks/useOrder';
@@ -109,7 +110,7 @@ export default function Ordering() {
               }
             />
           )}
-
+          <PaymentProgress step={modalStep} />
           {modalStep === 'remit' ? (
             <RemitStep
               totalAmount={totalAmount}
