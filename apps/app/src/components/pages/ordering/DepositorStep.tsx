@@ -1,6 +1,8 @@
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
+import { useLogs } from '@/hooks/common/useLogs';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface DepositorStepProps {
@@ -22,6 +24,39 @@ export default function DepositorStep({
 }: DepositorStepProps) {
   const { targetRef, handleFocus, handleBlur } = useKeyboardScroll();
   const { t } = useTranslation();
+  const { sendLog } = useLogs();
+  const isProceeding = useRef(false);
+  const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (!isProceeding.current) {
+        sendLog('customer.ordering.dropoff.depositor', userData.userId);
+      }
+    };
+
+    const handlePageHide = () => {
+      if (!isProceeding.current) {
+        sendLog('customer.ordering.dropoff.depositor', userData.userId);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pagehide', handlePageHide);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', handlePageHide);
+    };
+  }, [sendLog, userData.userId]);
+
+  useEffect(() => {
+    return () => {
+      if (!isProceeding.current) {
+        sendLog('customer.ordering.dropoff.depositor', userData.userId);
+      }
+    };
+  }, [sendLog, userData.userId]);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawNumbers = e.target.value.replace(/[^0-9]/g, '');
@@ -80,6 +115,7 @@ export default function DepositorStep({
               : t('customer.depositor.submit')
           }
           onClick={() => {
+            isProceeding.current = true;
             onSubmit();
           }}
           disabled={isSubmitDisabled}

@@ -26,6 +26,32 @@
         }
       }
     },
+    "waiting": {
+      "title": "ウェイティング登録",
+      "banner": {
+        "complete": "ウェイティング登録完了！",
+        "currentWaiting": "現在の待機組数 "
+      },
+      "form": {
+        "nameLabel": "予約者名",
+        "namePlaceholder": "お名前を入力してください。",
+        "phoneLabel": "電話番号",
+        "phonePlaceholder": "連絡先を入力してください。",
+        "partySizeLabel": "入場人数",
+        "partySizePlaceholder": "合計人数を入力してください。",
+        "submitButton": "登録する"
+      },
+      "validation": {
+        "nameRequired": "予約者名は必須です。",
+        "phoneInvalid": "有効な電話番号の形式ではありません。",
+        "partySizeInvalid": "入場人数は1名以上でなければなりません。"
+      },
+      "finish": {
+        "waitingNumberLabel": "待機番号",
+        "waitingNumberPlaceholder": "待機番号を入力してください。",
+        "previewMenuButton": "メニューをプレビュー"
+      }
+    },
     "menuBoard": {
       "takeoutTitle": "テイクアウトを注文する",
       "orderButton": "注文する",

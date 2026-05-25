@@ -26,6 +26,32 @@
         }
       }
     },
+    "waiting": {
+      "title": "Join Waitlist",
+      "banner": {
+        "complete": "Registration Complete!",
+        "currentWaiting": "Current waiting "
+      },
+      "form": {
+        "nameLabel": "Name",
+        "namePlaceholder": "Please enter your name.",
+        "phoneLabel": "Phone Number",
+        "phonePlaceholder": "Please enter your contact number.",
+        "partySizeLabel": "Party Size",
+        "partySizePlaceholder": "Enter the total number of people.",
+        "submitButton": "Join Waitlist"
+      },
+      "validation": {
+        "nameRequired": "Name is required.",
+        "phoneInvalid": "Invalid phone number format.",
+        "partySizeInvalid": "Party size must be at least 1."
+      },
+      "finish": {
+        "waitingNumberLabel": "Waiting Number",
+        "waitingNumberPlaceholder": "Waiting number.",
+        "previewMenuButton": "Preview Menu"
+      }
+    },
     "menuBoard": {
       "takeoutTitle": "Order Takeout",
       "orderButton": "Order",

@@ -1,5 +1,6 @@
 import CheckAnimation from '@/assets/lotties/lottie_check.json';
 import Lottie from 'lottie-react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   boothName: string;
@@ -12,6 +13,8 @@ export default function Banner({
   waitingListLength,
   isFinishJoinWaitlist,
 }: Props) {
+  const { t } = useTranslation();
+
   return (
     <div className="text-t-1 flex flex-col items-center gap-4 pt-20">
       {isFinishJoinWaitlist && (
@@ -21,12 +24,14 @@ export default function Banner({
             loop={false}
             style={{ width: 64, height: 64 }}
           />
-          <div className="text-st-2 text-gray-400">웨이팅 등록 완료 !</div>
+          <div className="text-st-2 text-gray-400">
+            {t('customer.waiting.banner.complete')}
+          </div>
         </div>
       )}
       <div className="text-c-1">{boothName}</div>
       <div>
-        현재 대기팀{' '}
+        {t('customer.waiting.banner.currentWaiting')}
         <span className="text-primary-300">{waitingListLength}</span>
       </div>
     </div>

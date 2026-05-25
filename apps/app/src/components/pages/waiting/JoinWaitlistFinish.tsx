@@ -3,6 +3,7 @@ import TextInput from '@/components/common/inputs/TextInput';
 import Banner from '@/components/pages/waiting/Banner';
 import { ROUTES } from '@/constants/routes';
 import { KEYS } from '@/constants/storage';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import NoticeView from '../board/NoticeView';
 
@@ -26,6 +27,7 @@ export default function JoinWaitlistFinish({
   notice,
 }: Props) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handlePreview = () => {
     localStorage.setItem(KEYS.IS_PREVIEW, '1');
@@ -42,29 +44,29 @@ export default function JoinWaitlistFinish({
         />
         <NoticeView notice={notice} />
         <TextInput
-          label="대기번호"
-          placeholder="대기번호를 입력해주세요."
+          label={t('customer.waiting.finish.waitingNumberLabel')}
+          placeholder={t('customer.waiting.finish.waitingNumberPlaceholder')}
           limitHide
           value={waitingNumber}
           disabled
         />
         <TextInput
-          label="예약자 이름"
-          placeholder="예약하시는 분 이름을 입력해주세요."
+          label={t('customer.waiting.form.nameLabel')}
+          placeholder={t('customer.waiting.form.namePlaceholder')}
           limitHide
           value={name}
           disabled
         />
         <TextInput
-          label="전화번호"
-          placeholder="예약자 연락처를 입력해주세요."
+          label={t('customer.waiting.form.phoneLabel')}
+          placeholder={t('customer.waiting.form.phonePlaceholder')}
           limitHide
           value={phone}
           disabled
         />
         <TextInput
-          label="입장 인원"
-          placeholder="총 인원을 입력해주세요."
+          label={t('customer.waiting.form.partySizeLabel')}
+          placeholder={t('customer.waiting.form.partySizePlaceholder')}
           type="number"
           limitHide
           value={partySize}
@@ -74,7 +76,7 @@ export default function JoinWaitlistFinish({
 
       <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
         <CtaButton
-          text="메뉴판 미리보기"
+          text={t('customer.waiting.finish.previewMenuButton')}
           radius="_2xl"
           onClick={handlePreview}
         />

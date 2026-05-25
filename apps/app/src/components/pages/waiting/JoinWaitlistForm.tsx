@@ -5,21 +5,15 @@ import JoinWaitlistFinish from '@/components/pages/waiting/JoinWaitlistFinish';
 import { useStore } from '@/hooks/useStore';
 import { useWaiting } from '@/hooks/useWaiting';
 import { IWaitingListItem } from '@/types/global';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 import NoticeView from '../board/NoticeView';
 
-const waitlistSchema = z.object({
-  name: z.string().min(1, '예약자 이름은 필수입니다.'),
-  phone: z
-    .string()
-    .regex(/^010-\d{3,4}-\d{4}$/, '올바른 전화번호 형식이 아닙니다.'),
-  partySize: z.number().gt(0, '입장 인원은 1명 이상이어야 합니다.'),
-});
-
 export default function JoinWaitlistForm() {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const { createWaiting, fetchActiveWaitingCount, activeWaitingCount } =
     useWaiting();
@@ -30,6 +24,23 @@ export default function JoinWaitlistForm() {
     JSON.parse(sessionStorage.getItem('userData') || '{}');
   const storeId = userData?.userId || userData?.id;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const waitlistSchema = useMemo(
+    () =>
+      z.object({
+        name: z.string().min(1, t('customer.waiting.validation.nameRequired')),
+        phone: z
+          .string()
+          .regex(
+            /^010-\d{3,4}-\d{4}$/,
+            t('customer.waiting.validation.phoneInvalid'),
+          ),
+        partySize: z
+          .number()
+          .gt(0, t('customer.waiting.validation.partySizeInvalid')),
+      }),
+    [t],
+  );
 
   useEffect(() => {
     if (storeId) {
@@ -123,8 +134,8 @@ export default function JoinWaitlistForm() {
         <NoticeView notice={notice} />
 
         <TextInput
-          label="예약자 이름"
-          placeholder="예약하시는 분 이름을 입력해주세요."
+          label={t('customer.waiting.form.nameLabel')}
+          placeholder={t('customer.waiting.form.namePlaceholder')}
           limitHide
           value={formData.name}
           onChange={(e) =>
@@ -132,15 +143,15 @@ export default function JoinWaitlistForm() {
           }
         />
         <TextInput
-          label="전화번호"
-          placeholder="예약자 연락처를 입력해주세요."
+          label={t('customer.waiting.form.phoneLabel')}
+          placeholder={t('customer.waiting.form.phonePlaceholder')}
           limitHide
           value={formData.phone}
           onChange={handlePhoneChange}
         />
         <TextInput
-          label="입장 인원"
-          placeholder="총 인원을 입력해주세요."
+          label={t('customer.waiting.form.partySizeLabel')}
+          placeholder={t('customer.waiting.form.partySizePlaceholder')}
           type="number"
           limitHide
           value={formData.partySize}
@@ -152,7 +163,7 @@ export default function JoinWaitlistForm() {
 
       <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
         <CtaButton
-          text="웨이팅 등록하기"
+          text={t('customer.waiting.form.submitButton')}
           radius="_2xl"
           onClick={handleSubmit}
           disabled={!isFormValid}

@@ -14,10 +14,18 @@ export const useLanguageStore = create<LanguageState>()(
       setLanguage: (lang) => {
         set({ language: lang });
         i18n.changeLanguage(lang);
+        document.documentElement.lang = lang;
       },
     }),
     {
       name: 'app_language',
+
+      onRehydrateStorage: () => (state) => {
+        if (state && state.language) {
+          i18n.changeLanguage(state.language);
+          document.documentElement.lang = state.language;
+        }
+      },
     },
   ),
 );

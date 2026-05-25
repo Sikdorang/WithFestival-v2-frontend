@@ -26,6 +26,32 @@
         }
       }
     },
+    "waiting": {
+      "title": "加入等候名单",
+      "banner": {
+        "complete": "排队登记完成！",
+        "currentWaiting": "当前等待组数 "
+      },
+      "form": {
+        "nameLabel": "预约人姓名",
+        "namePlaceholder": "请输入您的姓名。",
+        "phoneLabel": "电话号码",
+        "phonePlaceholder": "请输入您的联系电话。",
+        "partySizeLabel": "入场人数",
+        "partySizePlaceholder": "请输入总人数。",
+        "submitButton": "加入等候名单"
+      },
+      "validation": {
+        "nameRequired": "预约人姓名是必填项。",
+        "phoneInvalid": "无效的电话号码格式。",
+        "partySizeInvalid": "入场人数必须至少为 1。"
+      },
+      "finish": {
+        "waitingNumberLabel": "等候号码",
+        "waitingNumberPlaceholder": "请输入等候号码。",
+        "previewMenuButton": "预览菜单"
+      }
+    },
     "menuBoard": {
       "takeoutTitle": "外带下单",
       "orderButton": "下单",

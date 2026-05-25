@@ -4,10 +4,11 @@ import TextInput from '@/components/common/inputs/TextInput';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { SUCCESS_MESSAGES } from '@/constants/message';
 import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
+import { useLogs } from '@/hooks/common/useLogs';
 import { useCoupon } from '@/hooks/useCoupon';
 import { useStore } from '@/hooks/useStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +19,9 @@ interface RemitStepProps {
 
 export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+  const { sendLog } = useLogs();
+  const isProceeding = useRef(false);
+
   const { getStorePublicInfo, account } = useStore();
   const { validateCoupon } = useCoupon();
   const { targetRef, handleFocus, handleBlur } =
@@ -34,6 +38,36 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
     getStorePublicInfo(userData.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (!isProceeding.current) {
+        sendLog('customer.ordering.dropoff.remit', userData.userId);
+      }
+    };
+
+    const handlePageHide = () => {
+      if (!isProceeding.current) {
+        sendLog('customer.ordering.dropoff.remit', userData.userId);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('pagehide', handlePageHide);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('pagehide', handlePageHide);
+    };
+  }, [sendLog, userData.userId]);
+
+  useEffect(() => {
+    return () => {
+      if (!isProceeding.current) {
+        sendLog('customer.ordering.dropoff.remit', userData.userId);
+      }
+    };
+  }, [sendLog, userData.userId]);
 
   const handleToggleCoupon = async () => {
     if (isCouponApplied) {
@@ -153,7 +187,10 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
           description={t('customer.remit.modal.confirmDesc')}
           cancelButtonText={t('customer.remit.modal.cancel')}
           confirmButtonText={t('customer.remit.modal.confirm')}
-          onConfirm={onNext}
+          onConfirm={() => {
+            isProceeding.current = true;
+            onNext();
+          }}
         >
           <CtaButton text={t('customer.remit.modal.remitDone')} radius="_2xl" />
         </DeleteConfirmModal>
