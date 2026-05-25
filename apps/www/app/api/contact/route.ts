@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "알 수 없는 오류";
+    const msg = e instanceof Error ? e.message : "네트워크 오류";
     console.error("[notion] create page failed:", msg);
     return NextResponse.json(
       { error: "문의 접수 중 오류가 발생했습니다." },
