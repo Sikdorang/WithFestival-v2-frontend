@@ -122,6 +122,21 @@ export const useOrder = () => {
     }
   };
 
+  // 주문 개별 메뉴 처리 완료
+  const toggleItemCompleted = async (
+    itemId: number,
+    isSentMode: boolean = false,
+  ) => {
+    try {
+      await orderAPI.toggleOrderItemCompleted(itemId);
+      toast.success('품목 상태가 변경되었습니다.');
+      await getOrders(isSentMode);
+    } catch (error) {
+      toast.error('상태 변경에 실패했습니다.');
+      console.error(error);
+    }
+  };
+
   // 주문 처리 상태 변경 -> COMPLETED
   const setOrderCompleted = async (
     orderId: number,
@@ -142,6 +157,7 @@ export const useOrder = () => {
     setPaymentPaid,
     setPaymentFailed,
     setOrderCancelled,
+    toggleItemCompleted,
     setOrderCompleted,
     isLoading,
     error: orderError,

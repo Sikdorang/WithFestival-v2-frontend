@@ -50,7 +50,7 @@ export interface OrderItemSummary {
   price: number;
   name?: string;
   margin?: number;
-
+  completed: boolean;
   menu?: {
     id: number;
     name: string;

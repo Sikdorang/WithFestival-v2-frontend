@@ -10,6 +10,7 @@ import ServiceOrderCard from '@/components/pages/order/ServiceOrderCard';
 import { useSocket } from '@/contexts/useSocket';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 const isServiceOrder = (order: any): boolean => {
   const items = order.items || order.orderUsers;
@@ -33,6 +34,7 @@ export default function Order() {
     setPaymentPaid,
     setOrderCompleted,
     setOrderCancelled,
+    toggleItemCompleted,
     isLoading,
   } = useOrder();
 
@@ -50,12 +52,14 @@ export default function Order() {
       socket.on('order.payment.paid', handleRefresh);
       socket.on('order.status.canceled', handleRefresh);
       socket.on('order.status.completed', handleRefresh);
+      socket.on('order.item.completed.changed', handleRefresh);
 
       return () => {
         socket.off('order.created', handleRefresh);
         socket.off('order.payment.paid', handleRefresh);
         socket.off('order.status.canceled', handleRefresh);
         socket.off('order.status.completed', handleRefresh);
+        socket.off('order.item.completed.changed', handleRefresh);
       };
     }
   }, [socket, orderType, getOrders]);
@@ -66,6 +70,13 @@ export default function Order() {
   const orderCount = Array.isArray(allOrders)
     ? allOrders.length
     : allOrders?.count || 0;
+
+  const debouncedToggleItem = useDebouncedCallback(
+    (itemId: number, isSentMode: boolean) => {
+      toggleItemCompleted(itemId, isSentMode);
+    },
+    200,
+  );
 
   const renderOrderList = (orders: any[]) => {
     return orders.map((order) =>
@@ -84,6 +95,9 @@ export default function Order() {
           setOrderSent={(id) => setPaymentPaid(id, orderType === 'sent')}
           setOrderCooked={(id) => setOrderCompleted(id, orderType === 'sent')}
           deleteOrder={(id) => setOrderCancelled(id, orderType === 'sent')}
+          toggleItemCompleted={(itemId) =>
+            debouncedToggleItem(itemId, orderType === 'sent')
+          }
         />
       ),
     );

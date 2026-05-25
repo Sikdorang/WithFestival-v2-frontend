@@ -13,17 +13,17 @@ interface Props {
   setOrderSent: (orderId: number) => void;
   setOrderCooked: (orderId: number) => void;
   deleteOrder: (orderId: number) => void;
+  toggleItemCompleted?: (itemId: number) => void;
 }
 
 export function OrderCard({
   order,
   setOrderSent,
   setOrderCooked,
+  toggleItemCompleted,
   deleteOrder,
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [servedItems, setServedItems] = useState<Set<number>>(new Set());
-
   const notification = new Audio('/sounds/effect_notification_2.mp3');
 
   const orderItems = order.items || [];
@@ -50,18 +50,6 @@ export function OrderCard({
     () => order.phoneNumber?.replace(/-/g, '') || '',
     [order.phoneNumber],
   );
-
-  const handleToggleServe = (itemId: number) => {
-    setServedItems((prev) => {
-      const next = new Set(prev);
-      if (next.has(itemId)) {
-        next.delete(itemId);
-      } else {
-        next.add(itemId);
-      }
-      return next;
-    });
-  };
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -96,7 +84,7 @@ export function OrderCard({
             const itemName = item.menu.name || '메뉴명 없음';
             const itemTotal = (item.price || 0) * quantity;
             const itemId = item.id || index;
-            const isServed = servedItems.has(itemId);
+            const isServed = item.completed;
 
             return (
               <div
@@ -109,7 +97,9 @@ export function OrderCard({
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleToggleServe(itemId);
+                        if (toggleItemCompleted) {
+                          toggleItemCompleted(itemId);
+                        }
                       }}
                       className="flex shrink-0 items-center justify-center focus:outline-none"
                     >

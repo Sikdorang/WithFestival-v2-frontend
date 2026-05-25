@@ -46,6 +46,14 @@ export const orderAPI = {
     return response.data;
   },
 
+  // 주문 개별 메뉴 처리 완료
+  toggleOrderItemCompleted: async (itemId: number) => {
+    const response = await axiosInstance.patch(
+      `/orders/items/${itemId}/toggle-completed`,
+    );
+    return response.data;
+  },
+
   // 주문 처리 상태 변경 -> COMPLETED
   setOrderCompleted: async (orderId: number) => {
     const response = await axiosInstance.patch(
