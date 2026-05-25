@@ -62,7 +62,7 @@ export const useOrder = () => {
       await orderAPI.createOrder(payload);
 
       clearOrder();
-      toast.success('주문이 완료되었습니다.');
+
       return true;
     } catch (error: any) {
       const errorMessage =

@@ -95,9 +95,28 @@ const router = createBrowserRouter([
         path: ROUTES.COUPON,
         element: <ManageCoupon />,
       },
+      {
+        path: ROUTES.MANAGE_RESERVE.ROOT,
+        element: <ManageReserve />,
+      },
+      {
+        path: ROUTES.MANAGE_RESERVE.DETAIL_PATH,
+        element: <ManageReserveDetail />,
+      },
+      {
+        path: ROUTES.AI_MENU_GENERATOR,
+        element: <AiMenuGenerator />,
+      },
+      {
+        path: ROUTES.MANAGE_WAITING_SETTING,
+        element: <ManageWaitingSetting />,
+      },
+      {
+        path: ROUTES.MANAGE_MISSIONS.ROOT,
+        element: <ManageMission />,
+      },
     ],
   },
-
   {
     path: ROUTES.WAITING,
     element: <Waiting />,
@@ -136,31 +155,6 @@ const router = createBrowserRouter([
   {
     path: ROUTES.MAP,
     element: <BoothMap />,
-    errorElement: <ErrorBoundary />,
-  },
-  {
-    path: ROUTES.MANAGE_RESERVE.ROOT,
-    element: <ManageReserve />,
-    errorElement: <ErrorBoundary />,
-  },
-  {
-    path: ROUTES.MANAGE_RESERVE.DETAIL_PATH,
-    element: <ManageReserveDetail />,
-    errorElement: <ErrorBoundary />,
-  },
-  {
-    path: ROUTES.AI_MENU_GENERATOR,
-    element: <AiMenuGenerator />,
-    errorElement: <ErrorBoundary />,
-  },
-  {
-    path: ROUTES.MANAGE_WAITING_SETTING,
-    element: <ManageWaitingSetting />,
-    errorElement: <ErrorBoundary />,
-  },
-  {
-    path: ROUTES.MANAGE_MISSIONS.ROOT,
-    element: <ManageMission />,
     errorElement: <ErrorBoundary />,
   },
   {

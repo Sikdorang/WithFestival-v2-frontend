@@ -6,6 +6,7 @@ import { SUCCESS_MESSAGES } from '@/constants/message';
 import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
 import { useCoupon } from '@/hooks/useCoupon';
 import { useStore } from '@/hooks/useStore';
+import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -24,6 +25,8 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
   const [couponCode, setCouponCode] = useState('');
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [discountAmount, setDiscountAmount] = useState(0);
+
+  const [showNotice, setShowNotice] = useState(true);
 
   useEffect(() => {
     getStorePublicInfo(userData.userId);
@@ -130,6 +133,42 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
           <CtaButton text="송금 완료" radius="_2xl" />
         </DeleteConfirmModal>
       </footer>
+
+      <Dialog.Root open={showNotice} onOpenChange={setShowNotice}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in fixed inset-0 z-50 bg-black/45" />
+
+          <Dialog.Content
+            onInteractOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+            className="data-[state=closed]:animate-slide-down data-[state=open]:animate-slide-up fixed inset-x-0 bottom-0 z-50 flex flex-col gap-6 rounded-t-[2rem] bg-white px-6 pt-10 pb-8 shadow-xl outline-none"
+          >
+            <Dialog.Title className="sr-only">
+              주의사항: 입금자명 입력 안내
+            </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              송금 완료 후 입금자명을 입력해야 주문이 완료됩니다.
+            </Dialog.Description>
+
+            <div className="flex flex-col gap-3 text-left">
+              <h3 className="text-xl font-bold text-gray-800">
+                주문하기 전에 한번만 읽어주세요 !
+              </h3>
+              <p className="text-[15px] leading-relaxed text-gray-600">
+                송금을 완료하신 후, 반드시 다음 화면에서{' '}
+                <span className="font-bold text-black">입금자명</span>까지 모두
+                입력해주셔야 정상적으로 주문 접수가 완료됩니다.
+              </p>
+            </div>
+
+            <CtaButton
+              text="확인했어요"
+              onClick={() => setShowNotice(false)}
+              radius="_2xl"
+            />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }

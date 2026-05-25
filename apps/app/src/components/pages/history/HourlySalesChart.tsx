@@ -48,7 +48,7 @@ export default function HourlySalesChart({ data }: HourlySalesChartProps) {
 
   return (
     <div className="mt-4">
-      <div className="text-st-2 mb-4 text-gray-800">시간대별 매출</div>
+      <div className="text-st-2 mb-4 text-gray-800 md:block">시간대별 매출</div>
 
       <div className="h-[250px] w-full focus:outline-none">
         <ResponsiveContainer width="100%" height="100%">

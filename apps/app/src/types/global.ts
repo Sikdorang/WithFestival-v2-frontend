@@ -50,6 +50,11 @@ export interface OrderItemSummary {
   price: number;
   name?: string;
   margin?: number;
+
+  menu?: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface OrderSummary {

@@ -1,3 +1,4 @@
+import { storeAPI } from '@/apis/store';
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
@@ -5,10 +6,10 @@ import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
 import { encryptJson } from '@/utils/crypto';
+import { toPng } from 'html-to-image';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storeAPI } from '../../apis/store';
 
 const DOMAIN = 'https://app.withfestival.site';
 
@@ -17,6 +18,7 @@ type QrType = 'table' | 'booth';
 export default function ManageQr() {
   const navigate = useNavigate();
   const qrRef = useRef<HTMLDivElement>(null);
+  const captureAreaRef = useRef<HTMLDivElement>(null);
 
   const [qrType, setQrType] = useState<QrType>('table');
   const [tableNum, setTableNum] = useState<string>('');
@@ -34,7 +36,7 @@ export default function ManageQr() {
     fetchUserInfo();
   }, []);
 
-  const { finalQrUrl, currentTableId } = useMemo(() => {
+  const { finalQrUrl } = useMemo(() => {
     const data: { userId: string; tableId?: number } = { userId };
 
     if (qrType === 'table') {
@@ -54,19 +56,38 @@ export default function ManageQr() {
     };
   }, [qrType, tableNum, userId]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (userId === '0') {
       alert('부스 정보를 불러오는 중입니다. 잠시만 기다려주세요.');
       return;
     }
 
-    const canvas = qrRef.current?.querySelector('canvas');
-    if (canvas) {
-      const url = canvas.toDataURL('image/png');
+    if (!captureAreaRef.current) return;
+
+    try {
+      const dataUrl = await toPng(captureAreaRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: '#f9fafb',
+
+        filter: (node) => {
+          if (node instanceof HTMLElement && node.id === 'hide-on-capture') {
+            return false;
+          }
+          return true;
+        },
+      });
+
+      const fileName =
+        qrType === 'table' ? `테이블_${tableNum}번_QR.png` : `부스_QR.png`;
+
       const link = document.createElement('a');
-      link.href = url;
-      link.download = `qr_${userId}_${currentTableId}.png`;
+      link.href = dataUrl;
+      link.download = fileName;
       link.click();
+    } catch (err) {
+      console.error('QR 다운로드 실패:', err);
+      alert('이미지 저장에 실패했습니다.');
     }
   };
 
@@ -86,7 +107,10 @@ export default function ManageQr() {
             </label>
             <select
               value={qrType}
-              onChange={(e) => setQrType(e.target.value as QrType)}
+              onChange={(e) => {
+                setQrType(e.target.value as QrType);
+                setTableNum('');
+              }}
               className="focus:border-primary-300 w-full rounded-xl border-2 border-gray-100 p-4 text-gray-800 outline-none"
             >
               <option value="table">테이블 QR</option>
@@ -105,7 +129,31 @@ export default function ManageQr() {
             />
           )}
 
-          <div className="flex flex-col items-center gap-5 rounded-[2rem] border border-gray-100 bg-gray-50 py-12">
+          <div
+            ref={captureAreaRef}
+            className="flex flex-col items-center gap-5 rounded-[2rem] border border-gray-100 bg-gray-50 py-12"
+          >
+            <div className="text-center">
+              <h3 className="text-gray-500-90 text-2xl font-black">
+                {qrType === 'table'
+                  ? tableNum
+                    ? `테이블 ${tableNum}`
+                    : '테이블을 선택해주세요'
+                  : '부스 QR'}
+              </h3>
+              {tableNum ? (
+                <p className="text-gray-500-80 mt-1 text-sm font-medium">
+                  QR을 스캔하여 주문해주세요 !
+                </p>
+              ) : undefined}
+
+              {qrType === 'booth' && (
+                <p className="text-gray-500-80 mt-1 text-sm font-medium">
+                  웨이팅 • 포장 주문 • 메뉴 보기
+                </p>
+              )}
+            </div>
+
             <div
               ref={qrRef}
               className="flex aspect-square items-center justify-center rounded-3xl bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
@@ -117,7 +165,10 @@ export default function ManageQr() {
                 includeMargin={false}
               />
             </div>
-            <div className="flex flex-col items-center gap-2">
+            <div
+              id="hide-on-capture"
+              className="flex flex-col items-center gap-2"
+            >
               <span className="bg-primary-100 text-primary-300 rounded-full px-3 py-1 text-[10px] font-bold">
                 {qrType.toUpperCase()} MODE
               </span>

@@ -1,6 +1,7 @@
 import { OrderSummary } from '@/types/global';
 import { useMemo } from 'react';
 import HourlySalesChart, { HourlySalesData } from './HourlySalesChart';
+import TopMenuChart, { TopMenuData } from './TopMenuChart';
 
 interface Props {
   orders: OrderSummary[];
@@ -26,6 +27,7 @@ export default function OrderDashBoard({ orders }: Props) {
         netProfit: 0,
         totalOrders: 0,
         hourlySales: DEFAULT_HOURLY_SALES,
+        topMenus: [],
       };
     }
 
@@ -39,6 +41,8 @@ export default function OrderDashBoard({ orders }: Props) {
       DEFAULT_HOURLY_SALES.map((item) => [item.time, 0]),
     );
 
+    const menuCountMap = new Map<string, number>();
+
     filteredOrders.forEach((order) => {
       let orderSales = 0;
 
@@ -47,6 +51,11 @@ export default function OrderDashBoard({ orders }: Props) {
         orderSales += itemSales;
         totalSales += itemSales;
         netProfit += itemSales * ((item.margin || 0) / 100);
+
+        if (item.menu && item.menu.name) {
+          const currentCount = menuCountMap.get(item.menu.name) || 0;
+          menuCountMap.set(item.menu.name, currentCount + item.quantity);
+        }
       });
 
       totalOrders++;
@@ -75,33 +84,50 @@ export default function OrderDashBoard({ orders }: Props) {
       ([time, 매출]) => ({ time, 매출 }),
     );
 
-    return { totalSales, netProfit, totalOrders, hourlySales };
+    const topMenus: TopMenuData[] = Array.from(menuCountMap.entries())
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+
+    return { totalSales, netProfit, totalOrders, hourlySales, topMenus };
   }, [orders]);
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg bg-white p-4 shadow-sm">
-      <div className="flex flex-col">
-        <div className="flex items-center justify-between gap-1 rounded-xl p-1">
-          <div className="text-b-1 text-gray-400">총 주문</div>
-          <div className="text-st-2 text-gray-800">
+    <div className="flex flex-col gap-4 rounded-lg bg-white p-4 shadow-sm md:p-6">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-4">
+        <div className="flex items-center justify-between rounded-xl p-1 md:flex-col md:items-start md:justify-center md:bg-gray-50 md:p-5">
+          <div className="text-b-1 text-gray-400 md:mb-1">총 주문</div>
+          <div className="text-st-2 text-gray-800 md:text-2xl">
             {summary.totalOrders.toLocaleString()}건
           </div>
         </div>
-        <div className="flex items-center justify-between gap-1 rounded-xl p-1">
-          <div className="text-b-1 text-gray-400">총 판매액</div>
-          <div className="text-st-2 text-gray-800">
+
+        <div className="flex items-center justify-between rounded-xl p-1 md:flex-col md:items-start md:justify-center md:bg-gray-50 md:p-5">
+          <div className="text-b-1 text-gray-400 md:mb-1">총 판매액</div>
+          <div className="text-st-2 text-gray-800 md:text-2xl">
             {summary.totalSales.toLocaleString()}원
           </div>
         </div>
-        <div className="flex items-center justify-between gap-1 rounded-xl p-1">
-          <div className="text-b-1 text-gray-400">순수익</div>
-          <div className="text-st-2 text-gray-800">
+
+        <div className="flex items-center justify-between rounded-xl p-1 md:flex-col md:items-start md:justify-center md:bg-gray-50 md:p-5">
+          <div className="text-b-1 text-gray-400 md:mb-1">순수익</div>
+          <div className="text-st-2 text-gray-800 md:text-2xl">
             {Math.round(summary.netProfit).toLocaleString()}원
           </div>
         </div>
       </div>
 
-      <HourlySalesChart data={summary.hourlySales} />
+      <div className="mt-2 grid w-full grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="flex w-full flex-col rounded-xl md:bg-gray-50 md:p-5">
+          <HourlySalesChart data={summary.hourlySales} />
+        </div>
+
+        <div className="flex w-full flex-col rounded-xl md:bg-gray-50 md:p-5">
+          <div className="mb-4 text-lg font-bold text-gray-800">
+            메뉴별 판매량
+          </div>
+          <TopMenuChart data={summary.topMenus} />
+        </div>
+      </div>
     </div>
   );
 }
