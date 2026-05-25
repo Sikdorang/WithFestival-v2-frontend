@@ -129,52 +129,54 @@ export default function ManageQr() {
             />
           )}
 
-          <div
-            ref={captureAreaRef}
-            className="flex flex-col items-center gap-5 rounded-[2rem] border border-gray-100 bg-gray-50 py-12"
-          >
-            <div className="text-center">
-              <h3 className="text-gray-500-90 text-2xl font-black">
-                {qrType === 'table'
-                  ? tableNum
-                    ? `테이블 ${tableNum}`
-                    : '테이블을 선택해주세요'
-                  : '부스 QR'}
-              </h3>
-              {tableNum ? (
-                <p className="text-gray-500-80 mt-1 text-sm font-medium">
-                  QR을 스캔하여 주문해주세요 !
-                </p>
-              ) : undefined}
-
-              {qrType === 'booth' && (
-                <p className="text-gray-500-80 mt-1 text-sm font-medium">
-                  웨이팅 • 포장 주문 • 메뉴 보기
-                </p>
-              )}
-            </div>
-
+          <div className="flex w-full justify-center">
             <div
-              ref={qrRef}
-              className="flex aspect-square items-center justify-center rounded-3xl bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+              ref={captureAreaRef}
+              className="flex w-fit min-w-[320px] flex-col items-center gap-5 rounded-[2rem] border border-gray-100 bg-gray-50 px-8 py-12"
             >
-              <QRCodeCanvas
-                value={finalQrUrl}
-                size={200}
-                level="H"
-                includeMargin={false}
-              />
-            </div>
-            <div
-              id="hide-on-capture"
-              className="flex flex-col items-center gap-2"
-            >
-              <span className="bg-primary-100 text-primary-300 rounded-full px-3 py-1 text-[10px] font-bold">
-                {qrType.toUpperCase()} MODE
-              </span>
-              <p className="max-w-[250px] text-center text-[10px] break-all text-gray-400">
-                {finalQrUrl}
-              </p>
+              <div className="text-center">
+                <h3 className="text-gray-500-90 text-2xl font-black">
+                  {qrType === 'table'
+                    ? tableNum
+                      ? `테이블 ${tableNum}`
+                      : '테이블을 선택해주세요'
+                    : '부스 QR'}
+                </h3>
+                {tableNum ? (
+                  <p className="text-gray-500-80 mt-1 text-sm font-medium">
+                    QR을 스캔하여 주문해주세요 !
+                  </p>
+                ) : undefined}
+
+                {qrType === 'booth' && (
+                  <p className="text-gray-500-80 mt-1 text-sm font-medium">
+                    웨이팅 • 포장 주문 • 메뉴 보기
+                  </p>
+                )}
+              </div>
+
+              <div
+                ref={qrRef}
+                className="flex aspect-square items-center justify-center rounded-3xl bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+              >
+                <QRCodeCanvas
+                  value={finalQrUrl}
+                  size={200}
+                  level="H"
+                  includeMargin={false}
+                />
+              </div>
+              <div
+                id="hide-on-capture"
+                className="flex flex-col items-center gap-2"
+              >
+                <span className="bg-primary-100 text-primary-300 rounded-full px-3 py-1 text-[10px] font-bold">
+                  {qrType.toUpperCase()} MODE
+                </span>
+                <p className="max-w-[250px] text-center text-[10px] break-all text-gray-400">
+                  {finalQrUrl}
+                </p>
+              </div>
             </div>
           </div>
         </div>
