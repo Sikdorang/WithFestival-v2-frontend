@@ -1,16 +1,16 @@
 import DepthIcon from '@/assets/icons/ic_arrow_right.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TopBar from '@/components/common/layouts/TopBar';
-import MenuList from '@/components/pages/board/MenuList';
+import AdminMenuList from '@/components/pages/store/AdminMenuList';
 import StoreInformation from '@/components/pages/store/StoreInformation';
 import { ROUTES } from '@/constants/routes';
 import { STORE_MANAGEMENT_MENUS } from '@/constants/storeMenu';
 import { AdminMenuId, useLogs } from '@/hooks/common/useLogs';
+import { useStore } from '@/hooks/useStore';
 import { useAuthStore } from '@/stores/authStore';
 import { Menu } from '@/types/global';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../../hooks/useStore';
 
 export default function Store() {
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ export default function Store() {
             </div>
             <DepthIcon />
           </div> */}
-          <MenuList onMenuItemClick={handleMenuItemClick} />
+          <AdminMenuList onMenuItemClick={handleMenuItemClick} />
         </section>
 
         <section className="mt-8 flex justify-center pb-20">
