@@ -31,8 +31,23 @@ export default function ManageBoothItem({
     setIsEditing(false);
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const newValue = e.target.value;
+
+    if (isTextArea) {
+      const lines = newValue.split('\n');
+      if (lines.length > 5) {
+        return;
+      }
+    }
+
+    setInputValue(newValue);
+  };
+
   return (
-    <div className="relative mb-4 rounded-2xl bg-white p-4">
+    <div className="relative mb-4 h-auto w-full shrink-0 rounded-2xl bg-white p-4">
       <h2 className="text-gray-500-80 mb-3 pt-1 text-[14px] font-medium">
         {title}
       </h2>
@@ -43,14 +58,14 @@ export default function ManageBoothItem({
             <TextArea
               placeholder={placeholder}
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleInputChange}
               limitHide
             />
           ) : (
             <TextInput
               placeholder={placeholder}
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleInputChange}
               limitHide
             />
           )}
@@ -67,7 +82,7 @@ export default function ManageBoothItem({
         </div>
       ) : (
         <div>
-          <div className="text-b-1 pt-4">
+          <div className="text-b-1 pt-4 whitespace-pre-wrap">
             {value || '등록된 이름이 없습니다.'}
           </div>
           <div className="absolute top-3 right-4">
