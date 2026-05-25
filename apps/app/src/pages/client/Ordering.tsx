@@ -7,6 +7,7 @@ import OrderingMenuList from '@/components/pages/ordering/OrderingMenuList';
 import PaymentProgress from '@/components/pages/ordering/PaymentProgress';
 import RemitStep from '@/components/pages/ordering/RemitStep';
 import { ROUTES } from '@/constants/routes';
+import { useCustomerMenuQuery } from '@/hooks/useMenuQuery';
 import { useOrder } from '@/hooks/useOrder';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -17,7 +18,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 export default function Ordering() {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const userData = useMemo(() => {
     if (location.state?.userData) return location.state.userData;
@@ -32,6 +33,28 @@ export default function Ordering() {
   const { orderItems } = useOrderStore();
   const { createOrder } = useOrder();
 
+  const storeId = userData?.userId || userData?.id;
+  const { data: menus } = useCustomerMenuQuery(storeId, true);
+
+  const localizedOrderItems = useMemo(() => {
+    return orderItems.map((item) => {
+      const rawMenu = menus?.find((m: any) => m.id === item.id);
+      if (!rawMenu) return item;
+
+      let localizedName = rawMenu.name;
+      const lang = i18n.language;
+
+      if (lang === 'en') localizedName = rawMenu.nameEn || rawMenu.name;
+      else if (lang === 'zh') localizedName = rawMenu.nameZh || rawMenu.name;
+      else if (lang === 'ja') localizedName = rawMenu.nameJa || rawMenu.name;
+
+      return {
+        ...item,
+        name: localizedName,
+      };
+    });
+  }, [orderItems, menus, i18n.language]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<
     'remit' | 'depositor' | 'complete'
@@ -39,7 +62,7 @@ export default function Ordering() {
   const [depositorName, setDepositorName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
-  const totalAmount = orderItems.reduce(
+  const totalAmount = localizedOrderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
@@ -71,7 +94,7 @@ export default function Ordering() {
           <h2 className="text-st-2 mt-6 mb-2">
             {t('customer.ordering.orderHistory')}
           </h2>
-          <OrderingMenuList items={orderItems} />
+          <OrderingMenuList items={localizedOrderItems} />
           <BottomSpace />
         </main>
       </div>

@@ -34,13 +34,19 @@
     },
     "ordering": {
       "title": "下单",
+      "priceFormat": "{{price}}韩元",
+      "quantityFormat": "{{quantity}}个",
       "orderHistory": "订单记录",
       "totalAmount": "总计 {{amount}}韩元",
       "remitButton": "汇款",
       "srRemitOrDeposit": "汇款或输入汇款人姓名",
       "completeTitle": "订单完成",
       "remitTitle": "汇款",
-      "depositTitle": "输入汇款人姓名"
+      "depositTitle": "输入汇款人姓名",
+      "progress": {
+        "step1": "账户汇款",
+        "step2": "输入汇款人姓名"
+      }
     },
     "remit": {
       "toast": {

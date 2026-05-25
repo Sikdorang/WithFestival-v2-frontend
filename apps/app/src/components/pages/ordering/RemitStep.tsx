@@ -54,10 +54,21 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
 
     if (response && response.valid) {
       setIsCouponApplied(true);
-      setDiscountAmount(response.discountPrice || 0);
+
+      let calculatedDiscount = 0;
+      if (response.type === 'PERCENT') {
+        calculatedDiscount = Math.floor(
+          totalAmount * (response.discountPrice / 100),
+        );
+      } else {
+        calculatedDiscount = response.discountPrice || 0;
+      }
+
+      setDiscountAmount(calculatedDiscount);
+
       toast.success(
         t('customer.remit.toast.couponApplied', {
-          discount: response.discountPrice?.toLocaleString(),
+          discount: calculatedDiscount.toLocaleString(),
         }),
       );
     } else {

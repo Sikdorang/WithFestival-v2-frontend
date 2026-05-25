@@ -34,13 +34,19 @@
     },
     "ordering": {
       "title": "주문하기",
+      "priceFormat": "{{price}}원",
+      "quantityFormat": "{{quantity}}개",
       "orderHistory": "주문 내역",
       "totalAmount": "총 {{amount}}원",
       "remitButton": "송금하기",
       "srRemitOrDeposit": "송금하기 또는 입금자명 입력",
       "completeTitle": "주문 완료",
       "remitTitle": "송금하기",
-      "depositTitle": "입금자명 입력"
+      "depositTitle": "입금자명 입력",
+      "progress": {
+        "step1": "계좌 입금",
+        "step2": "입금자명 입력"
+      }
     },
     "remit": {
       "toast": {

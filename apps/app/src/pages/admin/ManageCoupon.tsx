@@ -3,6 +3,7 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import TrashIcon from '@/assets/icons/ic_cancel.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
+import { TabButton } from '@/components/common/buttons/TabButton'; // 💡 TabButton import 추가 (경로는 프로젝트 환경에 맞게 수정 필요)
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
@@ -29,6 +30,7 @@ export default function ManageCoupon() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const [newCode, setNewCode] = useState('');
+  const [newType, setNewType] = useState<'AMOUNT' | 'PERCENT'>('AMOUNT');
   const [newDiscount, setNewDiscount] = useState('');
   const [newHolder, setNewHolder] = useState('');
 
@@ -48,19 +50,28 @@ export default function ManageCoupon() {
 
   const handleCreateSubmit = async () => {
     if (!newCode.trim() || !newDiscount) {
-      toast.error('쿠폰 번호와 할인 금액을 입력해주세요.');
+      toast.error('쿠폰 번호와 할인 값을 입력해주세요.');
+      return;
+    }
+
+    const discountVal = Number(newDiscount);
+
+    if (newType === 'PERCENT' && (discountVal <= 0 || discountVal > 100)) {
+      toast.error('할인 비율은 1에서 100 사이여야 합니다.');
       return;
     }
 
     const success = await createCoupon({
       code: newCode.trim(),
-      discountPrice: Number(newDiscount),
+      type: newType,
+      discountPrice: discountVal,
       holder: newHolder.trim() || null,
     });
 
     if (success) {
       setIsCreateModalOpen(false);
       setNewCode('');
+      setNewType('AMOUNT');
       setNewDiscount('');
       setNewHolder('');
     }
@@ -126,7 +137,9 @@ export default function ManageCoupon() {
                         coupon.used ? 'text-gray-400' : 'text-primary-500'
                       }`}
                     >
-                      {coupon.discountPrice.toLocaleString()}원 할인
+                      {coupon.type === 'PERCENT'
+                        ? `${coupon.discountPrice}% 할인`
+                        : `${coupon.discountPrice.toLocaleString()}원 할인`}
                     </span>
 
                     <span
@@ -191,44 +204,58 @@ export default function ManageCoupon() {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/30" />
           <Dialog.Content className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-xl outline-none">
-            <Dialog.Title className="text-lg font-bold text-gray-900">
-              새 쿠폰 생성
+            <Dialog.Title className="text-gray-500-90 text-lg font-semibold">
+              쿠폰 생성
             </Dialog.Title>
-            <div className="mt-6 flex flex-col gap-4">
+            <div className="mt-6 flex flex-col gap-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-bold text-gray-700">
-                  쿠폰 번호 (필수)
-                </label>
-                <input
-                  type="text"
+                <TextInput
+                  label="쿠폰 번호"
                   value={newCode}
                   onChange={(e) => setNewCode(e.target.value)}
                   placeholder="예: FEST2026-NEW"
-                  className="rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-gray-400 focus:outline-none"
+                  limitHide
                 />
               </div>
+
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-bold text-gray-700">
-                  할인 금액 (필수)
+                <label className="text-b-2 block text-gray-400">
+                  할인 유형
                 </label>
-                <input
-                  type="number"
+                <div className="flex justify-center">
+                  <TabButton
+                    options={['정액 할인', '비율 할인 (%)']}
+                    selectedIndex={newType === 'AMOUNT' ? 0 : 1}
+                    onChange={(index) => {
+                      setNewType(index === 0 ? 'AMOUNT' : 'PERCENT');
+                      setNewDiscount('');
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <TextInput
+                  label={newType === 'AMOUNT' ? '할인 금액' : '할인 비율 (%)'}
                   value={newDiscount}
-                  onChange={(e) => setNewDiscount(e.target.value)}
-                  placeholder="예: 3000"
-                  className="rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-gray-400 focus:outline-none"
+                  type="number"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (newType === 'PERCENT' && Number(val) > 100) return;
+                    setNewDiscount(val);
+                  }}
+                  placeholder={newType === 'AMOUNT' ? '예: 3000' : '예: 10'}
+                  limitHide
                 />
               </div>
+
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-bold text-gray-700">
-                  소지자 (선택)
-                </label>
-                <input
-                  type="text"
+                <TextInput
+                  label="소지자 (선택)"
                   value={newHolder}
                   onChange={(e) => setNewHolder(e.target.value)}
                   placeholder="예: 김철수 010-1234-5678"
-                  className="rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-gray-400 focus:outline-none"
+                  limitHide
                 />
               </div>
             </div>

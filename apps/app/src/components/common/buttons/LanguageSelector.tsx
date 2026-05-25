@@ -30,13 +30,22 @@ export default function LanguageSelector() {
     setIsOpen(false);
   };
 
+  const displayLabel =
+    language === 'en'
+      ? 'EN'
+      : LANGUAGES.find((lang) => lang.code === language)?.label || '한국어';
+
   return (
     <div className="relative" ref={menuRef}>
       <motion.div
         whileTap={{ scale: 0.9 }}
-        className="flex cursor-pointer items-center justify-center p-2"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="flex cursor-pointer items-center justify-center gap-1 p-2"
       >
-        <LanguageIcon onClick={() => setIsOpen((prev) => !prev)} />
+        <LanguageIcon />
+        <span className="text-[15px] font-medium text-gray-600">
+          {displayLabel}
+        </span>
       </motion.div>
 
       <AnimatePresence>

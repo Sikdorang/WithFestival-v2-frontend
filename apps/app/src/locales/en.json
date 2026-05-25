@@ -34,13 +34,19 @@
     },
     "ordering": {
       "title": "Place Order",
+      "priceFormat": "{{price}} KRW",
+      "quantityFormat": "{{quantity}} items",
       "orderHistory": "Order History",
       "totalAmount": "Total {{amount}} KRW",
       "remitButton": "Send Money",
       "srRemitOrDeposit": "Send money or enter depositor name",
       "completeTitle": "Order Complete",
       "remitTitle": "Send Money",
-      "depositTitle": "Depositor Name"
+      "depositTitle": "Depositor Name",
+      "progress": {
+        "step1": "Bank Transfer",
+        "step2": "Depositor Name"
+      }
     },
     "remit": {
       "toast": {

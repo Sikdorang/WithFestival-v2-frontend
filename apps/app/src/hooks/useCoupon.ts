@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 export interface Coupon {
   id: number;
   code: string;
+  type: 'AMOUNT' | 'PERCENT';
   discountPrice: number;
   used: boolean;
   holder: string | null;

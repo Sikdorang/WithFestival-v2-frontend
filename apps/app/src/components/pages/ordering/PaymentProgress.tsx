@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface PaymentProgressProps {
   step: 'remit' | 'depositor' | 'complete';
 }
@@ -6,7 +8,7 @@ export default function PaymentProgress({ step }: PaymentProgressProps) {
   if (step === 'complete') return null;
 
   const isDepositorStep = step === 'depositor';
-
+  const { t } = useTranslation();
   return (
     <div className="flex w-full items-start justify-center pt-2">
       <div className="flex flex-col items-center gap-2">
@@ -14,7 +16,7 @@ export default function PaymentProgress({ step }: PaymentProgressProps) {
           1
         </div>
         <span className="text-gray-500-90 text-[13px] font-medium">
-          계좌 입금
+          {t('customer.ordering.progress.step1')}
         </span>
       </div>
 
@@ -39,7 +41,7 @@ export default function PaymentProgress({ step }: PaymentProgressProps) {
             isDepositorStep ? 'text-gray-500-90' : 'text-gray-500-30'
           }`}
         >
-          입금자명 입력
+          {t('customer.ordering.progress.step2')}
         </span>
       </div>
     </div>

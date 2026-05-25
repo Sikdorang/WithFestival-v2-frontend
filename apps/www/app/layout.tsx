@@ -8,7 +8,22 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "축제랑",
-  description: "With Festival",
+  description: "대학 축제는 축제랑과 함께 더 즐겁게 !",
+  openGraph: {
+    title: "축제랑",
+    description: "대학 축제는 축제랑과 함께 더 즐겁게 !",
+    url: "https://withfestival.site",
+    siteName: "축제랑",
+    images: [
+      {
+        url: "https://withfestival.site/images/img_logo_full.svg",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

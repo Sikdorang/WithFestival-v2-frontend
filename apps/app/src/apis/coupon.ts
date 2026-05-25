@@ -2,12 +2,13 @@ import axiosInstance from '.';
 
 export interface CreateCouponDto {
   code: string;
+  type: 'AMOUNT' | 'PERCENT';
   discountPrice: number;
   holder?: string | null;
 }
 
 export const couponAPI = {
-  // 쿠폰 번호 검증 (JWT 불필요)
+  // 쿠폰 번호 검증
   validateCoupon: async (storeId: number, code: string) => {
     const response = await axiosInstance.post(
       `/stores/${storeId}/coupons/validate`,

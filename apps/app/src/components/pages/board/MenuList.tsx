@@ -9,13 +9,35 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import MenuItem from './MenuListItem';
 
+const getLocalizedMenu = (menu: any, lang: string): Menu => {
+  let name = menu.name;
+  let description = menu.description;
+
+  if (lang === 'en') {
+    name = menu.nameEn || menu.name;
+    description = menu.descriptionEn || menu.description;
+  } else if (lang === 'zh') {
+    name = menu.nameZh || menu.name;
+    description = menu.descriptionZh || menu.description;
+  } else if (lang === 'ja') {
+    name = menu.nameJa || menu.name;
+    description = menu.descriptionJa || menu.description;
+  }
+
+  return {
+    ...menu,
+    name,
+    description,
+  };
+};
+
 export default function MenuList({
   onMenuItemClick,
 }: {
   onMenuItemClick: (item: Menu) => void;
 }) {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const userData = useMemo(() => {
     if (location.state?.userData) return location.state.userData;
@@ -65,15 +87,19 @@ export default function MenuList({
   return (
     <div className="rounded-lg bg-white">
       <div className="flex flex-col">
-        {menus.map((item: Menu) => (
-          <MenuItem
-            key={item.id}
-            name={item.name}
-            price={item.price}
-            image={item.imageUrl ?? ''}
-            onClick={() => onMenuItemClick(item)}
-          />
-        ))}
+        {menus.map((rawItem: any) => {
+          const localizedItem = getLocalizedMenu(rawItem, i18n.language);
+
+          return (
+            <MenuItem
+              key={localizedItem.id}
+              name={localizedItem.name}
+              price={localizedItem.price}
+              image={localizedItem.imageUrl ?? ''}
+              onClick={() => onMenuItemClick(localizedItem)}
+            />
+          );
+        })}
       </div>
     </div>
   );

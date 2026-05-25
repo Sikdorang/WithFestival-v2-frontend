@@ -34,13 +34,19 @@
     },
     "ordering": {
       "title": "注文する",
+      "priceFormat": "{{price}}ウォン",
+      "quantityFormat": "{{quantity}}個",
       "orderHistory": "注文履歴",
       "totalAmount": "合計 {{amount}}ウォン",
       "remitButton": "送金する",
       "srRemitOrDeposit": "送金または入金者名の入力",
       "completeTitle": "注文完了",
       "remitTitle": "送金する",
-      "depositTitle": "入金者名の入力"
+      "depositTitle": "入金者名の入力",
+      "progress": {
+        "step1": "口座入金",
+        "step2": "入金者名の入力"
+      }
     },
     "remit": {
       "toast": {

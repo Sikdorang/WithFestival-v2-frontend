@@ -1,4 +1,5 @@
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
+import { useTranslation } from 'react-i18next';
 
 interface MenuItemProps {
   name: string;
@@ -13,6 +14,8 @@ export default function MenuItem({
   image,
   quantity,
 }: MenuItemProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex justify-between py-4">
       {image ? (
@@ -30,9 +33,15 @@ export default function MenuItem({
       <div className="flex-1 pl-4 text-left">
         <div className="text-b-1 text-gray-400">{name}</div>
         <div className="text-st-1 text-gray-800">
-          {price.toLocaleString()}원
+          {t('customer.ordering.priceFormat', {
+            price: price.toLocaleString(),
+          })}
         </div>
-        <div className="text-st-1 text-gray-800">{quantity}개</div>
+        <div className="text-st-1 text-gray-800">
+          {t('customer.ordering.quantityFormat', {
+            quantity,
+          })}
+        </div>
       </div>
     </div>
   );
