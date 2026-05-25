@@ -1,12 +1,14 @@
-import NoticeIcon from '@/assets/icons/ic_megaphone.svg?react';
 import MoreIcon from '@/assets/icons/ic_arrow_down.svg?react';
+import NoticeIcon from '@/assets/icons/ic_megaphone.svg?react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   notice: string;
 }
 
 export default function NoticeView({ notice }: Props) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (!notice) {
@@ -23,7 +25,9 @@ export default function NoticeView({ notice }: Props) {
       >
         <div className="flex items-center gap-2">
           <NoticeIcon />
-          <h3 className="text-st-2 text-black">공지사항</h3>
+          <h3 className="text-st-2 text-black">
+            {t('customer.storeBanner.status.noticeTitle')}
+          </h3>
         </div>
         <MoreIcon
           className={`cursor-pointer text-gray-600 transition-transform duration-300 ${

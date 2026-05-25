@@ -25,6 +25,90 @@
           "sub": "查看各酒馆的排名"
         }
       }
+    },
+    "menuBoard": {
+      "takeoutTitle": "外带下单",
+      "orderButton": "下单",
+      "emptyMenu": "没有可用的菜单。",
+      "priceFormat": "{{price}}韩元"
+    },
+    "ordering": {
+      "title": "下单",
+      "orderHistory": "订单记录",
+      "totalAmount": "总计 {{amount}}韩元",
+      "remitButton": "汇款",
+      "srRemitOrDeposit": "汇款或输入汇款人姓名",
+      "completeTitle": "订单完成",
+      "remitTitle": "汇款",
+      "depositTitle": "输入汇款人姓名"
+    },
+    "remit": {
+      "toast": {
+        "couponRemoved": "优惠券已取消。",
+        "enterCoupon": "请输入优惠券号码。",
+        "couponApplied": "优惠券已应用，为您立减 {{discount}}韩元。",
+        "invalidCoupon": "优惠券无效或已被使用。"
+      },
+      "payment": {
+        "originalPrice": "原价 {{amount}}韩元",
+        "pleaseRemit1": "请汇款",
+        "pleaseRemit2": "{{amount}}韩元！",
+        "accountNumber": "账号"
+      },
+      "coupon": {
+        "label": "优惠券号码",
+        "placeholder": "请输入优惠券号码",
+        "apply": "应用",
+        "remove": "取消"
+      },
+      "modal": {
+        "confirmTitle": "您完成汇款了吗？",
+        "confirmDesc": "如果未汇款直接下一步，您的订单可能会被取消！",
+        "cancel": "返回",
+        "confirm": "已完成！",
+        "remitDone": "汇款完成"
+      },
+      "notice": {
+        "srTitle": "注意事项：请输入汇款人姓名",
+        "srDesc": "汇款完成后，必须输入汇款人姓名才能完成订单。",
+        "title": "下单前请阅读！",
+        "desc1": "完成汇款后，请务必在下一页输入",
+        "descHighlight": "汇款人姓名",
+        "desc2": "，才能正常完成订单。",
+        "confirm": "我已知晓"
+      }
+    },
+    "depositor": {
+      "title1": "请输入汇款人的",
+      "title2": "姓名和电话号码",
+      "nameLabel": "汇款人姓名",
+      "namePlaceholder": "请输入汇款人姓名",
+      "phoneLabel": "电话号码",
+      "phonePlaceholder": "010-0000-0000",
+      "loading": "订单处理中...",
+      "submit": "提交"
+    },
+    "complete": {
+      "title": "订单已完成",
+      "desc1": "请稍候，",
+      "desc2": "您的餐点正在准备中！",
+      "goHome": "返回首页"
+    },
+    "storeBanner": {
+      "status": {
+        "preview": "菜单预览",
+        "waiting": "等位顾客",
+        "takeout": "外带订单",
+        "table": "桌号 {{tableId}}",
+        "noticeTitle": "公告"
+      },
+      "previewMessage": "您可以在等候时提前预览菜单。"
+    },
+    "menuDetail": {
+      "title": "菜单详情",
+      "imageAlt": "菜单图片",
+      "price": "{{price}}韩元",
+      "addBtn": "添加"
     }
   }
 }

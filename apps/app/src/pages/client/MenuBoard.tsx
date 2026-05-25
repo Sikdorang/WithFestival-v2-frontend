@@ -13,11 +13,13 @@ import { useOrderStore } from '@/stores/orderStore';
 import { Menu } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 export default function MenuBoard() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const { getStorePublicInfo, name, notice } = useStore();
   const {
     missions,
@@ -66,11 +68,15 @@ export default function MenuBoard() {
   return (
     <>
       <div className="relative min-h-screen space-y-4 bg-white">
-        {userData.tableId == 0 ? (
+        {userData.tableId == 9999 ? (
           <Navigator
             left={<GoBackIcon />}
             onLeftPress={() => navigate(-1)}
-            center={<div className="text-st-1">포장 주문하기</div>}
+            center={
+              <div className="text-st-1">
+                {t('customer.menuBoard.takeoutTitle')}
+              </div>
+            }
           />
         ) : (
           <TopBar />
@@ -115,7 +121,9 @@ export default function MenuBoard() {
             className="bg-primary-300 flex w-full flex-1 items-center justify-between rounded-2xl px-6 py-4 text-black"
           >
             <div className="flex w-full items-center justify-center gap-2">
-              <div className="text-b-1">주문하기</div>
+              <div className="text-b-1">
+                {t('customer.menuBoard.orderButton')}
+              </div>
               <div className="text-c-1 flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">
                 {totalQuantity}
               </div>

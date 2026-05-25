@@ -6,6 +6,7 @@ import Navigator from '@/components/common/layouts/Navigator';
 import { useOrderStore } from '@/stores/orderStore';
 import { Menu } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useTranslation } from 'react-i18next';
 interface Props {
   menu: Menu;
   onClose: () => void;
@@ -13,6 +14,7 @@ interface Props {
 
 export default function MenuDetail({ menu, onClose }: Props) {
   const { addItem } = useOrderStore();
+  const { t } = useTranslation();
 
   const isPreview = localStorage.getItem('preview') === '1';
 
@@ -30,7 +32,7 @@ export default function MenuDetail({ menu, onClose }: Props) {
     <BaseResponsiveLayout>
       <Navigator
         left={<GoBackIcon />}
-        center={'메뉴 상세'}
+        center={t('customer.menuDetail.title')}
         onLeftPress={onClose}
       />
 
@@ -40,7 +42,7 @@ export default function MenuDetail({ menu, onClose }: Props) {
             {menu.imageUrl ? (
               <img
                 src={`${menu.imageUrl}`}
-                alt="메뉴 이미지"
+                alt={t('customer.menuDetail.imageAlt')}
                 className="aspect-[4/3] w-full object-cover"
               />
             ) : (
@@ -57,7 +59,9 @@ export default function MenuDetail({ menu, onClose }: Props) {
             <p className="text-b-1 text-gray-500">{menu.description}</p>
           )}
           <p className="text-st-2 mt-2 text-black">
-            {Number(menu.price).toLocaleString()}원
+            {t('customer.menuDetail.price', {
+              price: Number(menu.price).toLocaleString(),
+            })}
           </p>
         </div>
       </main>
@@ -65,7 +69,11 @@ export default function MenuDetail({ menu, onClose }: Props) {
       {!isPreview && (
         <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 px-4 pb-4">
           <Dialog.Close asChild>
-            <CtaButton text="담기" radius="_2xl" onClick={handleAddItem} />
+            <CtaButton
+              text={t('customer.menuDetail.addBtn')}
+              radius="_2xl"
+              onClick={handleAddItem}
+            />
           </Dialog.Close>
         </footer>
       )}

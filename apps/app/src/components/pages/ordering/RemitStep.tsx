@@ -9,6 +9,7 @@ import { useStore } from '@/hooks/useStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface RemitStepProps {
   totalAmount: number;
@@ -21,6 +22,7 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
   const { validateCoupon } = useCoupon();
   const { targetRef, handleFocus, handleBlur } =
     useKeyboardScroll<HTMLDivElement>();
+  const { t } = useTranslation();
 
   const [couponCode, setCouponCode] = useState('');
   const [isCouponApplied, setIsCouponApplied] = useState(false);
@@ -38,13 +40,13 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
       setIsCouponApplied(false);
       setDiscountAmount(0);
       setCouponCode('');
-      toast.success('쿠폰 적용이 해제되었습니다.');
+      toast.success(t('customer.remit.toast.couponRemoved'));
       return;
     }
 
     const trimmedCode = couponCode.trim();
     if (!trimmedCode) {
-      toast.error('쿠폰 번호를 입력해주세요.');
+      toast.error(t('customer.remit.toast.enterCoupon'));
       return;
     }
 
@@ -54,10 +56,12 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
       setIsCouponApplied(true);
       setDiscountAmount(response.discountPrice || 0);
       toast.success(
-        `쿠폰이 적용되어 ${response.discountPrice?.toLocaleString()}원이 할인됩니다.`,
+        t('customer.remit.toast.couponApplied', {
+          discount: response.discountPrice?.toLocaleString(),
+        }),
       );
     } else {
-      toast.error('유효하지 않거나 이미 사용된 쿠폰입니다.');
+      toast.error(t('customer.remit.toast.invalidCoupon'));
     }
   };
 
@@ -69,17 +73,23 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
         <div className="text-t-1">
           {isCouponApplied && (
             <span className="mb-1 block text-sm text-gray-400 line-through">
-              기존 {totalAmount.toLocaleString()}원
+              {t('customer.remit.payment.originalPrice', {
+                amount: totalAmount.toLocaleString(),
+              })}
             </span>
           )}
-          {finalAmount.toLocaleString()}원을
+          {t('customer.remit.payment.pleaseRemit1', {
+            amount: finalAmount.toLocaleString(),
+          })}
           <br />
-          입금해주세요!
+          {t('customer.remit.payment.pleaseRemit2', {
+            amount: finalAmount.toLocaleString(),
+          })}
         </div>
 
         <div className="flex flex-col items-center gap-2 rounded-xl bg-gray-100 px-4 py-5">
           <span className="text-b-2 bg-primary-300-80 text-gray-500-80 rounded-sm px-1.5 py-1">
-            계좌번호
+            {t('customer.remit.payment.accountNumber')}
           </span>
           <div className="flex items-center gap-2">
             <span className="text-b-1 text-gray-700">{account}</span>
@@ -97,11 +107,11 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
           <div className="flex w-full items-end gap-2">
             <div className="flex-1">
               <TextInput
-                label="쿠폰 번호"
+                label={t('customer.remit.coupon.label')}
                 limitHide
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
-                placeholder="쿠폰 번호를 입력하세요"
+                placeholder={t('customer.remit.coupon.placeholder')}
                 disabled={isCouponApplied}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -110,7 +120,11 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
             <div className="flex flex-col justify-end">
               <CtaButton
                 onClick={handleToggleCoupon}
-                text={isCouponApplied ? '해제' : '적용'}
+                text={
+                  isCouponApplied
+                    ? t('customer.remit.coupon.remove')
+                    : t('customer.remit.coupon.apply')
+                }
                 color={isCouponApplied ? 'white' : 'gray'}
                 width="fit"
                 size="medium"
@@ -124,13 +138,13 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
 
       <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 bg-white p-4">
         <DeleteConfirmModal
-          title={'송금을 완료하셨나요 ?'}
-          description={'송금하지 않고 넘어가면 주문이 취소될 수 있어요 !'}
-          cancelButtonText={'돌아가기'}
-          confirmButtonText={'완료했어요 !'}
+          title={t('customer.remit.modal.confirmTitle')}
+          description={t('customer.remit.modal.confirmDesc')}
+          cancelButtonText={t('customer.remit.modal.cancel')}
+          confirmButtonText={t('customer.remit.modal.confirm')}
           onConfirm={onNext}
         >
-          <CtaButton text="송금 완료" radius="_2xl" />
+          <CtaButton text={t('customer.remit.modal.remitDone')} radius="_2xl" />
         </DeleteConfirmModal>
       </footer>
 
@@ -144,25 +158,27 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
             className="data-[state=closed]:animate-slide-down data-[state=open]:animate-slide-up fixed inset-x-0 bottom-0 z-50 flex flex-col gap-6 rounded-t-[2rem] bg-white px-6 pt-10 pb-8 shadow-xl outline-none"
           >
             <Dialog.Title className="sr-only">
-              주의사항: 입금자명 입력 안내
+              {t('customer.remit.notice.srTitle')}
             </Dialog.Title>
             <Dialog.Description className="sr-only">
-              송금 완료 후 입금자명을 입력해야 주문이 완료됩니다.
+              {t('customer.remit.notice.srDesc')}
             </Dialog.Description>
 
             <div className="flex flex-col gap-3 text-left">
               <h3 className="text-xl font-bold text-gray-800">
-                주문하기 전에 한번만 읽어주세요 !
+                {t('customer.remit.notice.title')}
               </h3>
               <p className="text-[15px] leading-relaxed text-gray-600">
-                송금을 완료하신 후, 반드시 다음 화면에서{' '}
-                <span className="font-bold text-black">입금자명</span>까지 모두
-                입력해주셔야 정상적으로 주문 접수가 완료됩니다.
+                {t('customer.remit.notice.desc1')}
+                <span className="font-bold text-black">
+                  {t('customer.remit.notice.descHighlight')}
+                </span>
+                {t('customer.remit.notice.desc2')}
               </p>
             </div>
 
             <CtaButton
-              text="확인했어요"
+              text={t('customer.remit.notice.confirm')}
               onClick={() => setShowNotice(false)}
               radius="_2xl"
             />

@@ -5,6 +5,7 @@ import { KEYS } from '@/constants/storage';
 import { useAdminMenuQuery, useCustomerMenuQuery } from '@/hooks/useMenuQuery';
 import { Menu } from '@/types/global';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import MenuItem from './MenuListItem';
 
@@ -14,6 +15,7 @@ export default function MenuList({
   onMenuItemClick: (item: Menu) => void;
 }) {
   const location = useLocation();
+  const { t } = useTranslation();
 
   const userData = useMemo(() => {
     if (location.state?.userData) return location.state.userData;
@@ -53,7 +55,7 @@ export default function MenuList({
       <div className="py-20">
         <EmptyPlaceHolder
           image={<StoreIcon width={48} height={48} className="text-gray-300" />}
-          text="등록된 메뉴가 없습니다."
+          text={t('customer.menuBoard.emptyMenu')}
           textClassName="text-gray-400"
         />
       </div>

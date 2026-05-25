@@ -11,11 +11,14 @@ import { useOrder } from '@/hooks/useOrder';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
 
 export default function Ordering() {
   const location = useLocation();
+  const { t } = useTranslation();
+
   const userData = useMemo(() => {
     if (location.state?.userData) return location.state.userData;
     try {
@@ -60,12 +63,14 @@ export default function Ordering() {
       <Navigator
         left={<GoBackIcon />}
         onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
-        center={<div className="text-st-1">주문하기</div>}
+        center={<div className="text-st-1">{t('customer.ordering.title')}</div>}
       />
 
       <div className="relative min-h-screen bg-white px-4">
         <main className="pb-24">
-          <h2 className="text-st-2 mt-6 mb-2">주문 내역</h2>
+          <h2 className="text-st-2 mt-6 mb-2">
+            {t('customer.ordering.orderHistory')}
+          </h2>
           <OrderingMenuList items={orderItems} />
           <BottomSpace />
         </main>
@@ -74,12 +79,14 @@ export default function Ordering() {
       {orderItems.length > 0 && (
         <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 bg-white p-4">
           <span className="text-st-2 text-black">
-            총 {totalAmount.toLocaleString()}원
+            {t('customer.ordering.totalAmount', {
+              amount: totalAmount.toLocaleString(),
+            })}
           </span>
 
           <Dialog.Trigger asChild>
             <button className="bg-primary-300 text-b-1 flex-1 rounded-2xl py-4 text-center text-black">
-              송금하기
+              {t('customer.ordering.remitButton')}
             </button>
           </Dialog.Trigger>
         </footer>
@@ -89,13 +96,19 @@ export default function Ordering() {
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
         <Dialog.Content className="fixed inset-0 z-50 flex flex-col bg-white">
           <Dialog.Title className="sr-only">
-            송금하기 또는 입금자명 입력
+            {t('customer.ordering.srRemitOrDeposit')}
           </Dialog.Title>
           <Dialog.Description className="sr-only">
-            송금하기 또는 입금자명 입력
+            {t('customer.ordering.srRemitOrDeposit')}
           </Dialog.Description>
           {modalStep === 'complete' ? (
-            <Navigator center={<div className="text-st-1">주문 완료</div>} />
+            <Navigator
+              center={
+                <div className="text-st-1">
+                  {t('customer.ordering.completeTitle')}
+                </div>
+              }
+            />
           ) : (
             <Navigator
               left={<GoBackIcon />}
@@ -105,7 +118,9 @@ export default function Ordering() {
               }}
               center={
                 <div className="text-st-1">
-                  {modalStep === 'remit' ? '송금하기' : '입금자명 입력'}
+                  {modalStep === 'remit'
+                    ? t('customer.ordering.remitTitle')
+                    : t('customer.ordering.depositTitle')}
                 </div>
               }
             />

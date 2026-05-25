@@ -25,6 +25,90 @@
           "sub": "居酒屋別の順位を確認する"
         }
       }
+    },
+    "menuBoard": {
+      "takeoutTitle": "テイクアウトを注文する",
+      "orderButton": "注文する",
+      "emptyMenu": "登録されたメニューがありません。",
+      "priceFormat": "{{price}}ウォン"
+    },
+    "ordering": {
+      "title": "注文する",
+      "orderHistory": "注文履歴",
+      "totalAmount": "合計 {{amount}}ウォン",
+      "remitButton": "送金する",
+      "srRemitOrDeposit": "送金または入金者名の入力",
+      "completeTitle": "注文完了",
+      "remitTitle": "送金する",
+      "depositTitle": "入金者名の入力"
+    },
+    "remit": {
+      "toast": {
+        "couponRemoved": "クーポンの適用を解除しました。",
+        "enterCoupon": "クーポン番号を入力してください。",
+        "couponApplied": "クーポンが適用され、{{discount}}ウォン割引されました。",
+        "invalidCoupon": "無効、または既に使用済みのクーポンです。"
+      },
+      "payment": {
+        "originalPrice": "従来 {{amount}}ウォン",
+        "pleaseRemit1": "{{amount}}ウォンを",
+        "pleaseRemit2": "入金してください！",
+        "accountNumber": "口座番号"
+      },
+      "coupon": {
+        "label": "クーポン番号",
+        "placeholder": "クーポン番号を入力してください",
+        "apply": "適用",
+        "remove": "解除"
+      },
+      "modal": {
+        "confirmTitle": "送金は完了しましたか？",
+        "confirmDesc": "送金せずに進むと、注文がキャンセルされる場合があります！",
+        "cancel": "戻る",
+        "confirm": "完了しました！",
+        "remitDone": "送金完了"
+      },
+      "notice": {
+        "srTitle": "注意事項：入金者名の入力",
+        "srDesc": "送金完了後、入金者名を入力しないと注文が完了しません。",
+        "title": "注文前に一度お読みください！",
+        "desc1": "送金を完了した後、必ず次の画面で「",
+        "descHighlight": "入金者名",
+        "desc2": "」を入力していただくことで、注文が正常に完了します。",
+        "confirm": "確認しました"
+      }
+    },
+    "depositor": {
+      "title1": "入金された方の",
+      "title2": "お名前と電話番号を入力してください",
+      "nameLabel": "入金者名",
+      "namePlaceholder": "入金者名を入力してください。",
+      "phoneLabel": "電話番号",
+      "phonePlaceholder": "010-0000-0000",
+      "loading": "注文処理中...",
+      "submit": "入力完了"
+    },
+    "complete": {
+      "title": "注文が完了しました",
+      "desc1": "料理が出来上がるまで",
+      "desc2": "しばらくお待ちください！",
+      "goHome": "ホームへ戻る"
+    },
+    "storeBanner": {
+      "status": {
+        "preview": "メニュープレビュー",
+        "waiting": "ウェイティングのお客様",
+        "takeout": "テイクアウト注文",
+        "table": "テーブル番号 {{tableId}}",
+        "noticeTitle": "お知らせ"
+      },
+      "previewMessage": "お待ちの間にメニューを事前に確認できます。"
+    },
+    "menuDetail": {
+      "title": "メニュー詳細",
+      "imageAlt": "メニュー画像",
+      "price": "{{price}}ウォン",
+      "addBtn": "追加"
     }
   }
 }

@@ -1,6 +1,7 @@
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
+import { useTranslation } from 'react-i18next';
 
 interface DepositorStepProps {
   onSubmit: () => void;
@@ -20,6 +21,7 @@ export default function DepositorStep({
   isLoading = false,
 }: DepositorStepProps) {
   const { targetRef, handleFocus, handleBlur } = useKeyboardScroll();
+  const { t } = useTranslation();
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawNumbers = e.target.value.replace(/[^0-9]/g, '');
@@ -44,13 +46,13 @@ export default function DepositorStep({
         className="flex w-full flex-col items-center gap-4 px-8"
       >
         <div className="text-t-1 mb-2">
-          입금하신 분의
+          {t('customer.depositor.title1')}
           <br />
-          이름과 전화번호를 입력해주세요
+          {t('customer.depositor.title2')}
         </div>
         <TextInput
-          label="입금자명"
-          placeholder="입금자명을 입력해주세요."
+          label={t('customer.depositor.nameLabel')}
+          placeholder={t('customer.depositor.namePlaceholder')}
           value={depositorName}
           onChange={(e) => setDepositorName(e.target.value)}
           onFocus={handleFocus}
@@ -58,8 +60,8 @@ export default function DepositorStep({
           limitHide
         />
         <TextInput
-          label="전화번호"
-          placeholder="010-0000-0000"
+          label={t('customer.depositor.phoneLabel')}
+          placeholder={t('customer.depositor.phonePlaceholder')}
           value={phoneNumber}
           onChange={handlePhoneChange}
           limitHide
@@ -72,7 +74,11 @@ export default function DepositorStep({
 
       <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 bg-white p-4">
         <CtaButton
-          text={isLoading ? '주문 처리 중...' : '입력 완료'}
+          text={
+            isLoading
+              ? t('customer.depositor.loading')
+              : t('customer.depositor.submit')
+          }
           onClick={() => {
             onSubmit();
           }}

@@ -25,6 +25,90 @@
           "sub": "주점 별로 순위 확인해보기"
         }
       }
+    },
+    "menuBoard": {
+      "takeoutTitle": "포장 주문하기",
+      "orderButton": "주문하기",
+      "emptyMenu": "등록된 메뉴가 없습니다.",
+      "priceFormat": "{{price}}원"
+    },
+    "ordering": {
+      "title": "주문하기",
+      "orderHistory": "주문 내역",
+      "totalAmount": "총 {{amount}}원",
+      "remitButton": "송금하기",
+      "srRemitOrDeposit": "송금하기 또는 입금자명 입력",
+      "completeTitle": "주문 완료",
+      "remitTitle": "송금하기",
+      "depositTitle": "입금자명 입력"
+    },
+    "remit": {
+      "toast": {
+        "couponRemoved": "쿠폰 적용이 해제되었습니다.",
+        "enterCoupon": "쿠폰 번호를 입력해주세요.",
+        "couponApplied": "쿠폰이 적용되어 {{discount}}원이 할인됩니다.",
+        "invalidCoupon": "유효하지 않거나 이미 사용된 쿠폰입니다."
+      },
+      "payment": {
+        "originalPrice": "기존 {{amount}}원",
+        "pleaseRemit1": "{{amount}}원을",
+        "pleaseRemit2": "입금해주세요!",
+        "accountNumber": "계좌번호"
+      },
+      "coupon": {
+        "label": "쿠폰 번호",
+        "placeholder": "쿠폰 번호를 입력하세요",
+        "apply": "적용",
+        "remove": "해제"
+      },
+      "modal": {
+        "confirmTitle": "송금을 완료하셨나요 ?",
+        "confirmDesc": "송금하지 않고 넘어가면 주문이 취소될 수 있어요 !",
+        "cancel": "돌아가기",
+        "confirm": "완료했어요 !",
+        "remitDone": "송금 완료"
+      },
+      "notice": {
+        "srTitle": "주의사항: 입금자명 입력 안내",
+        "srDesc": "송금 완료 후 입금자명을 입력해야 주문이 완료됩니다.",
+        "title": "주문하기 전에 한번만 읽어주세요 !",
+        "desc1": "송금을 완료하신 후, 반드시 다음 화면에서 ",
+        "descHighlight": "입금자명",
+        "desc2": "까지 모두 입력해주셔야 정상적으로 주문 접수가 완료됩니다.",
+        "confirm": "확인했어요"
+      }
+    },
+    "depositor": {
+      "title1": "입금하신 분의",
+      "title2": "이름과 전화번호를 입력해주세요",
+      "nameLabel": "입금자명",
+      "namePlaceholder": "입금자명을 입력해주세요.",
+      "phoneLabel": "전화번호",
+      "phonePlaceholder": "010-0000-0000",
+      "loading": "주문 처리 중...",
+      "submit": "입력 완료"
+    },
+    "complete": {
+      "title": "주문이 완료됐어요",
+      "desc1": "음식이 조리될 때 까지",
+      "desc2": "잠시 기다려주세요 !",
+      "goHome": "홈으로 가기"
+    },
+    "storeBanner": {
+      "status": {
+        "preview": "메뉴판 미리보기",
+        "waiting": "웨이팅 고객",
+        "takeout": "포장 주문",
+        "table": "테이블 번호 {{tableId}}",
+        "noticeTitle": "공지사항"
+      },
+      "previewMessage": "웨이팅을 기다리며 메뉴를 미리 볼 수 있어요."
+    },
+    "menuDetail": {
+      "title": "메뉴 상세",
+      "imageAlt": "메뉴 이미지",
+      "price": "{{price}}원",
+      "addBtn": "담기"
     }
   }
 }

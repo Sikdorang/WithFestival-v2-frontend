@@ -1,4 +1,5 @@
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
+import { useTranslation } from 'react-i18next';
 
 export default function MenuItem({
   name,
@@ -11,6 +12,8 @@ export default function MenuItem({
   image: string;
   onClick: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div
       className="flex w-full cursor-pointer items-start justify-between border-b border-gray-50 py-5 transition-colors active:bg-gray-50"
@@ -19,7 +22,9 @@ export default function MenuItem({
       <div className="flex flex-1 flex-col gap-1 pr-4">
         <span className="text-[15px] font-medium text-[#8B95A1]">{name}</span>
         <span className="text-[18px] font-bold text-[#191F28]">
-          {price.toLocaleString()}원
+          {t('customer.menuBoard.priceFormat', {
+            price: price.toLocaleString(),
+          })}
         </span>
       </div>
 

@@ -1,5 +1,6 @@
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
 
@@ -17,14 +18,17 @@ export default function StoreBanner({
   notice,
 }: Props) {
   // const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
 
   const renderStatusText = () => {
-    if (isPreview) return '메뉴판 미리보기';
-    if (tableId === 'w') return '웨이팅 고객';
-    if (tableId === 0 || tableId === '0') return '포장 주문';
-    return `테이블 번호 ${tableId}`;
+    if (isPreview) return t('customer.storeBanner.status.preview');
+    if (tableId === 'w') return t('customer.storeBanner.status.waiting');
+    if (tableId === 9999 || tableId === '9999')
+      return t('customer.storeBanner.status.takeout');
+
+    return t('customer.storeBanner.status.table', { tableId });
   };
 
   return (
@@ -56,7 +60,7 @@ export default function StoreBanner({
           </div>
           {isPreview && (
             <div className="text-c-1 flex text-gray-200">
-              웨이팅을 기다리며 메뉴를 미리 볼 수 있어요.
+              {t('customer.storeBanner.previewMessage')}
             </div>
           )}
         </div>

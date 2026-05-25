@@ -25,6 +25,90 @@
           "sub": "Check rankings by pub"
         }
       }
+    },
+    "menuBoard": {
+      "takeoutTitle": "Order Takeout",
+      "orderButton": "Order",
+      "emptyMenu": "No menus available.",
+      "priceFormat": "{{price}} KRW"
+    },
+    "ordering": {
+      "title": "Place Order",
+      "orderHistory": "Order History",
+      "totalAmount": "Total {{amount}} KRW",
+      "remitButton": "Send Money",
+      "srRemitOrDeposit": "Send money or enter depositor name",
+      "completeTitle": "Order Complete",
+      "remitTitle": "Send Money",
+      "depositTitle": "Depositor Name"
+    },
+    "remit": {
+      "toast": {
+        "couponRemoved": "Coupon removed.",
+        "enterCoupon": "Please enter a coupon code.",
+        "couponApplied": "Coupon applied! {{discount}} KRW discounted.",
+        "invalidCoupon": "Invalid or already used coupon."
+      },
+      "payment": {
+        "originalPrice": "Original {{amount}} KRW",
+        "pleaseRemit1": "Please remit",
+        "pleaseRemit2": "{{amount}} KRW!",
+        "accountNumber": "Account Number"
+      },
+      "coupon": {
+        "label": "Coupon Code",
+        "placeholder": "Enter coupon code",
+        "apply": "Apply",
+        "remove": "Remove"
+      },
+      "modal": {
+        "confirmTitle": "Have you completed the transfer?",
+        "confirmDesc": "If you proceed without transferring, your order may be canceled!",
+        "cancel": "Go Back",
+        "confirm": "Completed!",
+        "remitDone": "Transfer Complete"
+      },
+      "notice": {
+        "srTitle": "Notice: Depositor Name Required",
+        "srDesc": "You must enter the depositor's name after transferring to complete the order.",
+        "title": "Please read before ordering!",
+        "desc1": "After completing the transfer, you must enter the ",
+        "descHighlight": "Depositor Name",
+        "desc2": " on the next screen to finalize your order.",
+        "confirm": "I understand"
+      }
+    },
+    "depositor": {
+      "title1": "Please enter the",
+      "title2": "depositor's name and phone number",
+      "nameLabel": "Depositor Name",
+      "namePlaceholder": "Enter depositor's name",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "010-0000-0000",
+      "loading": "Processing order...",
+      "submit": "Complete"
+    },
+    "complete": {
+      "title": "Order Completed",
+      "desc1": "Please wait a moment",
+      "desc2": "while your food is being prepared!",
+      "goHome": "Go to Home"
+    },
+    "storeBanner": {
+      "status": {
+        "preview": "Menu Preview",
+        "waiting": "Waiting Customer",
+        "takeout": "Takeout Order",
+        "table": "Table {{tableId}}",
+        "noticeTitle": "Notice"
+      },
+      "previewMessage": "You can preview the menu while waiting."
+    },
+    "menuDetail": {
+      "title": "Menu Details",
+      "imageAlt": "Menu Image",
+      "price": "{{price}} KRW",
+      "addBtn": "Add"
     }
   }
 }
