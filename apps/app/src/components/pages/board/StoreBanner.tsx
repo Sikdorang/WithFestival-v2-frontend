@@ -49,10 +49,10 @@ export default function StoreBanner({
               {/* <CtaButton
                 width="fit"
                 color="red"
-                text="좋아하면 울리는"
+                text="번호팅"
                 size="small"
                 onClick={() => {
-                  navigate(ROUTES.LOVE_ALARM);
+                  navigate(ROUTES.BLIND_PHONENUMBER_DATE);
                 }}
               /> */}
               <LanguageSelector />

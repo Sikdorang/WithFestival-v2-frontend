@@ -45,4 +45,5 @@ export const ROUTES = {
   NOT_FOUND: '/not-found',
   ORDERING: '/ordering',
   COUPON: '/coupon',
+  BLIND_PHONENUMBER_DATE: '/dating',
 } as const;
