@@ -31,6 +31,7 @@ import AiMenuGenerator from '../pages/admin/AiMenuGenerator';
 import ManageCoupon from '../pages/admin/ManageCoupon';
 import ManageMission from '../pages/admin/ManageMission';
 import ManageWaitingSetting from '../pages/admin/ManageWaitingSetting';
+import BlindPhoneNumberDate from '../pages/client/BlindPhoneNumberDate';
 import { authLoader } from './authLoader';
 
 function ProtectedLayout() {
@@ -155,6 +156,11 @@ const router = createBrowserRouter([
   {
     path: ROUTES.MAP,
     element: <BoothMap />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.BLIND_PHONENUMBER_DATE,
+    element: <BlindPhoneNumberDate />,
     errorElement: <ErrorBoundary />,
   },
   {

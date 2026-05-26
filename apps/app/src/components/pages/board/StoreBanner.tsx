@@ -1,6 +1,9 @@
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../../constants/routes';
+import CtaButton from '../../common/buttons/CtaButton';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
 
@@ -17,7 +20,7 @@ export default function StoreBanner({
   tableId,
   notice,
 }: Props) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
@@ -46,15 +49,15 @@ export default function StoreBanner({
               <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
             <div className="mr-2 flex items-center gap-4">
-              {/* <CtaButton
+              <CtaButton
                 width="fit"
                 color="red"
-                text="좋아하면 울리는"
+                text="번호팅"
                 size="small"
                 onClick={() => {
-                  navigate(ROUTES.LOVE_ALARM);
+                  navigate(ROUTES.BLIND_PHONENUMBER_DATE);
                 }}
-              /> */}
+              />
               <LanguageSelector />
             </div>
           </div>
