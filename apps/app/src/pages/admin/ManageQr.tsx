@@ -23,6 +23,8 @@ export default function ManageQr() {
   const [qrType, setQrType] = useState<QrType>('table');
   const [tableNum, setTableNum] = useState<string>('');
   const [userId, setUserId] = useState<string>('0');
+  const [qrImgSrc, setQrImgSrc] = useState<string>('');
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -56,6 +58,18 @@ export default function ManageQr() {
     };
   }, [qrType, tableNum, userId]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (qrRef.current) {
+        const canvas = qrRef.current.querySelector('canvas');
+        if (canvas) {
+          setQrImgSrc(canvas.toDataURL('image/png'));
+        }
+      }
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [finalQrUrl]);
+
   const handleDownload = async () => {
     if (userId === '0') {
       alert('부스 정보를 불러오는 중입니다. 잠시만 기다려주세요.');
@@ -69,7 +83,6 @@ export default function ManageQr() {
         cacheBust: true,
         pixelRatio: 2,
         backgroundColor: '#f9fafb',
-
         filter: (node) => {
           if (node instanceof HTMLElement && node.id === 'hide-on-capture') {
             return false;
@@ -159,12 +172,20 @@ export default function ManageQr() {
                 ref={qrRef}
                 className="flex aspect-square items-center justify-center rounded-3xl bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
               >
-                <QRCodeCanvas
-                  value={finalQrUrl}
-                  size={200}
-                  level="H"
-                  includeMargin={false}
-                />
+                <div className="pointer-events-none absolute opacity-0">
+                  <QRCodeCanvas
+                    value={finalQrUrl}
+                    size={200}
+                    level="H"
+                    includeMargin={false}
+                  />
+                </div>
+
+                {qrImgSrc ? (
+                  <img src={qrImgSrc} alt="QR Code" width={200} height={200} />
+                ) : (
+                  <div className="h-[200px] w-[200px]" />
+                )}
               </div>
               <div
                 id="hide-on-capture"
