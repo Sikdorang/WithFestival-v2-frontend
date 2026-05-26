@@ -24,7 +24,7 @@ export default function OrderTopBar({ orderCount, type, onTypeChange }: Props) {
 
         <div className="flex w-[200px]">
           <TabButton
-            options={['송금 전', '송금 완료']}
+            options={['입금 확인 전', '입금 확인 완료']}
             selectedIndex={type === 'pending' ? 0 : 1}
             onChange={(index) => {
               onTypeChange(index === 0 ? 'pending' : 'sent');

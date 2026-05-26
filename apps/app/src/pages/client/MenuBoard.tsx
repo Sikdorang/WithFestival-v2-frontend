@@ -20,7 +20,8 @@ export default function MenuBoard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  const { getStorePublicInfo, name, notice } = useStore();
+  const { getStorePublicInfo, name, notice, noticeEn, noticeZh, noticeJa } =
+    useStore();
   const {
     missions,
     isLoading: isMissionsLoading,
@@ -87,6 +88,9 @@ export default function MenuBoard() {
             isPreview={isPreview === '1'}
             tableId={userData.tableId}
             notice={notice || ''}
+            noticeEn={noticeEn || ''}
+            noticeZh={noticeZh || ''}
+            noticeJa={noticeJa || ''}
           />
           <MenuList onMenuItemClick={handleMenuItemClick} />
           <CustomerMissionList

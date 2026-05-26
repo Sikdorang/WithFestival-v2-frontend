@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 
-type NewOrderItem = Omit<OrderItem, 'quantity'>;
+interface NewOrderItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
 
 interface OrderItem {
   id: number;
@@ -34,13 +40,13 @@ export const useOrderStore = create<OrderState>((set) => ({
         return {
           orderItems: state.orderItems.map((item) =>
             item.id === newItem.id
-              ? { ...item, quantity: item.quantity + 1 }
+              ? { ...item, quantity: item.quantity + newItem.quantity }
               : item,
           ),
         };
       } else {
         return {
-          orderItems: [...state.orderItems, { ...newItem, quantity: 1 }],
+          orderItems: [...state.orderItems, newItem],
         };
       }
     }),

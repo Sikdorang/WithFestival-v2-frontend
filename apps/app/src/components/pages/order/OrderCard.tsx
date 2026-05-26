@@ -167,15 +167,35 @@ export function OrderCard({
 
         {isPaid ? (
           <div className="mt-6 flex flex-col gap-2">
-            <button
-              className="flex-1 rounded-xl bg-[#F5C754] py-4 text-[14px] text-gray-900 transition-colors active:bg-yellow-500"
-              onClick={() => {
-                setOrderCooked(order.id);
-                toast.success(SUCCESS_MESSAGES.orderCookingComplete);
-              }}
-            >
-              주문 처리 완료
-            </button>
+            <div className="flex gap-3 pt-2">
+              <DeleteConfirmModal
+                title={'주문을 취소할까요 ?'}
+                description={'주문 취소 후에는 복구할 수 없어요.'}
+                cancelButtonText={'돌아가기'}
+                confirmButtonText={'주문 취소하기'}
+                onConfirm={() => {
+                  deleteOrder(order.id);
+                }}
+              >
+                <CtaButton
+                  text="취소하기"
+                  color="lightRed"
+                  size="small"
+                  width="fit"
+                  className="shrink-0 text-[0.85rem] whitespace-nowrap"
+                />
+              </DeleteConfirmModal>
+
+              <CtaButton
+                text="조리 완료 처리"
+                onClick={() => {
+                  setOrderCooked(order.id);
+                  toast.success(SUCCESS_MESSAGES.orderCookingComplete);
+                }}
+                size="small"
+                className="text-[0.85rem]"
+              />
+            </div>
           </div>
         ) : (
           <div className="flex flex-col gap-2">
@@ -191,7 +211,7 @@ export function OrderCard({
               >
                 <CtaButton
                   text="취소하기"
-                  color="red"
+                  color="lightRed"
                   size="small"
                   width="fit"
                   className="shrink-0 text-[0.85rem] whitespace-nowrap"

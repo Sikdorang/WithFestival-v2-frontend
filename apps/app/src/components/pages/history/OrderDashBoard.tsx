@@ -31,7 +31,9 @@ export default function OrderDashBoard({ orders }: Props) {
       };
     }
 
-    const filteredOrders = orders.filter((order) => order.totalPrice > 0);
+    const filteredOrders = orders.filter(
+      (order) => order.totalPrice > 0 && order.status !== 'CANCELED',
+    );
 
     let totalSales = 0;
     let netProfit = 0;

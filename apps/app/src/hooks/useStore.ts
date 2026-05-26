@@ -8,7 +8,12 @@ export const useStore = () => {
   const [storeId, setStoreId] = useState<number | undefined>(undefined);
   const [name, setName] = useState<string>('');
   const [account, setAccount] = useState<string>('');
+
   const [notice, setNotice] = useState<string>('');
+  const [noticeEn, setNoticeEn] = useState<string>('');
+  const [noticeZh, setNoticeZh] = useState<string>('');
+  const [noticeJa, setNoticeJa] = useState<string>('');
+
   const [event, setEvent] = useState<string>('');
   const [waitingsEnabled, setWaitingsEnabled] = useState<boolean>(false);
   const [reservationEnabled, setReservationEnabled] = useState<boolean>(false);
@@ -26,7 +31,12 @@ export const useStore = () => {
       setStoreId(response.id);
       setName(response.name);
       setAccount(response.accountNumber);
+
       setNotice(response.notice);
+      setNoticeEn(response.noticeEn);
+      setNoticeZh(response.noticeZh);
+      setNoticeJa(response.noticeJa);
+
       setEvent(response.event);
       setWaitingsEnabled(response.waitingsEnabled);
       setReservationEnabled(response.reservationEnabled);
@@ -50,7 +60,12 @@ export const useStore = () => {
       setStoreId(storeId);
       setName(response.name);
       setAccount(response.accountNumber);
+
       setNotice(response.notice);
+      setNoticeEn(response.noticeEn);
+      setNoticeZh(response.noticeZh);
+      setNoticeJa(response.noticeJa);
+
       setEvent(response.event);
       setWaitingsEnabled(response.waitingsEnabled);
       setReservationEnabled(response.reservationEnabled);
@@ -168,6 +183,9 @@ export const useStore = () => {
     name,
     account,
     notice,
+    noticeEn,
+    noticeZh,
+    noticeJa,
     event,
     waitingsEnabled,
     reservationEnabled,

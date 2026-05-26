@@ -15,21 +15,24 @@ interface OrderingMenuListProps {
 }
 
 export default function OrderingMenuList({ items }: OrderingMenuListProps) {
-  const { decreaseItemQuantity } = useOrderStore();
+  const { addItem, decreaseItemQuantity, removeItem } = useOrderStore();
 
   return (
     <div className="rounded-lg bg-white">
       {items.map((item) => (
-        <div key={item.id} className="relative pr-10">
+        <div key={item.id} className="relative pr-8">
           <MenuItem
             name={item.name}
             price={item.price}
             image={item.image}
             quantity={item.quantity}
+            onIncrease={() => addItem({ ...item, quantity: 1 })}
+            onDecrease={() => decreaseItemQuantity(item.id)}
           />
+
           <button
-            onClick={() => decreaseItemQuantity(item.id)}
-            className="absolute top-5 right-2"
+            onClick={() => removeItem(item.id)}
+            className="absolute top-2 right-0 p-2 text-gray-400 transition-colors hover:text-gray-600"
           >
             <CancelIcon />
           </button>

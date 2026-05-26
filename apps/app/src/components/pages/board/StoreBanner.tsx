@@ -1,5 +1,5 @@
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
@@ -9,6 +9,9 @@ interface Props {
   isPreview: boolean;
   tableId?: string | number;
   notice: string;
+  noticeEn?: string;
+  noticeZh?: string;
+  noticeJa?: string;
 }
 
 export default function StoreBanner({
@@ -16,11 +19,29 @@ export default function StoreBanner({
   isPreview,
   tableId,
   notice,
+  noticeEn,
+  noticeZh,
+  noticeJa,
 }: Props) {
-  // const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
+
+  const [currentLang, setCurrentLang] = useState(i18n.language);
+
+  useEffect(() => {
+    setCurrentLang(i18n.language);
+  }, [i18n.language]);
+
+  useEffect(() => {
+    console.log('현재 설정된 i18n 언어 코드:', currentLang);
+    console.log('들어온 데이터 상태:', {
+      notice,
+      noticeEn,
+      noticeZh,
+      noticeJa,
+    });
+  }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
   const renderStatusText = () => {
     if (isPreview) return t('customer.storeBanner.status.preview');
@@ -30,6 +51,16 @@ export default function StoreBanner({
 
     return t('customer.storeBanner.status.table', { tableId });
   };
+
+  const currentNotice = useMemo(() => {
+    const lang = currentLang.toLowerCase();
+
+    if (lang.startsWith('en') && noticeEn) return noticeEn;
+    if (lang.startsWith('zh') && noticeZh) return noticeZh;
+    if (lang.startsWith('ja') && noticeJa) return noticeJa;
+
+    return notice;
+  }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
   return (
     <div>
@@ -46,15 +77,6 @@ export default function StoreBanner({
               <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
             <div className="mr-2 flex items-center gap-4">
-              {/* <CtaButton
-                width="fit"
-                color="red"
-                text="번호팅"
-                size="small"
-                onClick={() => {
-                  navigate(ROUTES.BLIND_PHONENUMBER_DATE);
-                }}
-              /> */}
               <LanguageSelector />
             </div>
           </div>
@@ -66,7 +88,7 @@ export default function StoreBanner({
         </div>
       </div>
 
-      <NoticeView notice={notice} />
+      <NoticeView notice={currentNotice} />
     </div>
   );
 }
