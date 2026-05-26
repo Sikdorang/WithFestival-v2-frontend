@@ -9,6 +9,9 @@ interface Props {
 export function OrderBill({ order }: Props) {
   const orderItems = order.items || order.orderUsers || [];
 
+  // 💡 취소 상태 확인 플래그
+  const isCanceled = order.status === 'CANCELED';
+
   const timeString = order.createdAt || order.time || '';
   const formattedTime = timeString
     ? new Date(timeString).toLocaleString('ko-KR', {
@@ -32,25 +35,41 @@ export function OrderBill({ order }: Props) {
     [order.phoneNumber],
   );
 
+  const totalQuantity = orderItems.reduce(
+    (acc: number, item: any) => acc + (item.quantity ?? item.count ?? 0),
+    0,
+  );
+
   return (
     <Dialog.Root open={true} onOpenChange={() => {}}>
       <div className="w-full space-y-3 rounded-lg bg-white p-4">
         <div className="flex flex-col">
-          <div className="mb-2 flex items-center gap-1">
-            <span className="text-b-2 text-black">주문번호</span>
-            <span className="text-b-2 text-black">
-              {String(order.id).padStart(3, '0')}
-            </span>
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <span className="text-b-2 text-black">주문번호</span>
+              <span className="text-b-2 text-black">
+                {String(order.id).padStart(3, '0')}
+              </span>
+            </div>
+            {isCanceled && (
+              <span className="text-b-2 text-red-500">취소된 주문</span>
+            )}
           </div>
+
           <div className="flex justify-between">
             <div className="flex flex-col">
               <span className="text-b-2 text-gray-400">테이블 번호</span>
-              <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
+
+              <span
+                className={`text-b-2 inline-flex self-start rounded-lg px-3 py-1 text-white ${
+                  isCanceled ? 'bg-red-500' : 'bg-black'
+                }`}
+              >
                 {order.tableId || order.tableNumber}번
               </span>
             </div>
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-end">
               <span className="text-gray-400">{formattedTime}</span>
             </div>
           </div>
@@ -69,12 +88,18 @@ export function OrderBill({ order }: Props) {
                 key={`${order.id}-${item.id || index}`}
                 className="flex justify-between"
               >
-                <p className="text-gray-black">{itemName}</p>
+                <p
+                  className={`text-gray-black ${
+                    isCanceled ? 'text-gray-500 line-through' : ''
+                  }`}
+                >
+                  {itemName}
+                </p>
                 <div className="text-right">
                   <p className="text-gray-black">
                     {itemTotal.toLocaleString()}원
                   </p>
-                  <span className="text-sm text-gray-300">{quantity}개</span>
+                  <span className="text-sm text-gray-400">{quantity}개</span>
                 </div>
               </div>
             );
@@ -85,7 +110,10 @@ export function OrderBill({ order }: Props) {
           <p>총 금액</p>
           <div className="text-right">
             <p>{(order.totalPrice || 0).toLocaleString()}원</p>
-            <span className="text-sm font-medium text-gray-400"></span>
+
+            <span className="text-sm font-medium text-gray-400">
+              총 {totalQuantity}개
+            </span>
           </div>
         </div>
 
