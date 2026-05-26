@@ -40,6 +40,9 @@ export function OrderBill({ order }: Props) {
     0,
   );
 
+  const tableNum = order.tableId || order.tableNumber;
+  const isTakeout = String(tableNum) === '9999';
+
   return (
     <Dialog.Root open={true} onOpenChange={() => {}}>
       <div className="w-full space-y-3 rounded-lg bg-white p-4">
@@ -65,7 +68,7 @@ export function OrderBill({ order }: Props) {
                   isCanceled ? 'bg-red-500' : 'bg-black'
                 }`}
               >
-                {order.tableId || order.tableNumber}번
+                {isTakeout ? '포장주문' : `${tableNum}번`}
               </span>
             </div>
 
