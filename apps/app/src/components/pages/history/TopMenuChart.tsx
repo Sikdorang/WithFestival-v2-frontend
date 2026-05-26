@@ -18,7 +18,16 @@ interface Props {
   data: TopMenuData[];
 }
 
-const COLORS = ['#FFBF0B', '#FF9800', '#FFC107', '#FFE082', '#FFF9E6'];
+const COLORS = [
+  '#EF4444', // Red
+  '#F97316', // Orange
+  '#EAB308', // Yellow
+  '#22C55E', // Green
+  '#3B82F6', // Blue
+  '#8B5CF6', // Purple
+  '#EC4899', // Pink
+  '#14B8A6', // Teal
+];
 
 export default function TopMenuChart({ data }: Props) {
   const { filteredData, totalSales } = useMemo(() => {
