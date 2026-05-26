@@ -41,7 +41,7 @@ export default function OrderDashBoard({ orders }: Props) {
       DEFAULT_HOURLY_SALES.map((item) => [item.time, 0]),
     );
 
-    const menuCountMap = new Map<string, number>();
+    const menuDataMap = new Map<string, { quantity: number; price: number }>();
 
     filteredOrders.forEach((order) => {
       let orderSales = 0;
@@ -53,8 +53,14 @@ export default function OrderDashBoard({ orders }: Props) {
         netProfit += itemSales * ((item.margin || 0) / 100);
 
         if (item.menu && item.menu.name) {
-          const currentCount = menuCountMap.get(item.menu.name) || 0;
-          menuCountMap.set(item.menu.name, currentCount + item.quantity);
+          const currentData = menuDataMap.get(item.menu.name) || {
+            quantity: 0,
+            price: item.price,
+          };
+          menuDataMap.set(item.menu.name, {
+            ...currentData,
+            quantity: currentData.quantity + item.quantity,
+          });
         }
       });
 
@@ -84,8 +90,12 @@ export default function OrderDashBoard({ orders }: Props) {
       ([time, 매출]) => ({ time, 매출 }),
     );
 
-    const topMenus: TopMenuData[] = Array.from(menuCountMap.entries())
-      .map(([name, value]) => ({ name, value }))
+    const topMenus: TopMenuData[] = Array.from(menuDataMap.entries())
+      .map(([name, data]) => ({
+        name,
+        value: data.quantity, // value에는 수량 할당
+        price: data.price, // price 추가
+      }))
       .sort((a, b) => b.value - a.value);
 
     return { totalSales, netProfit, totalOrders, hourlySales, topMenus };
