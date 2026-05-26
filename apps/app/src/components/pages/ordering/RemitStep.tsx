@@ -1,4 +1,5 @@
 import CopyIcon from '@/assets/icons/ic_copy.svg?react';
+import WarningIcon from '@/assets/icons/ic_warning_triangle.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
@@ -170,7 +171,7 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
                     ? t('customer.remit.coupon.remove')
                     : t('customer.remit.coupon.apply')
                 }
-                color={isCouponApplied ? 'white' : 'gray'}
+                color={isCouponApplied ? 'lightRed' : 'gray'}
                 width="fit"
                 size="medium"
                 radius="xl"
@@ -213,10 +214,11 @@ export default function RemitStep({ totalAmount, onNext }: RemitStepProps) {
             </Dialog.Description>
 
             <div className="flex flex-col gap-3 text-left">
-              <h3 className="text-xl font-bold text-gray-800">
+              <h3 className="flex items-center gap-1 text-xl font-bold text-gray-800">
+                <WarningIcon />
                 {t('customer.remit.notice.title')}
               </h3>
-              <p className="text-[15px] leading-relaxed text-gray-600">
+              <p className="text-[15px] leading-relaxed whitespace-pre-line text-gray-600">
                 {t('customer.remit.notice.desc1')}
                 <span className="font-bold text-black">
                   {t('customer.remit.notice.descHighlight')}

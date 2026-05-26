@@ -101,13 +101,13 @@
         "remitDone": "Transfer Complete"
       },
       "notice": {
-        "srTitle": "Notice: Depositor Name Required",
-        "srDesc": "You must enter the depositor's name after transferring to complete the order.",
-        "title": "Please read before ordering!",
-        "desc1": "After completing the transfer, you must enter the ",
-        "descHighlight": "Depositor Name",
-        "desc2": " on the next screen to finalize your order.",
-        "confirm": "I understand"
+        "srTitle": "Notice: Depositor Name Entry Guide",
+        "srDesc": "You must enter the depositor's name after the transfer to complete your order.",
+        "title": "Please read this before placing your order!",
+        "desc1": "After completing the transfer,\nplease make sure to enter the ",
+        "descHighlight": "depositor's name",
+        "desc2": " on the next screen\nto successfully complete your order.",
+        "confirm": "Understood"
       }
     },
     "depositor": {
