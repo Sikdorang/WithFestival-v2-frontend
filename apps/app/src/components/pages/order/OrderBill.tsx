@@ -9,7 +9,31 @@ interface Props {
 export function OrderBill({ order }: Props) {
   const orderItems = order.items || order.orderUsers || [];
 
-  // 💡 취소 상태 확인 플래그
+  const groupedItems = useMemo(() => {
+    const itemMap = new Map<string, any>();
+
+    orderItems.forEach((item: any) => {
+      const itemName = item.menu?.name ?? item.name ?? '메뉴명 없음';
+      const quantity = item.quantity ?? item.count ?? 1;
+      const unitPrice = item.price ?? 0;
+
+      if (itemMap.has(itemName)) {
+        const existing = itemMap.get(itemName);
+        existing.quantity += quantity;
+        existing.itemTotal += unitPrice * quantity;
+      } else {
+        itemMap.set(itemName, {
+          id: item.id ?? item.menu?.id ?? itemName,
+          itemName,
+          quantity,
+          itemTotal: unitPrice * quantity,
+        });
+      }
+    });
+
+    return Array.from(itemMap.values());
+  }, [orderItems]);
+
   const isCanceled = order.status === 'CANCELED';
 
   const timeString = order.createdAt || order.time || '';
@@ -35,8 +59,8 @@ export function OrderBill({ order }: Props) {
     [order.phoneNumber],
   );
 
-  const totalQuantity = orderItems.reduce(
-    (acc: number, item: any) => acc + (item.quantity ?? item.count ?? 0),
+  const totalQuantity = groupedItems.reduce(
+    (acc: number, item: any) => acc + item.quantity,
     0,
   );
 
@@ -81,32 +105,26 @@ export function OrderBill({ order }: Props) {
         <div className="space-y-2 border-b border-gray-200 py-3">
           <p className="text-c-1 text-gray-400">주문내역</p>
 
-          {orderItems.map((item: any, index: number) => {
-            const quantity = item.quantity ?? item.count ?? 0;
-            const itemName = item.menu?.name ?? item.name ?? '메뉴명 없음';
-            const itemTotal = item.price * quantity;
-
-            return (
-              <div
-                key={`${order.id}-${item.id || index}`}
-                className="flex justify-between"
+          {groupedItems.map((item: any, index: number) => (
+            <div
+              key={`${order.id}-${item.id || index}`}
+              className="flex justify-between"
+            >
+              <p
+                className={`text-gray-black ${
+                  isCanceled ? 'text-gray-500 line-through' : ''
+                }`}
               >
-                <p
-                  className={`text-gray-black ${
-                    isCanceled ? 'text-gray-500 line-through' : ''
-                  }`}
-                >
-                  {itemName}
+                {item.itemName}
+              </p>
+              <div className="text-right">
+                <p className="text-gray-black">
+                  {item.itemTotal.toLocaleString()}원
                 </p>
-                <div className="text-right">
-                  <p className="text-gray-black">
-                    {itemTotal.toLocaleString()}원
-                  </p>
-                  <span className="text-sm text-gray-400">{quantity}개</span>
-                </div>
+                <span className="text-sm text-gray-400">{item.quantity}개</span>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         <div className="flex justify-between font-bold text-black">

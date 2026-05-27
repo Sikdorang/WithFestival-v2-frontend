@@ -39,8 +39,6 @@ export default function StoreBanner({
 
   const isInitialMount = useRef(true);
 
-  const [isAnimating, setIsAnimating] = useState(true);
-
   useEffect(() => {
     setCurrentLang(i18n.language);
 
@@ -55,13 +53,6 @@ export default function StoreBanner({
   useEffect(() => {
     setCurrentLang(i18n.language);
   }, [i18n.language]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const renderStatusText = () => {
     if (isPreview) return t('customer.storeBanner.status.preview');
@@ -102,21 +93,16 @@ export default function StoreBanner({
               <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
             <div className="mr-2 flex items-center gap-4">
-              <div className="relative flex items-center justify-center">
-                {isAnimating && (
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-200 opacity-75"></span>
-                )}
-
-                <div className="relative">
-                  <CtaButton
-                    text={t('customer.storeBanner.blindDate')}
-                    color="lightRed"
-                    width="fit"
-                    size="small"
-                    onClick={handleBlindDateClick}
-                  />
-                </div>
+              <div className="relative">
+                <CtaButton
+                  text={t('customer.storeBanner.blindDate')}
+                  color="lightRed"
+                  width="fit"
+                  size="small"
+                  onClick={handleBlindDateClick}
+                />
               </div>
+
               <LanguageSelector />
             </div>
           </div>
