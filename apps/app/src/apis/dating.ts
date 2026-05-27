@@ -25,7 +25,7 @@ export interface BlindDateResponse {
 }
 
 export const datingAPI = {
-  // 소개팅 명단 응모
+  // 소개팅 명단 응모 (POST /blind-dates)
   createBlindDate: async (
     data: BlindDateRequest,
   ): Promise<BlindDateResponse> => {
@@ -33,7 +33,11 @@ export const datingAPI = {
     return response.data;
   },
 
-  // 소개팅 명단 전체 조회
+  createProfile: async (data: BlindDateRequest): Promise<BlindDateResponse> => {
+    return datingAPI.createBlindDate(data);
+  },
+
+  // 소개팅 명단 전체 조회 (GET /blind-dates - createdAt 내림차순)
   getBlindDates: async (): Promise<BlindDateResponse[]> => {
     const response = await axiosInstance.get('/blind-dates');
     return response.data;

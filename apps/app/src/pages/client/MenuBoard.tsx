@@ -84,6 +84,7 @@ export default function MenuBoard() {
         )}
         <main className="p-4 pb-24">
           <StoreBanner
+            storeId={userData.userId}
             boothName={name}
             isPreview={isPreview === '1'}
             tableId={userData.tableId}

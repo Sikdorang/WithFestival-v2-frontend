@@ -127,6 +127,7 @@
       "goHome": "Go to Home"
     },
     "storeBanner": {
+      "blindDate": "Blind Date",
       "status": {
         "preview": "Menu Preview",
         "waiting": "Waiting Customer",
@@ -141,6 +142,69 @@
       "imageAlt": "Menu Image",
       "price": "{{price}} KRW",
       "addBtn": "Add"
+    },
+    "blindDate": {
+      "validation": {
+        "nameMin": "Name must be at least 2 characters.",
+        "nameMax": "Name cannot exceed 20 characters.",
+        "nameRegex": "Only letters are allowed. (No special characters, numbers, or emojis)",
+        "ageType": "Age must be a number.",
+        "ageRange": "Only youth and university students (19-39) can participate.",
+        "contactMin": "Please enter your contact information to be shared.",
+        "contactMax": "Contact information is too long.",
+        "contactFormatPhone": "Phone number must be in 010-XXXX-XXXX format.",
+        "contactFakePhone": "Invalid phone number pattern. Please enter a real number.",
+        "contactFormatGeneral": "Please enter a valid phone number or Instagram ID (@...).",
+        "mbtiRequired": "Please select all 4 MBTI traits.",
+        "deliveryPhoneFormat": "Please enter a valid phone number (010-XXXX-XXXX) to receive notifications."
+      },
+      "ui": {
+        "title": "Festival Blind Date",
+        "headerHighlight": "University Festival",
+        "headerRest": " \nA fateful encounter at the ",
+        "descPrefix": "If a match is successful, we will notify you via ",
+        "descHighlight": "SMS",
+        "descSuffix": "!",
+        "nameLabel": "Name",
+        "namePlaceholder": "Enter your name",
+        "ageLabel": "Age",
+        "agePlaceholder": "Age",
+        "genderLabel": "Gender",
+        "genderMale": "Male",
+        "genderFemale": "Female",
+        "contactLabel": "Contact info to share (Phone or Instagram)",
+        "contactPlaceholder": "Phone number or @Instagram",
+        "deliveryPhoneLabel": "Phone number for match notifications",
+        "deliveryPhonePlaceholder": "010-0000-0000 (Numbers only)",
+        "deliveryPhoneNotice": "* This number is strictly used for match notifications and will NOT be shared with the other person.",
+        "modalTitle": "Register Profile?",
+        "modalDesc": "Once submitted, you cannot re-register for 24 hours.\nPlease make sure your information is correct!",
+        "modalCancel": "Go Back",
+        "modalConfirm": "Register",
+        "submitLoading": "Registering...",
+        "submitDefault": "Register Profile",
+        "toastSuccess": "Profile successfully registered.",
+        "toastError": "Registration failed. Please try again."
+      },
+      "mbti": {
+        "energy": "Energy",
+        "perception": "Perception",
+        "judgment": "Judgment",
+        "lifestyle": "Lifestyle"
+      },
+      "appearance": {
+        "title": "Desired Partner's Appearance",
+        "minLabel": "Soft",
+        "maxLabel": "Strong",
+        "types": {
+          "step1": "Soft/Puppy Face (Tofu)",
+          "step2": "Chic & Soft Face",
+          "step3": "Defined Soft Face",
+          "step4": "Cat-like Face",
+          "step5": "Exotic/Mixed Face",
+          "step6": "Strong/Deep-set Face"
+        }
+      }
     }
   }
 }

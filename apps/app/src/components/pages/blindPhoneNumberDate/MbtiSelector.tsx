@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface MbtiSelectorProps {
   value: [string | null, string | null, string | null, string | null];
   onChange: (
@@ -5,14 +7,9 @@ interface MbtiSelectorProps {
   ) => void;
 }
 
-const MBTI_OPTIONS = [
-  { label: '에너지', top: 'E', bottom: 'I' },
-  { label: '인식', top: 'N', bottom: 'S' },
-  { label: '판단', top: 'T', bottom: 'F' },
-  { label: '생활방식', top: 'J', bottom: 'P' },
-];
-
 export default function MbtiSelector({ value, onChange }: MbtiSelectorProps) {
+  const { t } = useTranslation();
+
   const handleSelect = (index: number, selectedValue: string) => {
     const newMbti = [...value] as [
       string | null,
@@ -23,6 +20,13 @@ export default function MbtiSelector({ value, onChange }: MbtiSelectorProps) {
     newMbti[index] = selectedValue;
     onChange(newMbti);
   };
+
+  const MBTI_OPTIONS = [
+    { label: t('customer.blindDate.mbti.energy'), top: 'E', bottom: 'I' },
+    { label: t('customer.blindDate.mbti.perception'), top: 'N', bottom: 'S' },
+    { label: t('customer.blindDate.mbti.judgment'), top: 'T', bottom: 'F' },
+    { label: t('customer.blindDate.mbti.lifestyle'), top: 'J', bottom: 'P' },
+  ];
 
   return (
     <section className="flex flex-col gap-4">
@@ -57,9 +61,6 @@ export default function MbtiSelector({ value, onChange }: MbtiSelectorProps) {
             </button>
           </div>
         ))}
-      </div>
-      <div className="mt-2 rounded-xl bg-gray-50 py-4 text-center text-xl font-bold tracking-[0.5em] text-gray-800">
-        {value.map((val) => val || '_').join('')}
       </div>
     </section>
   );

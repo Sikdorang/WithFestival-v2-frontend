@@ -127,6 +127,7 @@
       "goHome": "返回首页"
     },
     "storeBanner": {
+      "blindDate": "随机速配",
       "status": {
         "preview": "菜单预览",
         "waiting": "等位顾客",
@@ -141,6 +142,69 @@
       "imageAlt": "菜单图片",
       "price": "{{price}}韩元",
       "addBtn": "添加"
+    },
+    "blindDate": {
+      "validation": {
+        "nameMin": "名字至少需要2个字符。",
+        "nameMax": "名字最多20个字符。",
+        "nameRegex": "名字只能包含字母或韩文。(不可使用特殊字符、数字或表情符号)",
+        "ageType": "年龄必须是数字。",
+        "ageRange": "仅限青年和大学生(19-39岁)参与。",
+        "contactMin": "请输入要展示给对方的联系方式。",
+        "contactMax": "联系方式过长。",
+        "contactFormatPhone": "手机号码格式必须为 010-XXXX-XXXX。",
+        "contactFakePhone": "无效的手机号码模式，请输入真实号码。",
+        "contactFormatGeneral": "请输入有效的手机号码或 Instagram ID (@...)。",
+        "mbtiRequired": "请选择全部4个 MBTI 性格特征。",
+        "deliveryPhoneFormat": "请准确输入接收通知的手机号码 (010-XXXX-XXXX)。"
+      },
+      "ui": {
+        "title": "庆典随机速配",
+        "headerHighlight": "大学庆典",
+        "headerRest": "上的\n命运邂逅 ",
+        "descPrefix": "如果匹配成功，我们将通过 ",
+        "descHighlight": "短信",
+        "descSuffix": " 通知您！",
+        "nameLabel": "名字",
+        "namePlaceholder": "请输入您的名字",
+        "ageLabel": "年龄",
+        "agePlaceholder": "年龄",
+        "genderLabel": "性别",
+        "genderMale": "男",
+        "genderFemale": "女",
+        "contactLabel": "展示给对方的联系方式（电话或 Instagram）",
+        "contactPlaceholder": "电话号码或 @Instagram",
+        "deliveryPhoneLabel": "用于接收匹配结果的手机号码",
+        "deliveryPhonePlaceholder": "010-0000-0000 (仅限数字)",
+        "deliveryPhoneNotice": "* 您输入的号码仅用于匹配结果通知，绝不会向对方公开。",
+        "modalTitle": "确认注册资料？",
+        "modalDesc": "提交后 24 小时内无法重新注册。\n请务必确认您输入的信息是否准确！",
+        "modalCancel": "返回",
+        "modalConfirm": "确认注册",
+        "submitLoading": "注册中...",
+        "submitDefault": "注册个人资料",
+        "toastSuccess": "资料注册成功。",
+        "toastError": "注册失败，请重试。"
+      },
+      "mbti": {
+        "energy": "能量",
+        "perception": "认知",
+        "judgment": "判断",
+        "lifestyle": "生活方式"
+      },
+      "appearance": {
+        "title": "理想对象的长相类型",
+        "minLabel": "淡颜系",
+        "maxLabel": "浓颜系",
+        "types": {
+          "step1": "淡颜系 (豆腐系)",
+          "step2": "清冷淡颜系",
+          "step3": "立体淡颜系",
+          "step4": "猫系长相",
+          "step5": "混血系",
+          "step6": "浓颜系 (立体深邃)"
+        }
+      }
     }
   }
 }

@@ -127,6 +127,7 @@
       "goHome": "ホームへ戻る"
     },
     "storeBanner": {
+      "blindDate": "即席マッチング",
       "status": {
         "preview": "メニュープレビュー",
         "waiting": "ウェイティングのお客様",
@@ -141,6 +142,69 @@
       "imageAlt": "メニュー画像",
       "price": "{{price}}ウォン",
       "addBtn": "追加"
+    },
+    "blindDate": {
+      "validation": {
+        "nameMin": "名前は2文字以上で入力してください。",
+        "nameMax": "名前は最大20文字までです。",
+        "nameRegex": "名前には文字のみ使用できます。(記号、数字、絵文字は不可)",
+        "ageType": "年齢は数字で入力してください。",
+        "ageRange": "大学生および若年層(19〜39歳)のみ参加可能です。",
+        "contactMin": "相手に公開する連絡先を入力してください。",
+        "contactMax": "連絡先が長すぎます。",
+        "contactFormatPhone": "電話番号は 010-XXXX-XXXX の形式で入力してください。",
+        "contactFakePhone": "使用できない電話番号です。実際の番号を入力してください。",
+        "contactFormatGeneral": "正しい電話番号またはInstagram ID (@...) を入力してください。",
+        "mbtiRequired": "MBTIの4項目をすべて選択してください。",
+        "deliveryPhoneFormat": "通知を受け取る電話番号を 010-XXXX-XXXX の形式で正確に入力してください。"
+      },
+      "ui": {
+        "title": "学園祭 即席マッチング",
+        "headerHighlight": "大学の学園祭",
+        "headerRest": "での\n運命の出会い ",
+        "descPrefix": "マッチングが成立した場合、",
+        "descHighlight": "SMS",
+        "descSuffix": "でお知らせします！",
+        "nameLabel": "名前",
+        "namePlaceholder": "名前を入力してください",
+        "ageLabel": "年齢",
+        "agePlaceholder": "年齢",
+        "genderLabel": "性別",
+        "genderMale": "男性",
+        "genderFemale": "女性",
+        "contactLabel": "相手に公開する連絡先 (電話番号またはInstagram)",
+        "contactPlaceholder": "電話番号 または @Instagram",
+        "deliveryPhoneLabel": "マッチング結果を受け取る電話番号",
+        "deliveryPhonePlaceholder": "010-0000-0000 (数字のみ)",
+        "deliveryPhoneNotice": "* 入力された番号は結果通知にのみ使用され、相手には公開されません。",
+        "modalTitle": "プロフィールを登録しますか？",
+        "modalDesc": "一度申請すると、24時間は再登録できません。\n入力内容に間違いがないか必ず確認してください！",
+        "modalCancel": "戻る",
+        "modalConfirm": "登録する",
+        "submitLoading": "登録中...",
+        "submitDefault": "プロフィールを登録する",
+        "toastSuccess": "プロフィールの登録が完了しました。",
+        "toastError": "登録に失敗しました。もう一度お試しください。"
+      },
+      "mbti": {
+        "energy": "エネルギー",
+        "perception": "認識",
+        "judgment": "判断",
+        "lifestyle": "ライフスタイル"
+      },
+      "appearance": {
+        "title": "希望する相手のルックス",
+        "minLabel": "塩顔",
+        "maxLabel": "濃い顔",
+        "types": {
+          "step1": "塩顔 (豆腐顔)",
+          "step2": "クールな塩顔",
+          "step3": "シャープな塩顔",
+          "step4": "猫目顔",
+          "step5": "ハーフ顔",
+          "step6": "濃い顔 (彫りが深い)"
+        }
+      }
     }
   }
 }

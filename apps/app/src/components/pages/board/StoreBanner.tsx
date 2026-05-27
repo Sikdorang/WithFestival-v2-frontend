@@ -1,10 +1,15 @@
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
-import { useEffect, useMemo, useState } from 'react';
+import { useLogs } from '@/hooks/common/useLogs';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../../constants/routes';
+import CtaButton from '../../common/buttons/CtaButton';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
 
 interface Props {
+  storeId: number;
   boothName: string;
   isPreview: boolean;
   tableId?: string | number;
@@ -15,6 +20,7 @@ interface Props {
 }
 
 export default function StoreBanner({
+  storeId,
   boothName,
   isPreview,
   tableId,
@@ -26,22 +32,27 @@ export default function StoreBanner({
   const { t, i18n } = useTranslation();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
+  const naviage = useNavigate();
 
   const [currentLang, setCurrentLang] = useState(i18n.language);
+  const { sendLog } = useLogs();
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    setCurrentLang(i18n.language);
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    sendLog(`customer.board.change.language.${i18n.language}`, storeId);
+  }, [i18n.language, sendLog]);
 
   useEffect(() => {
     setCurrentLang(i18n.language);
   }, [i18n.language]);
-
-  useEffect(() => {
-    console.log('현재 설정된 i18n 언어 코드:', currentLang);
-    console.log('들어온 데이터 상태:', {
-      notice,
-      noticeEn,
-      noticeZh,
-      noticeJa,
-    });
-  }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
   const renderStatusText = () => {
     if (isPreview) return t('customer.storeBanner.status.preview');
@@ -62,6 +73,11 @@ export default function StoreBanner({
     return notice;
   }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
+  const handleBlindDateClick = () => {
+    sendLog('customer.board.click.blindDate', storeId);
+    naviage(ROUTES.BLIND_PHONENUMBER_DATE);
+  };
+
   return (
     <div>
       <RequestModal
@@ -77,6 +93,13 @@ export default function StoreBanner({
               <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
             <div className="mr-2 flex items-center gap-4">
+              <CtaButton
+                text={t('customer.storeBanner.blindDate')}
+                color="lightRed"
+                width="fit"
+                size="small"
+                onClick={handleBlindDateClick}
+              />
               <LanguageSelector />
             </div>
           </div>
