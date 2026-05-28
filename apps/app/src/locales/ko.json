@@ -16,6 +16,10 @@
           "title": "포장 주문하기",
           "sub": "기다림 없이 바로 픽업하기"
         },
+        "preview": {
+          "title": "메뉴 미리보기",
+          "sub": "어떤 메뉴가 있는지 둘러보세요"
+        },
         "schedule": {
           "title": "타 대학 축제 현황",
           "sub": "다른 대학의 축제 현황보기"
@@ -23,6 +27,10 @@
         "ranking": {
           "title": "실시간 학교 주점 랭킹",
           "sub": "주점 별로 순위 확인해보기"
+        },
+        "blindDate": {
+          "title": "즉석 번호팅",
+          "sub": "축제에서 운명의 상대를 찾아보세요"
         }
       }
     },
@@ -54,6 +62,7 @@
     },
     "menuBoard": {
       "takeoutTitle": "포장 주문하기",
+      "previewTitle": "메뉴 미리보기",
       "orderButton": "주문하기",
       "emptyMenu": "등록된 메뉴가 없습니다.",
       "priceFormat": "{{price}}원"
@@ -176,14 +185,16 @@
         "contactPlaceholder": "전화번호 또는 @인스타그램",
         "deliveryPhoneLabel": "매칭 결과 알림을 받을 전화번호",
         "deliveryPhonePlaceholder": "010-0000-0000 (숫자만 입력)",
-        "deliveryPhoneNotice": "* 입력하신 번호는 매칭 결과 알림용으로만 사용되며, 상대방에게는 공개되지 않습니다.",
+        "deliveryPhoneNotice": "입력하신 번호는 매칭 결과 알림용으로만 사용되며, 상대방에게는 공개되지 않습니다.",
+        "noticeMultiple": "성비에 따라 여러 명과 매칭될 수 있습니다.",
+        "noticeDelay": "상황에 따라 축제가 끝난 뒤에 매칭이 완료될 수 있습니다.",
         "modalTitle": "프로필을 등록할까요?",
         "modalDesc": "한번 신청하면 24시간 동안 재등록이 불가해요.\n입력하신 정보가 올바른지 꼭 확인해주세요 !",
         "modalCancel": "돌아가기",
         "modalConfirm": "등록하기",
         "submitLoading": "등록 중...",
         "submitDefault": "프로필 등록하기",
-        "toastSuccess": "프로필 등록이 완료되었습니다.",
+        "toastSuccess": "이번 축제, 나의 운명의 상대는?",
         "toastError": "등록에 실패했습니다. 다시 시도해주세요."
       },
       "mbti": {

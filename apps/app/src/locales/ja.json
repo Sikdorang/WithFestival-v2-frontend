@@ -16,6 +16,10 @@
           "title": "テイクアウトを注文する",
           "sub": "待たずにすぐ受け取る"
         },
+        "preview": {
+          "title": "メニュー プレビュー",
+          "sub": "どんなメニューがあるか見てみましょう"
+        },
         "schedule": {
           "title": "他大学の学園祭状況",
           "sub": "他大学の学園祭状況を見る"
@@ -23,6 +27,10 @@
         "ranking": {
           "title": "リアルタイム居酒屋ランキング",
           "sub": "居酒屋別の順位を確認する"
+        },
+        "blindDate": {
+          "title": "即席マッチング",
+          "sub": "学園祭で運命の相手を見つけよう"
         }
       }
     },
@@ -54,6 +62,7 @@
     },
     "menuBoard": {
       "takeoutTitle": "テイクアウトを注文する",
+      "previewTitle": "メニュー プレビュー",
       "orderButton": "注文する",
       "emptyMenu": "登録されたメニューがありません。",
       "priceFormat": "{{price}}ウォン"
@@ -177,13 +186,15 @@
         "deliveryPhoneLabel": "マッチング結果を受け取る電話番号",
         "deliveryPhonePlaceholder": "010-0000-0000 (数字のみ)",
         "deliveryPhoneNotice": "* 入力された番号は結果通知にのみ使用され、相手には公開されません。",
+        "noticeMultiple": "男女比によっては、複数人とマッチングする場合があります。",
+        "noticeDelay": "状況により、マッチングの完了が学園祭終了後になる場合があります。",
         "modalTitle": "プロフィールを登録しますか？",
         "modalDesc": "一度申請すると、24時間は再登録できません。\n入力内容に間違いがないか必ず確認してください！",
         "modalCancel": "戻る",
         "modalConfirm": "登録する",
         "submitLoading": "登録中...",
         "submitDefault": "プロフィールを登録する",
-        "toastSuccess": "プロフィールの登録が完了しました。",
+        "toastSuccess": "今回の学園祭、私の運命の相手は？",
         "toastError": "登録に失敗しました。もう一度お試しください。"
       },
       "mbti": {

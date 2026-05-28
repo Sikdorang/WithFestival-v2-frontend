@@ -16,6 +16,10 @@
           "title": "打包点餐",
           "sub": "无需等待，直接取餐"
         },
+        "preview": {
+          "title": "菜单预览",
+          "sub": "看看有什么好吃的"
+        },
         "schedule": {
           "title": "其他大学庆典现状",
           "sub": "查看其他大学的庆典现状"
@@ -23,6 +27,10 @@
         "ranking": {
           "title": "实时酒馆排名",
           "sub": "查看各酒馆的排名"
+        },
+        "blindDate": {
+          "title": "庆典随机速配",
+          "sub": "在庆典中寻找命运的另一半"
         }
       }
     },
@@ -54,6 +62,7 @@
     },
     "menuBoard": {
       "takeoutTitle": "外带下单",
+      "previewTitle": "菜单预览",
       "orderButton": "下单",
       "emptyMenu": "没有可用的菜单。",
       "priceFormat": "{{price}}韩元"
@@ -177,13 +186,15 @@
         "deliveryPhoneLabel": "用于接收匹配结果的手机号码",
         "deliveryPhonePlaceholder": "010-0000-0000 (仅限数字)",
         "deliveryPhoneNotice": "* 您输入的号码仅用于匹配结果通知，绝不会向对方公开。",
+        "noticeMultiple": "根据性别比例，您可能会与多人匹配。",
+        "noticeDelay": "根据情况，匹配可能会在庆典结束后完成。",
         "modalTitle": "确认注册资料？",
         "modalDesc": "提交后 24 小时内无法重新注册。\n请务必确认您输入的信息是否准确！",
         "modalCancel": "返回",
         "modalConfirm": "确认注册",
         "submitLoading": "注册中...",
         "submitDefault": "注册个人资料",
-        "toastSuccess": "资料注册成功。",
+        "toastSuccess": "这次庆典，我的命中注定是谁呢？",
         "toastError": "注册失败，请重试。"
       },
       "mbti": {

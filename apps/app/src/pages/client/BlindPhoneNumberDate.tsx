@@ -281,9 +281,17 @@ export default function BlindPhoneNumberDate() {
             }}
             limitHide
           />
-          <p className="text-[12px] text-gray-400">
-            {t('customer.blindDate.ui.deliveryPhoneNotice')}
-          </p>
+          <div className="mt-1 flex flex-col gap-1">
+            <p className="text-[12px] text-gray-400">
+              * {t('customer.blindDate.ui.deliveryPhoneNotice')}
+            </p>
+            <p className="text-[12px] text-gray-400">
+              * {t('customer.blindDate.ui.noticeMultiple')}
+            </p>
+            <p className="text-[12px] text-gray-400">
+              * {t('customer.blindDate.ui.noticeDelay')}
+            </p>
+          </div>
         </section>
 
         <DeleteConfirmModal

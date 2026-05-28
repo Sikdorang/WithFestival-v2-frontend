@@ -2,19 +2,25 @@ import StoreIcon from '@/assets/icons/ic_store.svg?react';
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import TopBar from '@/components/common/layouts/TopBar';
+import NoticeView from '@/components/pages/board/NoticeView';
 import { getBoothLinks } from '@/constants/BoothPortal';
 import { useLogs } from '@/hooks/common/useLogs';
 import { useStore } from '@/hooks/useStore';
 import { encryptJson } from '@/utils/crypto';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function BoothPortal() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { sendBoothPortalClickLog } = useLogs();
+  const [currentLang, setCurrentLang] = useState(i18n.language);
+
+  useEffect(() => {
+    setCurrentLang(i18n.language);
+  }, [i18n.language]);
 
   const userData =
     location.state?.userData ||
@@ -24,7 +30,10 @@ export default function BoothPortal() {
 
   const {
     name,
-    event,
+    notice,
+    noticeEn,
+    noticeZh,
+    noticeJa,
     waitingsEnabled,
     reservationEnabled,
     getStorePublicInfo,
@@ -36,6 +45,16 @@ export default function BoothPortal() {
     }
   }, [storeId]);
 
+  const currentNotice = useMemo(() => {
+    const lang = currentLang.toLowerCase();
+
+    if (lang.startsWith('en') && noticeEn) return noticeEn;
+    if (lang.startsWith('zh') && noticeZh) return noticeZh;
+    if (lang.startsWith('ja') && noticeJa) return noticeJa;
+
+    return notice;
+  }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
+
   const visibleLinks = getBoothLinks({
     waitingsEnabled,
     reservationEnabled,
@@ -43,7 +62,13 @@ export default function BoothPortal() {
   }).filter((link) => link.enabled);
 
   const handleLinkClick = (link: any) => {
-    sendBoothPortalClickLog(link.id);
+    sendBoothPortalClickLog(link.id, Number(storeId));
+
+    if (link.id === 'preview') {
+      localStorage.setItem('preview', '1');
+      navigate(link.path);
+      return;
+    }
 
     if (link.id === 'takeout') {
       const data = { userId: String(storeId), tableId: 9999 };
@@ -71,17 +96,17 @@ export default function BoothPortal() {
       </div>
 
       <div className="flex min-h-screen flex-col items-center bg-white px-6 pt-12">
-        <div className="mb-10 flex flex-col items-center gap-4 text-center">
+        <div className="mb-10 flex w-full flex-col items-center gap-4 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#FFF9E6]">
             <StoreIcon width={36} height={36} className="text-[#FFBF0B]" />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex w-full flex-col items-center gap-1.5">
             <h1 className="text-gray-500-90 text-xl font-semibold">
               {name || t('customer.portal.noName')}
             </h1>
-            <p className="text-gray-500-60 font-regualar text-[15px]">
-              {event || t('customer.portal.noEvent')}
-            </p>
+            <div className="flex w-full flex-1 text-left">
+              <NoticeView notice={currentNotice} />
+            </div>
           </div>
         </div>
 

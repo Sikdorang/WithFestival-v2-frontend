@@ -69,7 +69,17 @@ export default function MenuBoard() {
   return (
     <>
       <div className="relative min-h-screen space-y-4 bg-white">
-        {userData.tableId == 9999 ? (
+        {isPreview ? (
+          <Navigator
+            left={<GoBackIcon />}
+            onLeftPress={() => navigate(-1)}
+            center={
+              <div className="text-st-1">
+                {t('customer.menuBoard.previewTitle')}
+              </div>
+            }
+          />
+        ) : userData.tableId == 9999 ? (
           <Navigator
             left={<GoBackIcon />}
             onLeftPress={() => navigate(-1)}
