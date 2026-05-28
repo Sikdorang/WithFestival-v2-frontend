@@ -37,22 +37,16 @@ export default function StoreBanner({
   const [currentLang, setCurrentLang] = useState(i18n.language);
   const { sendLog } = useLogs();
 
-  const isInitialMount = useRef(true);
+  const prevLangRef = useRef(i18n.language);
 
   useEffect(() => {
     setCurrentLang(i18n.language);
 
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
+    if (prevLangRef.current !== i18n.language) {
+      sendLog(`customer.board.change.language.${i18n.language}`, storeId);
+      prevLangRef.current = i18n.language;
     }
-
-    sendLog(`customer.board.change.language.${i18n.language}`, storeId);
-  }, [i18n.language, sendLog]);
-
-  useEffect(() => {
-    setCurrentLang(i18n.language);
-  }, [i18n.language]);
+  }, [i18n.language, sendLog, storeId]);
 
   const renderStatusText = () => {
     if (isPreview) return t('customer.storeBanner.status.preview');
