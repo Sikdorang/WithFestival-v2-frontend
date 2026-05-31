@@ -1,5 +1,6 @@
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import { useLogs } from '@/hooks/common/useLogs';
+import { SupportedLanguage } from '@/types/log';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,14 @@ import { ROUTES } from '../../../constants/routes';
 import CtaButton from '../../common/buttons/CtaButton';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
+
+const getSupportedLanguage = (lang: string): SupportedLanguage => {
+  const lowerLang = lang.toLowerCase();
+  if (lowerLang.startsWith('en')) return 'en';
+  if (lowerLang.startsWith('zh')) return 'zh';
+  if (lowerLang.startsWith('ja')) return 'ja';
+  return 'ko';
+};
 
 interface Props {
   storeId: number;
@@ -32,7 +41,7 @@ export default function StoreBanner({
   const { t, i18n } = useTranslation();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
-  const naviage = useNavigate();
+  const navigate = useNavigate();
 
   const [currentLang, setCurrentLang] = useState(i18n.language);
   const { sendLog } = useLogs();
@@ -43,19 +52,11 @@ export default function StoreBanner({
     setCurrentLang(i18n.language);
 
     if (prevLangRef.current !== i18n.language) {
-      sendLog(`customer.board.change.language.${i18n.language}`, storeId);
+      const safeLang = getSupportedLanguage(i18n.language);
+      sendLog(`customer.board.change.language.${safeLang}`, storeId);
       prevLangRef.current = i18n.language;
     }
   }, [i18n.language, sendLog, storeId]);
-
-  const renderStatusText = () => {
-    if (isPreview) return t('customer.storeBanner.status.preview');
-    if (tableId === 'w') return t('customer.storeBanner.status.waiting');
-    if (tableId === 9999 || tableId === '9999')
-      return t('customer.storeBanner.status.takeout');
-
-    return t('customer.storeBanner.status.table', { tableId });
-  };
 
   const currentNotice = useMemo(() => {
     const lang = currentLang.toLowerCase();
@@ -68,8 +69,16 @@ export default function StoreBanner({
   }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
   const handleBlindDateClick = () => {
-    sendLog('customer.board.click.blindDate', storeId);
-    naviage(ROUTES.BLIND_PHONENUMBER_DATE);
+    navigate(ROUTES.BLIND_PHONENUMBER_DATE);
+  };
+
+  const renderStatusText = () => {
+    if (isPreview) return t('customer.storeBanner.status.preview');
+    if (tableId === 'w') return t('customer.storeBanner.status.waiting');
+    if (tableId === 9999 || tableId === '9999')
+      return t('customer.storeBanner.status.takeout');
+
+    return t('customer.storeBanner.status.table', { tableId });
   };
 
   return (
@@ -87,7 +96,11 @@ export default function StoreBanner({
               <div className="text-st-2 text-black">{renderStatusText()}</div>
             </div>
             <div className="mr-2 flex items-center gap-4">
-              <div className="relative">
+              <div
+                className="relative"
+                data-log-action="customer.board.click.blindDate"
+                data-log-store-id={storeId}
+              >
                 <CtaButton
                   text={t('customer.storeBanner.blindDate')}
                   color="lightRed"
@@ -96,7 +109,6 @@ export default function StoreBanner({
                   onClick={handleBlindDateClick}
                 />
               </div>
-
               <LanguageSelector />
             </div>
           </div>

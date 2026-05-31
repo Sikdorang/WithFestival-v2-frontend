@@ -6,27 +6,44 @@ import NoticeView from '@/components/pages/board/NoticeView';
 import { getBoothLinks } from '@/constants/BoothPortal';
 import { useLogs } from '@/hooks/common/useLogs';
 import { useStore } from '@/hooks/useStore';
+import { SupportedLanguage } from '@/types/log';
 import { encryptJson } from '@/utils/crypto';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+const getSupportedLanguage = (lang: string): SupportedLanguage => {
+  const lowerLang = lang.toLowerCase();
+  if (lowerLang.startsWith('en')) return 'en';
+  if (lowerLang.startsWith('zh')) return 'zh';
+  if (lowerLang.startsWith('ja')) return 'ja';
+  return 'ko';
+};
 
 export default function BoothPortal() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation();
-  const { sendBoothPortalClickLog } = useLogs();
-  const [currentLang, setCurrentLang] = useState(i18n.language);
 
-  useEffect(() => {
-    setCurrentLang(i18n.language);
-  }, [i18n.language]);
+  const { sendLog } = useLogs();
+  const [currentLang, setCurrentLang] = useState(i18n.language);
+  const prevLangRef = useRef(i18n.language);
 
   const userData =
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
 
   const storeId = userData?.userId;
+
+  useEffect(() => {
+    setCurrentLang(i18n.language);
+
+    if (prevLangRef.current !== i18n.language) {
+      const safeLang = getSupportedLanguage(i18n.language);
+      sendLog(`customer.board.change.language.${safeLang}`, Number(storeId));
+      prevLangRef.current = i18n.language;
+    }
+  }, [i18n.language, sendLog, storeId]);
 
   const {
     name,
@@ -43,7 +60,7 @@ export default function BoothPortal() {
     if (storeId) {
       getStorePublicInfo(Number(storeId));
     }
-  }, [storeId]);
+  }, [storeId, getStorePublicInfo]);
 
   const currentNotice = useMemo(() => {
     const lang = currentLang.toLowerCase();
@@ -62,8 +79,6 @@ export default function BoothPortal() {
   }).filter((link) => link.enabled);
 
   const handleLinkClick = (link: any) => {
-    sendBoothPortalClickLog(link.id, Number(storeId));
-
     if (link.id === 'preview') {
       localStorage.setItem('preview', '1');
       navigate(link.path);
@@ -115,6 +130,8 @@ export default function BoothPortal() {
             <button
               key={link.id}
               onClick={() => handleLinkClick(link)}
+              data-log-action={`customer.portal.click.${link.id}`}
+              data-log-store-id={storeId}
               className="bg-gray-500-3 flex w-full items-center gap-4 rounded-[1.25rem] p-5 text-left transition-all active:scale-[0.98] active:bg-gray-100"
             >
               <div

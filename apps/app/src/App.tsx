@@ -1,15 +1,26 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
-import GlobalErrorBoundary from './components/common/GlobalErrorBoundary';
-import Router from './routes/index.tsx';
-import { SocketProvider } from './providers/SocketProvider.tsx';
 import { useEffect, useState } from 'react';
-import { useAuthStore } from './stores/authStore.ts';
-import BaseResponsiveLayout from './components/common/layouts/BaseResponsiveLayout.tsx';
+import { Toaster } from 'react-hot-toast';
 import LoadingView from './components/common/exceptions/LoadingView.tsx';
+import GlobalErrorBoundary from './components/common/GlobalErrorBoundary';
+import BaseResponsiveLayout from './components/common/layouts/BaseResponsiveLayout.tsx';
+import { useGlobalLogger } from './hooks/common/useGlobalLogger';
+import { SocketProvider } from './providers/SocketProvider.tsx';
+import Router from './routes/index.tsx';
+import { useAuthStore } from './stores/authStore.ts';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 export default function App() {
-  const queryClient = new QueryClient();
+  useGlobalLogger();
+
   const { checkAuthStatus } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
   useEffect(() => {

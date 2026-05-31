@@ -5,7 +5,6 @@ import AdminMenuList from '@/components/pages/store/AdminMenuList';
 import StoreInformation from '@/components/pages/store/StoreInformation';
 import { ROUTES } from '@/constants/routes';
 import { STORE_MANAGEMENT_MENUS } from '@/constants/storeMenu';
-import { AdminMenuId, useLogs } from '@/hooks/common/useLogs';
 import { useStore } from '@/hooks/useStore';
 import { useAuthStore } from '@/stores/authStore';
 import { Menu } from '@/types/global';
@@ -15,12 +14,11 @@ import { useNavigate } from 'react-router-dom';
 export default function Store() {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
-  const { sendAdminSettingsClickLog } = useLogs();
   const { storeId, getMyStoreInfo } = useStore();
 
   useEffect(() => {
     getMyStoreInfo();
-  }, []);
+  }, [getMyStoreInfo]);
 
   const handleMenuItemClick = (item: Menu) => {
     navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
@@ -29,11 +27,6 @@ export default function Store() {
   const handleLogout = () => {
     logout();
     navigate(ROUTES.LOGIN);
-  };
-
-  const handleAdminMenuClick = (id: string, route: string) => {
-    sendAdminSettingsClickLog(id as AdminMenuId, storeId);
-    navigate(route);
   };
 
   return (
@@ -46,7 +39,9 @@ export default function Store() {
           <section key={id} className="mb-2 space-y-4 p-1">
             <div
               className="flex cursor-pointer items-center justify-between"
-              onClick={() => handleAdminMenuClick(id, route)}
+              onClick={() => navigate(route)}
+              data-log-action={`admin.management.click.${id}`}
+              data-log-store-id={storeId}
             >
               <div className="text-lg font-semibold text-gray-500">{label}</div>
               <DepthIcon width={14} height={14} />
@@ -58,15 +53,6 @@ export default function Store() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-500">메뉴 관리</h2>
           </div>
-          {/* <div
-            className="flex items-center justify-between"
-            onClick={() => navigate(ROUTES.AI_MENU_GENERATOR)}
-          >
-            <div className="text-lg font-semibold text-gray-900">
-              AI 메뉴 관리
-            </div>
-            <DepthIcon />
-          </div> */}
           <AdminMenuList onMenuItemClick={handleMenuItemClick} />
         </section>
 
