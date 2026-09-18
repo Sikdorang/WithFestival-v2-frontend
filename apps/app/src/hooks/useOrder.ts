@@ -1,8 +1,12 @@
 import { handelError } from '@/apis/errorhandler';
 import { orderAPI } from '@/apis/order';
+import {
+  createIdempotencyKey,
+  createInFlightLock,
+} from '@/shared/lib/idempotency';
 import { useOrderStore } from '@/stores/orderStore';
 import { OrderListApiResponse } from '@/types/global';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { CreateOrderPayload } from '../types/payload/order';
@@ -13,6 +17,7 @@ export const useOrder = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
   const { orderItems, clearOrder } = useOrderStore();
+  const createLockRef = useRef(createInFlightLock());
 
   const userData = useMemo(() => {
     if (location.state?.userData) return location.state.userData;
@@ -26,14 +31,19 @@ export const useOrder = () => {
 
   // 주문 생성
   const createOrder = async (depositorName: string, phoneNumber: string) => {
+    if (!createLockRef.current.tryAcquire()) return false;
+
     setIsLoading(true);
     setOrderError(null);
 
     if (orderItems.length === 0) {
       toast.error('주문할 메뉴가 없습니다.');
       setIsLoading(false);
+      createLockRef.current.release();
       return false;
     }
+
+    const idempotencyKey = createIdempotencyKey('order');
 
     try {
       const itemsForApi = orderItems.map((item: any) => ({
@@ -59,7 +69,7 @@ export const useOrder = () => {
         phoneNumber: phoneNumber,
       };
 
-      await orderAPI.createOrder(payload);
+      await orderAPI.createOrder(payload, { idempotencyKey });
 
       clearOrder();
 
@@ -72,6 +82,7 @@ export const useOrder = () => {
       return false;
     } finally {
       setIsLoading(false);
+      createLockRef.current.release();
     }
   };
 

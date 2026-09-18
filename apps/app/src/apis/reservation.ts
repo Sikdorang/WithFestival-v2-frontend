@@ -1,9 +1,17 @@
 import {
+  createIdempotencyKey,
+  idempotencyHeaders,
+} from '@/shared/lib/idempotency';
+import {
   CreateReservationDTO,
   CreateReservationSlotDTO,
   UpdateReservationSlotDTO,
 } from '@/types/payload/reservation';
 import axiosInstance from '.';
+
+export type ReservationMutationOptions = {
+  idempotencyKey?: string;
+};
 
 export const reservationAPI = {
   // ------------------------------------------
@@ -14,10 +22,13 @@ export const reservationAPI = {
   createCustomerReservation: async (
     storeId: number,
     data: CreateReservationDTO,
+    options?: ReservationMutationOptions,
   ) => {
+    const key = options?.idempotencyKey ?? createIdempotencyKey('reservation');
     const response = await axiosInstance.post(
       `/stores/${storeId}/reservations`,
       data,
+      { headers: idempotencyHeaders(key) },
     );
     return response.data;
   },

@@ -2,7 +2,7 @@ import LoadingView from '@/components/common/exceptions/LoadingView';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { ROUTES } from '@/constants/routes';
 import { KEYS } from '@/constants/storage';
-import { decryptJson } from '@/utils/crypto';
+import { decodeAccessPayload } from '@/utils/crypto';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -19,28 +19,28 @@ export default function CheckUserType() {
 
       try {
         const decodedParam = decodeURIComponent(encryptedParam);
-        const decryptedData = decryptJson(decodedParam);
+        const accessData = decodeAccessPayload(decodedParam);
 
-        if (!decryptedData || !decryptedData.userId) {
+        if (!accessData || !accessData.userId) {
           navigate('/not-found', { replace: true });
           return;
         }
 
-        sessionStorage.setItem('userData', JSON.stringify(decryptedData));
+        sessionStorage.setItem('userData', JSON.stringify(accessData));
 
-        if ('tableId' in decryptedData) {
+        if ('tableId' in accessData) {
           localStorage.setItem(KEYS.IS_PREVIEW, '0');
           navigate(ROUTES.MENU_BOARD, {
             replace: true,
-            state: { userData: decryptedData },
+            state: { userData: accessData },
           });
         } else {
           navigate(ROUTES.LINKS, {
             replace: true,
-            state: { userData: decryptedData },
+            state: { userData: accessData },
           });
         }
-      } catch (error) {
+      } catch {
         navigate('/not-found', { replace: true });
       }
     };

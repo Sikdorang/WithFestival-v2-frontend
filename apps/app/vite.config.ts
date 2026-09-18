@@ -1,22 +1,30 @@
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+  define: {
+    'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL ?? ''),
+    'process.env.VITE_SOCKET_URL': JSON.stringify(env.VITE_SOCKET_URL ?? ''),
+    'process.env.VITE_SENTRY_DSN': JSON.stringify(env.VITE_SENTRY_DSN ?? ''),
+  },
   plugins: [
     react(),
     tsconfigPaths(),
     svgr(),
     tailwindcss(),
     sentryVitePlugin({
-      org: '여러분의-sentry-조직명',
-      project: '여러분의-sentry-프로젝트명',
-      // SENTRY_AUTH_TOKEN은 절대 코드에 하드코딩하지 말고 환경 변수로 주입하세요.
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
+      disable: !process.env.SENTRY_AUTH_TOKEN,
     }),
     VitePWA({
       registerType: 'autoUpdate',
@@ -111,4 +119,5 @@ export default defineConfig({
       },
     },
   },
+  };
 });

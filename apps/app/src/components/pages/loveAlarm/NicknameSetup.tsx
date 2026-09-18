@@ -35,6 +35,7 @@ export default function NicknameSetup({
       <CtaButton
         onClick={() => input && onSubmit(input)}
         disabled={!input || isLoading}
+        isLoading={isLoading}
         text={isLoading ? '설정 중...' : '시작하기'}
         radius="_2xl"
       />

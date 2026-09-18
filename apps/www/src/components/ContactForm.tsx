@@ -1,16 +1,24 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/Button";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 const TYPES = ["도입 문의", "가격 문의", "제휴", "기타"] as const;
 
+function createClientIdempotencyKey() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return `contact_${crypto.randomUUID()}`;
+  }
+  return `contact_${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [isValid, setIsValid] = useState(false);
+  const inFlightRef = useRef(false);
 
   function handleInput(e: FormEvent<HTMLFormElement>) {
     setIsValid(e.currentTarget.checkValidity());
@@ -18,7 +26,10 @@ export default function ContactForm() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (inFlightRef.current || status === "submitting") return;
+
     const form = e.currentTarget;
+    inFlightRef.current = true;
     setStatus("submitting");
     setErrorMsg("");
 
@@ -31,11 +42,15 @@ export default function ContactForm() {
       type: fd.get("type"),
       message: fd.get("message"),
     };
+    const idempotencyKey = createClientIdempotencyKey();
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": idempotencyKey,
+        },
         body: JSON.stringify(payload),
       });
       const json = await res.json().catch(() => ({}));
@@ -49,6 +64,8 @@ export default function ContactForm() {
     } catch {
       setStatus("error");
       setErrorMsg("네트워크 오류가 발생했습니다.");
+    } finally {
+      inFlightRef.current = false;
     }
   }
 
@@ -153,7 +170,7 @@ export default function ContactForm() {
         size="lg"
         loading={status === "submitting"}
         loadingLabel="전송 중"
-        disabled={!isValid}
+        disabled={!isValid || status === "submitting"}
         className="mt-2"
       >
         문의 보내기

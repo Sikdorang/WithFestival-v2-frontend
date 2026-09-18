@@ -16,6 +16,7 @@ interface ReservationModalProps {
   peopleCount: number;
   setPeopleCount: (count: number | ((prev: number) => number)) => void;
   isFormValid: boolean;
+  isSubmitting?: boolean;
   handleSubmit: () => void;
 }
 
@@ -30,6 +31,7 @@ export default function ReservationModal({
   peopleCount,
   setPeopleCount,
   isFormValid,
+  isSubmitting = false,
   handleSubmit,
 }: ReservationModalProps) {
   return (
@@ -139,11 +141,14 @@ export default function ReservationModal({
           <footer className="fixed right-0 bottom-0 left-0 border-t border-gray-100 bg-white p-4 pb-6">
             <CtaButton
               text={
-                isFormValid
-                  ? `${peopleCount}명 예약 확정하기`
-                  : '정보를 모두 입력해주세요'
+                isSubmitting
+                  ? '예약 처리 중...'
+                  : isFormValid
+                    ? `${peopleCount}명 예약 확정하기`
+                    : '정보를 모두 입력해주세요'
               }
-              disabled={!isFormValid}
+              disabled={!isFormValid || isSubmitting}
+              isLoading={isSubmitting}
               onClick={handleSubmit}
               className="w-full transition-all"
             />

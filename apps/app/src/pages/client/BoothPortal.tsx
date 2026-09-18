@@ -7,7 +7,7 @@ import { getBoothLinks } from '@/constants/BoothPortal';
 import { useLogs } from '@/hooks/common/useLogs';
 import { useStore } from '@/hooks/useStore';
 import { SupportedLanguage } from '@/types/log';
-import { encryptJson } from '@/utils/crypto';
+import { encodeAccessPayload } from '@/utils/crypto';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -87,8 +87,10 @@ export default function BoothPortal() {
 
     if (link.id === 'takeout') {
       const data = { userId: String(storeId), tableId: 9999 };
-      const encrypted = encryptJson(data);
-      const encoded = encrypted ? encodeURIComponent(encrypted) : '';
+      const encodedPayload = encodeAccessPayload(data);
+      const encoded = encodedPayload
+        ? encodeURIComponent(encodedPayload)
+        : '';
 
       navigate(`/check/${encoded}`);
       return;

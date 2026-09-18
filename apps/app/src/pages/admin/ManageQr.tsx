@@ -5,7 +5,7 @@ import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
-import { encryptJson } from '@/utils/crypto';
+import { encodeAccessPayload } from '@/utils/crypto';
 import { toPng } from 'html-to-image';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -49,8 +49,8 @@ export default function ManageQr() {
       }
     }
 
-    const encrypted = encryptJson(data);
-    const encoded = encrypted ? encodeURIComponent(encrypted) : '';
+    const encodedPayload = encodeAccessPayload(data);
+    const encoded = encodedPayload ? encodeURIComponent(encodedPayload) : '';
 
     return {
       finalQrUrl: `${DOMAIN}/check/${encoded}`,

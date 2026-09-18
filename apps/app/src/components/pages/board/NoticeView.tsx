@@ -11,8 +11,6 @@ export default function NoticeView({ notice }: Props) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  console.log('NoticeView 렌더링됨:', notice);
-
   if (!notice) {
     return null;
   }

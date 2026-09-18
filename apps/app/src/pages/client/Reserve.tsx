@@ -8,13 +8,21 @@ import Navigator from '@/components/common/layouts/Navigator';
 import CustomerReserveSlotList from '@/components/pages/reserve/CustomerReserveSlotList';
 import ReservationModal from '@/components/pages/reserve/ReservationModal';
 import { useReserve } from '@/hooks/useReserve';
-import { useEffect, useMemo, useState } from 'react';
+import {
+  createIdempotencyKey,
+  createInFlightLock,
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Reserve() {
   const navigate = useNavigate();
   const location = useLocation();
+  const submitLockRef = useRef(createInFlightLock());
 
   const userData = useMemo(
     () =>
@@ -59,27 +67,38 @@ export default function Reserve() {
 
   const isFormValid = name.trim().length >= 2 && phone.length === 13;
 
-  const handleSubmit = async () => {
-    if (!isFormValid || !storeId || !selectedSlotId) return;
+  const handleSubmit = useDebouncedCallback(
+    async () => {
+      if (!isFormValid || !storeId || !selectedSlotId) return;
+      if (!submitLockRef.current.tryAcquire()) return;
 
-    setIsSubmitting(true);
-    try {
-      await reservationAPI.createCustomerReservation(Number(storeId), {
-        reservationSlotId: selectedSlotId,
-        reserverName: name,
-        phoneNumber: phone,
-        partySize: peopleCount,
-      });
+      setIsSubmitting(true);
+      const idempotencyKey = createIdempotencyKey('reservation');
+      try {
+        await reservationAPI.createCustomerReservation(
+          Number(storeId),
+          {
+            reservationSlotId: selectedSlotId,
+            reserverName: name,
+            phoneNumber: phone,
+            partySize: peopleCount,
+          },
+          { idempotencyKey },
+        );
 
-      toast.success('예약이 완료되었습니다!');
-      setIsModalOpen(false);
-      navigate(-1);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        toast.success('예약이 완료되었습니다!');
+        setIsModalOpen(false);
+        navigate(-1);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsSubmitting(false);
+        submitLockRef.current.release();
+      }
+    },
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
+  );
 
   return (
     <BaseResponsiveLayout>
@@ -131,7 +150,8 @@ export default function Reserve() {
         handlePhoneChange={handlePhoneChange}
         peopleCount={peopleCount}
         setPeopleCount={setPeopleCount}
-        isFormValid={isFormValid && !isSubmitting}
+        isFormValid={isFormValid}
+        isSubmitting={isSubmitting}
         handleSubmit={handleSubmit}
       />
     </BaseResponsiveLayout>

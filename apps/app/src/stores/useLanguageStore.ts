@@ -7,24 +7,27 @@ interface LanguageState {
   setLanguage: (lang: string) => void;
 }
 
+/** Shared side-effect used by setLanguage and rehydration (behavior unchanged). */
+export function syncDocumentLanguage(language?: string | null) {
+  if (!language) return;
+  i18n.changeLanguage(language);
+  document.documentElement.lang = language;
+}
+
 export const useLanguageStore = create<LanguageState>()(
   persist(
     (set) => ({
       language: 'ko',
       setLanguage: (lang) => {
         set({ language: lang });
-        i18n.changeLanguage(lang);
-        document.documentElement.lang = lang;
+        syncDocumentLanguage(lang);
       },
     }),
     {
       name: 'app_language',
 
       onRehydrateStorage: () => (state) => {
-        if (state && state.language) {
-          i18n.changeLanguage(state.language);
-          document.documentElement.lang = state.language;
-        }
+        syncDocumentLanguage(state?.language);
       },
     },
   ),

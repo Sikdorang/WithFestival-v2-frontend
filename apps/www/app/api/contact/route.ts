@@ -1,5 +1,9 @@
 import { Client } from "@notionhq/client";
 import { NextResponse } from "next/server";
+import {
+  getIdempotentResponse,
+  storeIdempotentResponse,
+} from "@/lib/idempotency";
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 const DB_ID = process.env.NOTION_DATABASE_ID;
@@ -7,6 +11,12 @@ const DB_ID = process.env.NOTION_DATABASE_ID;
 const ALLOWED_TYPES = ["도입 문의", "가격 문의", "제휴", "기타"];
 
 export async function POST(req: Request) {
+  const idempotencyKey = req.headers.get("idempotency-key");
+  const cached = getIdempotentResponse(idempotencyKey);
+  if (cached) {
+    return NextResponse.json(cached.body, { status: cached.status });
+  }
+
   if (!process.env.NOTION_TOKEN || !DB_ID) {
     return NextResponse.json(
       { error: "서버 설정이 완료되지 않았습니다." },
@@ -62,7 +72,9 @@ export async function POST(req: Request) {
         typeof notion.pages.create
       >[0]["properties"],
     });
-    return NextResponse.json({ ok: true });
+    const okBody = { ok: true };
+    storeIdempotentResponse(idempotencyKey, 200, okBody);
+    return NextResponse.json(okBody);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "네트워크 오류";
     console.error("[notion] create page failed:", msg);

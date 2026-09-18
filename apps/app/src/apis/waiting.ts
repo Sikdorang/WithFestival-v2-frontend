@@ -1,8 +1,16 @@
 import {
+  createIdempotencyKey,
+  idempotencyHeaders,
+} from '@/shared/lib/idempotency';
+import {
   CreateWaitingDTO,
   UpdateWaitingStatusDTO,
 } from '@/types/payload/waiting';
 import axiosInstance from '.';
+
+export type WaitingMutationOptions = {
+  idempotencyKey?: string;
+};
 
 export const waitingAPI = {
   // 대기 팀 수 조회 (고객·공개)
@@ -14,10 +22,16 @@ export const waitingAPI = {
   },
 
   // 대기 등록 (고객)
-  createWaiting: async (storeId: number, payload: CreateWaitingDTO) => {
+  createWaiting: async (
+    storeId: number,
+    payload: CreateWaitingDTO,
+    options?: WaitingMutationOptions,
+  ) => {
+    const key = options?.idempotencyKey ?? createIdempotencyKey('waiting');
     const response = await axiosInstance.post(
       `/stores/${storeId}/waitings`,
       payload,
+      { headers: idempotencyHeaders(key) },
     );
     return response.data;
   },

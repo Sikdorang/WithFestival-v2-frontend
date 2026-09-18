@@ -9,6 +9,10 @@ import OrderTopBar from '@/components/pages/order/OrderTopBar';
 import ServiceOrderCard from '@/components/pages/order/ServiceOrderCard';
 import { useSocket } from '@/contexts/useSocket';
 import { useOrder } from '@/hooks/useOrder';
+import {
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -75,7 +79,8 @@ export default function Order() {
     (itemId: number, isSentMode: boolean) => {
       toggleItemCompleted(itemId, isSentMode);
     },
-    200,
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
   );
 
   const renderOrderList = (orders: any[]) => {

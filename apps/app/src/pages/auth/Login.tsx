@@ -4,13 +4,18 @@ import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayo
 import { Banner } from '@/components/pages/login/Banner';
 import { ROUTES } from '@/constants/routes';
 import { useKeyboardScroll } from '@/hooks/common/useKeyboardScroll';
+import {
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import { useAuthStore } from '@/stores/authStore';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, isLoggedIn } = useAuthStore();
+  const { login, isLoggedIn, isLoading } = useAuthStore();
   const [code, setCode] = useState('');
 
   const { targetRef, handleFocus, handleBlur } = useKeyboardScroll();
@@ -18,6 +23,15 @@ export default function Login() {
   useEffect(() => {
     if (isLoggedIn) navigate(ROUTES.MANAGE_WAITING);
   }, [isLoggedIn, navigate]);
+
+  const handleLogin = useDebouncedCallback(
+    () => {
+      if (useAuthStore.getState().isLoading || !code.trim()) return;
+      void login(code);
+    },
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
+  );
 
   return (
     <BaseResponsiveLayout>
@@ -35,10 +49,17 @@ export default function Login() {
               limitHide
               onFocus={handleFocus}
               onBlur={handleBlur}
+              disabled={isLoading}
             />
           </div>
 
-          <CtaButton text="로그인" radius="_2xl" onClick={() => login(code)} />
+          <CtaButton
+            text="로그인"
+            radius="_2xl"
+            onClick={handleLogin}
+            disabled={!code.trim() || isLoading}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </BaseResponsiveLayout>

@@ -1,0 +1,49 @@
+import { ROUTES } from '@/constants/routes';
+import { KEYS } from '@/constants/storage';
+import { env } from '@/shared/config/env';
+import { redirectTo } from '@/shared/lib/navigation';
+import axios from 'axios';
+
+const API_BASE = env.VITE_API_URL || '';
+const axiosInstance = axios.create({
+  baseURL: `${API_BASE}/api`,
+});
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = sessionStorage.getItem('accessToken');
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const originalUrl = error.config?.url || '';
+
+    const isLoginRequest = originalUrl.includes('/auth/login');
+
+    if (
+      !isLoginRequest &&
+      axios.isAxiosError(error) &&
+      error.response?.status === 401
+    ) {
+      sessionStorage.removeItem(KEYS.ACCESS_TOKEN);
+      redirectTo(ROUTES.LOGIN);
+    }
+
+    return Promise.reject(error);
+  },
+);
+
+export default axiosInstance;

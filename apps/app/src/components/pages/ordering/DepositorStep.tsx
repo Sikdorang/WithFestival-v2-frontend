@@ -119,6 +119,7 @@ export default function DepositorStep({
             onSubmit();
           }}
           disabled={isSubmitDisabled}
+          isLoading={isLoading}
           radius="_2xl"
         />
       </footer>

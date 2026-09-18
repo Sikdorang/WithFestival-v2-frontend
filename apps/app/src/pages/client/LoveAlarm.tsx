@@ -2,10 +2,15 @@ import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import Navigator from '@/components/common/layouts/Navigator';
 import LoveAlarmTableboard from '@/components/pages/loveAlarm/LoveAlarmTableboard';
 import NicknameSetup from '@/components/pages/loveAlarm/NicknameSetup';
-import { useLoveAlarm } from '@/hooks/useLoveAlarm'; // 💡 훅 임포트
+import { useLoveAlarm } from '@/hooks/useLoveAlarm';
+import {
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function LoveAlarm() {
   const navigate = useNavigate();
@@ -29,32 +34,38 @@ export default function LoveAlarm() {
     setIsLoaded(true);
   }, []);
 
-  const handleNicknameSubmit = async (newNickname: string) => {
-    const storeId = Number(userData?.userId);
-    const tableId = Number(userData?.tableId);
+  const handleNicknameSubmit = useDebouncedCallback(
+    async (newNickname: string) => {
+      if (isLoading) return;
 
-    if (!storeId || !tableId) {
-      toast.error('유효한 부스 또는 테이블 정보가 없습니다.');
-      return;
-    }
+      const storeId = Number(userData?.userId);
+      const tableId = Number(userData?.tableId);
 
-    try {
-      const response = await setApiNickname({
-        nickname: newNickname,
-        storeId,
-        tableId,
-      });
-
-      localStorage.setItem('user_nickname', newNickname);
-      if (response?.tokenUuid) {
-        localStorage.setItem('user_token_uuid', response.tokenUuid);
+      if (!storeId || !tableId) {
+        toast.error('유효한 부스 또는 테이블 정보가 없습니다.');
+        return;
       }
 
-      setNickname(newNickname);
-    } catch (error) {
-      console.error('닉네임 설정 실패:', error);
-    }
-  };
+      try {
+        const response = await setApiNickname({
+          nickname: newNickname,
+          storeId,
+          tableId,
+        });
+
+        localStorage.setItem('user_nickname', newNickname);
+        if (response?.tokenUuid) {
+          localStorage.setItem('user_token_uuid', response.tokenUuid);
+        }
+
+        setNickname(newNickname);
+      } catch (error) {
+        console.error('닉네임 설정 실패:', error);
+      }
+    },
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
+  );
 
   if (!isLoaded) return null;
 

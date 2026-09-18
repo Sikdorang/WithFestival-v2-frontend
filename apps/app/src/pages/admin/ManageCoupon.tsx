@@ -10,10 +10,16 @@ import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayo
 import Navigator from '@/components/common/layouts/Navigator';
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 import { useCoupon } from '@/hooks/useCoupon';
+import {
+  createInFlightLock,
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function ManageCoupon() {
   const navigate = useNavigate();
@@ -28,6 +34,8 @@ export default function ManageCoupon() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const createLockRef = useRef(createInFlightLock());
 
   const [newCode, setNewCode] = useState('');
   const [newType, setNewType] = useState<'AMOUNT' | 'PERCENT'>('AMOUNT');
@@ -48,34 +56,45 @@ export default function ManageCoupon() {
     );
   }, [coupons, searchQuery]);
 
-  const handleCreateSubmit = async () => {
-    if (!newCode.trim() || !newDiscount) {
-      toast.error('쿠폰 번호와 할인 값을 입력해주세요.');
-      return;
-    }
+  const handleCreateSubmit = useDebouncedCallback(
+    async () => {
+      if (!newCode.trim() || !newDiscount) {
+        toast.error('쿠폰 번호와 할인 값을 입력해주세요.');
+        return;
+      }
 
-    const discountVal = Number(newDiscount);
+      const discountVal = Number(newDiscount);
 
-    if (newType === 'PERCENT' && (discountVal <= 0 || discountVal > 100)) {
-      toast.error('할인 비율은 1에서 100 사이여야 합니다.');
-      return;
-    }
+      if (newType === 'PERCENT' && (discountVal <= 0 || discountVal > 100)) {
+        toast.error('할인 비율은 1에서 100 사이여야 합니다.');
+        return;
+      }
 
-    const success = await createCoupon({
-      code: newCode.trim(),
-      type: newType,
-      discountPrice: discountVal,
-      holder: newHolder.trim() || null,
-    });
+      if (!createLockRef.current.tryAcquire()) return;
+      setIsCreating(true);
+      try {
+        const success = await createCoupon({
+          code: newCode.trim(),
+          type: newType,
+          discountPrice: discountVal,
+          holder: newHolder.trim() || null,
+        });
 
-    if (success) {
-      setIsCreateModalOpen(false);
-      setNewCode('');
-      setNewType('AMOUNT');
-      setNewDiscount('');
-      setNewHolder('');
-    }
-  };
+        if (success) {
+          setIsCreateModalOpen(false);
+          setNewCode('');
+          setNewType('AMOUNT');
+          setNewDiscount('');
+          setNewHolder('');
+        }
+      } finally {
+        setIsCreating(false);
+        createLockRef.current.release();
+      }
+    },
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
+  );
 
   return (
     <BaseResponsiveLayout>
@@ -264,11 +283,14 @@ export default function ManageCoupon() {
                 text="취소"
                 color="gray"
                 onClick={() => setIsCreateModalOpen(false)}
+                disabled={isCreating}
               />
               <CtaButton
                 text="생성"
                 color="black"
                 onClick={handleCreateSubmit}
+                disabled={isCreating || isLoading}
+                isLoading={isCreating}
               />
             </div>
           </Dialog.Content>

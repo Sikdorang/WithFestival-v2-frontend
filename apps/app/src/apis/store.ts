@@ -3,13 +3,11 @@ import axiosInstance from '.';
 export const storeAPI = {
   getStorePublicInfo: async (storeId: number) => {
     const response = await axiosInstance.get(`/stores/${storeId}/info`);
-    console.log('통신 직후 원본 데이터1:', response.data);
     return response.data;
   },
 
   getStoreMyInfo: async () => {
     const response = await axiosInstance.get('/stores/me/info');
-    console.log('통신 직후 원본 데이터2:', response.data);
     return response.data;
   },
 

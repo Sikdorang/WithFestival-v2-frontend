@@ -13,13 +13,12 @@ export const useLogin = () => {
   const navigate = useNavigate();
 
   const login = async (code: string) => {
+    if (isLoading) return false;
     setIsLoading(true);
     setLoginError(null);
 
     try {
       const response = await authAPI.login(code);
-
-      console.log('아쫌1', response);
 
       if (!response.accessToken) {
         toast.error(ERROR_MESSAGES.invalidCodeError);
@@ -31,7 +30,6 @@ export const useLogin = () => {
       navigate(ROUTES.MANAGE_WAITING);
       return true;
     } catch (error) {
-      console.log('아쫌2', error);
       handelError(error);
       return false;
     } finally {

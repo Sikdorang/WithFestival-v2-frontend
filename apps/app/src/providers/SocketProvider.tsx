@@ -2,12 +2,12 @@
 
 import { KEYS } from '@/constants/storage';
 import { SocketContext } from '@/contexts/useSocket';
+import { env } from '@/shared/config/env';
 import { useAuthStore } from '@/stores/authStore';
 import React, { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL =
-  import.meta.env.VITE_SOCKET_URL || 'https://app.withfestival.site';
+const SOCKET_URL = env.VITE_SOCKET_URL || 'https://app.withfestival.site';
 
 interface Props {
   children: React.ReactNode;
@@ -27,12 +27,8 @@ export function SocketProvider({ children }: Props) {
         auth: accessToken ? { token: accessToken } : { boothId: user?.id },
       });
 
-      newSocket.on('connect', () => {
-        console.log('socket connected');
-      });
-
       newSocket.on('connect_error', () => {
-        console.error('socket rejected');
+        // Intentionally quiet — avoid leaking auth context to the console.
       });
 
       setSocket(newSocket);

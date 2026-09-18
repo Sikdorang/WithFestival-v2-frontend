@@ -7,11 +7,17 @@ import Navigator from '@/components/common/layouts/Navigator';
 import AppearanceSlider from '@/components/pages/blindPhoneNumberDate/AppearanceSlider';
 import MbtiSelector from '@/components/pages/blindPhoneNumberDate/MbtiSelector';
 import { useDating } from '@/hooks/useDating';
+import {
+  createInFlightLock,
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import { TFunction } from 'i18next';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 import DeleteConfirmModal from '../../components/common/modals/DeleteConfirmModal';
 
@@ -95,6 +101,7 @@ export default function BlindPhoneNumberDate() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { createProfile, isLoading } = useDating();
+  const submitLockRef = useRef(createInFlightLock());
 
   const GENDER_OPTIONS = [
     t('customer.blindDate.ui.genderMale'),
@@ -130,37 +137,46 @@ export default function BlindPhoneNumberDate() {
     return formattedVal.slice(0, 13);
   };
 
-  const handleSubmit = async () => {
-    if (isLoading) return;
+  const handleSubmit = useDebouncedCallback(
+    async () => {
+      if (isLoading || !submitLockRef.current.tryAcquire()) return;
 
-    const validation = getBlindDateSchema(t).safeParse(formData);
+      const validation = getBlindDateSchema(t).safeParse(formData);
 
-    if (!validation.success) {
-      const firstErrorMessage = validation.error.issues[0].message;
-      toast.error(firstErrorMessage);
-      return;
-    }
+      if (!validation.success) {
+        const firstErrorMessage = validation.error.issues[0].message;
+        toast.error(firstErrorMessage);
+        submitLockRef.current.release();
+        return;
+      }
 
-    const payload = {
-      name: formData.name,
-      age: Number(formData.age),
-      contact: formData.contact,
-      mbti: formData.mbti.join(''),
-      appearanceStyle: getAppearanceStep(formData.appearance),
-      gender:
-        formData.genderIndex === 0 ? 'MALE' : ('FEMALE' as 'MALE' | 'FEMALE'),
-      deliveryPhone: formData.deliveryPhone,
-    };
+      const payload = {
+        name: formData.name,
+        age: Number(formData.age),
+        contact: formData.contact,
+        mbti: formData.mbti.join(''),
+        appearanceStyle: getAppearanceStep(formData.appearance),
+        gender:
+          formData.genderIndex === 0
+            ? 'MALE'
+            : ('FEMALE' as 'MALE' | 'FEMALE'),
+        deliveryPhone: formData.deliveryPhone,
+      };
 
-    try {
-      await createProfile(payload);
-      toast.success(t('customer.blindDate.ui.toastSuccess'));
-      navigate(-1);
-    } catch (error) {
-      console.error('프로필 등록 실패:', error);
-      toast.error(t('customer.blindDate.ui.toastError'));
-    }
-  };
+      try {
+        await createProfile(payload);
+        toast.success(t('customer.blindDate.ui.toastSuccess'));
+        navigate(-1);
+      } catch (error) {
+        console.error('프로필 등록 실패:', error);
+        toast.error(t('customer.blindDate.ui.toastError'));
+      } finally {
+        submitLockRef.current.release();
+      }
+    },
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
+  );
 
   return (
     <BaseResponsiveLayout>
@@ -308,6 +324,7 @@ export default function BlindPhoneNumberDate() {
                 : t('customer.blindDate.ui.submitDefault')
             }
             disabled={isLoading}
+            isLoading={isLoading}
             radius="_2xl"
           />
         </DeleteConfirmModal>

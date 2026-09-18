@@ -1,0 +1,15 @@
+---
+description: Use frontend agent-skills workflows from .cursor/skills
+alwaysApply: true
+---
+
+# Agent Skills (frontend)
+
+Before non-trivial technical work:
+
+1. Route via `.cursor/skills/using-agent-skills/SKILL.md`.
+2. Read and follow the matching skill under `.cursor/skills/<name>/SKILL.md`.
+3. Open linked checklists under `.cursor/references/` only when the skill says so.
+4. Slash commands `/spec` `/plan` `/build` `/test` `/review` `/code-simplify` `/ship` map to lifecycle skills.
+
+This repo is **frontend only**. Do not design or implement backend services, databases, or server-side auth hashing here. Client API modules, UI, and browser verification are in scope.

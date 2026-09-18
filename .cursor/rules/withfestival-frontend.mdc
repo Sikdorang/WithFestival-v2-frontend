@@ -1,0 +1,40 @@
+---
+description: WithFestival-v2-frontend monorepo stack and conventions
+alwaysApply: true
+---
+
+# WithFestival frontend monorepo
+
+pnpm + Turborepo. Two apps — treat them as separate products.
+
+| App | Path | Stack | Dev |
+|-----|------|-------|-----|
+| Landing | `apps/www` | Next.js 16 App Router, Tailwind v4, shadcn | `pnpm --filter www dev` |
+| Product | `apps/app` | Vite 6, React Router 7, TanStack Query, Zustand, PWA, Sentry | `pnpm --filter app dev` |
+
+## Commands
+
+```bash
+pnpm install
+pnpm lint
+pnpm check-types
+pnpm test:ci
+pnpm build
+pnpm --filter www build
+pnpm --filter app build
+```
+
+## Conventions
+
+- Prefer root **pnpm** only (no nested `package-lock.json`).
+- Match local style: `app` = single quotes (Prettier); `www` = Next/shadcn defaults.
+- Path aliases: `www` `@/*` → app root; `app` `@/*` → `src/*`.
+- Shared design tokens: `packages/tailwind-config` (used by `app`). Do **not** import unused `@repo/ui`.
+- Env: use `.env.example` files. Never commit `.env`. Never put secrets in `VITE_*` / `NEXT_PUBLIC_*`.
+- Next.js 16: follow `apps/www/AGENTS.md` and in-repo Next docs.
+- Tests: `apps/app` has Jest (coverage gate 90% on a **scoped** surface — see `docs/ENGINEERING_DEBT.md`). Prefer FSD public APIs (`@/features/*`, `@/entities/*`, `@/shared/*`).
+- Debt tracker: `docs/ENGINEERING_DEBT.md`.
+
+## Out of scope
+
+Backend services, DB schemas, server migrations, password hashing — belong to the API repo, not this frontend.

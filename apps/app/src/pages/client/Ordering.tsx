@@ -14,6 +14,10 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import { useDebouncedCallback } from 'use-debounce';
 
 export default function Ordering() {
@@ -31,7 +35,7 @@ export default function Ordering() {
   }, [location.state?.userData]);
   const navigate = useNavigate();
   const { orderItems } = useOrderStore();
-  const { createOrder } = useOrder();
+  const { createOrder, isLoading: isCreatingOrder } = useOrder();
 
   const storeId = userData?.userId || userData?.id;
   const { data: menus } = useCustomerMenuQuery(storeId, true);
@@ -67,15 +71,20 @@ export default function Ordering() {
     0,
   );
 
-  const handleFinalSubmit = useDebouncedCallback(async () => {
-    const isSuccess = await createOrder(depositorName, phoneNumber);
+  const handleFinalSubmit = useDebouncedCallback(
+    async () => {
+      if (isCreatingOrder) return;
+      const isSuccess = await createOrder(depositorName, phoneNumber);
 
-    if (isSuccess) {
-      setModalStep('complete');
-      setDepositorName('');
-      setPhoneNumber('');
-    }
-  }, 300);
+      if (isSuccess) {
+        setModalStep('complete');
+        setDepositorName('');
+        setPhoneNumber('');
+      }
+    },
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
+  );
 
   if (userData.userId === undefined) {
     return <Navigate to={ROUTES.NOT_FOUND} replace />;
@@ -161,6 +170,7 @@ export default function Ordering() {
               setDepositorName={setDepositorName}
               phoneNumber={phoneNumber}
               setPhoneNumber={setPhoneNumber}
+              isLoading={isCreatingOrder}
             />
           ) : (
             <CompleteStep />

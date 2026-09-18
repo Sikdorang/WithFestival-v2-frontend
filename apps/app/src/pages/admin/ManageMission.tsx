@@ -5,6 +5,10 @@ import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayo
 import Navigator from '@/components/common/layouts/Navigator';
 import { useMission } from '@/hooks/useMission';
 import { useStore } from '@/hooks/useStore';
+import {
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import { Mission } from '@/types/global';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -44,7 +48,8 @@ export default function ManageMission() {
         setIsMissionEnabled(!targetState);
       }
     },
-    300,
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
   );
 
   const handleToggleMissionFeature = () => {

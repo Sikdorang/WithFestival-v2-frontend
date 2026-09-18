@@ -1,10 +1,24 @@
+import {
+  createIdempotencyKey,
+  idempotencyHeaders,
+} from '@/shared/lib/idempotency';
 import { CreateOrderPayload } from '@/types/payload/order';
 import axiosInstance from '.';
 
+export type MutationOptions = {
+  idempotencyKey?: string;
+};
+
 export const orderAPI = {
   // 주문 생성
-  createOrder: async (payload: CreateOrderPayload) => {
-    const response = await axiosInstance.post('/orders', payload);
+  createOrder: async (
+    payload: CreateOrderPayload,
+    options?: MutationOptions,
+  ) => {
+    const key = options?.idempotencyKey ?? createIdempotencyKey('order');
+    const response = await axiosInstance.post('/orders', payload, {
+      headers: idempotencyHeaders(key),
+    });
     return response.data;
   },
 

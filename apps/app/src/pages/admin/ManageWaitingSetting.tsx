@@ -6,6 +6,10 @@ import TextArea from '@/components/common/inputs/TextArea';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
 import { useStore } from '@/hooks/useStore';
+import {
+  LEADING_SUBMIT_OPTIONS,
+  SUBMIT_GUARD_MS,
+} from '@/shared/lib/idempotency';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -42,7 +46,8 @@ export default function ManageWaitingSetting() {
         toast.error('상태 변경에 실패했습니다. 네트워크를 확인해주세요.');
       }
     },
-    300,
+    SUBMIT_GUARD_MS,
+    LEADING_SUBMIT_OPTIONS,
   );
 
   const handleToggleWait = () => {
