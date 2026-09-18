@@ -34,7 +34,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm lint
+        run: |
+          set -eux
+          pnpm --filter app exec eslint --version
+          pnpm --filter @repo/ui run lint
+          pnpm --filter app run lint
+          pnpm --filter www run lint
+        env:
+          CI: "true"
+          TURBO_UI: stream
+          FORCE_COLOR: "0"
 
       - name: Typecheck
         run: pnpm check-types

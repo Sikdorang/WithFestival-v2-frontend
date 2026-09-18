@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+/** @type {import('eslint').Linter.Config[]} */
+export default [
   {
     ignores: [
       'dist/**',
@@ -18,8 +19,15 @@ export default tseslint.config(
     ],
   },
   {
+    ...js.configs.recommended,
     files: ['**/*.{ts,tsx}'],
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+  },
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: config.files ?? ['**/*.{ts,tsx}'],
+  })),
+  {
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -36,14 +44,14 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      // Legacy app surface — do not block CI; tighten later
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
       'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
     },
   },
   prettierConfig,
-);
+];
