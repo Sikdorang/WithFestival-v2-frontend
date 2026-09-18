@@ -54,7 +54,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-6 sm:flex-row">
-          <span className="text-sm text-[#9b9da3]">© 2026 Sikdorang.</span>
+          <span className="text-sm text-[#9b9da3]">
+            © 2026 Sikdorang. All rights reserved.
+          </span>
 
           <a
             href="https://www.instagram.com/with.festival/"

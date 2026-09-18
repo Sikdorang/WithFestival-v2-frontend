@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
 type Logo = {
   name: string;
-  src?: string;
+  src: string;
   scale?: number;
 };
 
@@ -19,7 +17,8 @@ const LOGOS: Logo[] = [
   },
   {
     name: "경희대학교",
-    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOkaXdGRCHM6nHG7GCC3c2asWz4f1UvKrGQQ&s",
+    // 기존 gstatic 썸네일은 광운대 로고였음 → 경희대 시그니처로 교체
+    src: "https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FbjsDsi%2FbtqxXJM3JKe%2FAAAAAAAAAAAAAAAAAAAAAOVaIPr5GDZysS4XpCiaQb-Ae2GN8g8_Nk_rkGT_szYg%2Fimg.jpg%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1780239599%26allow_ip%3D%26allow_referer%3D%26signature%3Do%252F7JfDGM3%252Fc02GgLJg8oMFADJCA%253D",
   },
   {
     name: "한성대학교",
@@ -27,12 +26,12 @@ const LOGOS: Logo[] = [
   },
   {
     name: "숭실대학교",
-    // No durable public logo asset in /public; text badge until one is added
+    src: "/logos/soongsil.svg",
   },
 ];
 
 export default function LogoMarquee() {
-  // Duplicate once so -50% → 0% loops seamlessly while scrolling right
+  // Two identical halves so translateX(-50%) loops seamlessly
   const loop = [...LOGOS, ...LOGOS];
 
   return (
@@ -41,18 +40,20 @@ export default function LogoMarquee() {
       className="relative w-full bg-white py-16 md:py-20"
     >
       <div className="mx-auto w-full max-w-6xl px-5 md:px-8">
-        <div
-          className="group relative overflow-hidden"
-          style={{
-            maskImage:
-              "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)",
-          }}
-        >
-          <div className="logo-marquee-track">
+        <div className="logo-marquee">
+          <div className="logo-marquee__track">
             {loop.map((logo, i) => (
-              <LogoItem key={`${logo.name}-${i}`} logo={logo} />
+              // eslint-disable-next-line @next/next/no-img-element -- partner marks; next/image not required
+              <img
+                key={`${logo.name}-${i}`}
+                src={logo.src}
+                alt={logo.name}
+                draggable={false}
+                style={
+                  logo.scale ? { transform: `scale(${logo.scale})` } : undefined
+                }
+                className="h-10 w-auto shrink-0 object-contain md:h-12"
+              />
             ))}
           </div>
         </div>
@@ -62,28 +63,5 @@ export default function LogoMarquee() {
         </p>
       </div>
     </section>
-  );
-}
-
-function LogoItem({ logo }: { logo: Logo }) {
-  const [broken, setBroken] = useState(false);
-
-  if (!logo.src || broken) {
-    return (
-      <div className="flex h-10 w-32 shrink-0 items-center justify-center rounded-lg bg-[#f0f1f3] text-xs font-medium text-[#9b9da3] md:h-12 md:w-40 md:text-sm">
-        {logo.name}
-      </div>
-    );
-  }
-
-  return (
-    // eslint-disable-next-line @next/next/no-img-element -- external/partner marks; next/image not required here
-    <img
-      src={logo.src}
-      alt={logo.name}
-      onError={() => setBroken(true)}
-      style={logo.scale ? { transform: `scale(${logo.scale})` } : undefined}
-      className="h-10 w-auto shrink-0 object-contain md:h-12"
-    />
   );
 }
