@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 9999",
     "preview": "vite preview",
     "generate-pwa-icons": "pwa-assets-generator",
     "test": "jest --config jest.config.ts",
