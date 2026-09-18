@@ -1,6 +1,5 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+/** @type {import('jest').Config} */
+const config = {
   testEnvironment: 'jsdom',
   roots: ['<rootDir>/src'],
   testMatch: [
@@ -46,11 +45,9 @@ const config: Config = {
   clearMocks: true,
   restoreMocks: true,
   collectCoverageFrom: [
-    // FSD layers
     'src/shared/**/*.{ts,tsx}',
     'src/entities/**/*.{ts,tsx}',
     'src/features/**/*.{ts,tsx}',
-    // Legacy modules covered by FSD public APIs (behavior unchanged)
     'src/stores/**/*.{ts,tsx}',
     'src/apis/**/*.{ts,tsx}',
     'src/hooks/useLogin.ts',
@@ -84,4 +81,4 @@ const config: Config = {
   },
 };
 
-export default config;
+module.exports = config;

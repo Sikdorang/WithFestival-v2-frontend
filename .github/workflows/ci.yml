@@ -57,10 +57,22 @@ jobs:
           FORCE_COLOR: "0"
 
       - name: Test (app, coverage gate 90%)
-        run: pnpm test:ci
+        run: |
+          set -euxo pipefail
+          pnpm --filter app run test:ci 2>&1 | tee jest-output.txt
         env:
           VITE_API_URL: http://api.test
           VITE_SOCKET_URL: http://socket.test
+          CI: "true"
+          FORCE_COLOR: "0"
+
+      - name: Upload jest output
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-output
+          path: jest-output.txt
+          if-no-files-found: ignore
 
       - name: Build
         run: pnpm build

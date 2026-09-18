@@ -9,12 +9,12 @@
     "lint": "eslint . --max-warnings 9999",
     "preview": "vite preview",
     "generate-pwa-icons": "pwa-assets-generator",
-    "test": "jest --config jest.config.ts",
-    "test:unit": "jest --config jest.config.ts --testPathPatterns=unit\\.test",
-    "test:integration": "jest --config jest.config.ts --testPathPatterns=integration\\.test",
-    "test:watch": "jest --config jest.config.ts --watch",
-    "test:coverage": "jest --config jest.config.ts --coverage",
-    "test:ci": "jest --config jest.config.ts --ci --coverage",
+    "test": "jest --config jest.config.cjs",
+    "test:unit": "jest --config jest.config.cjs --testPathPatterns=unit\\.test",
+    "test:integration": "jest --config jest.config.cjs --testPathPatterns=integration\\.test",
+    "test:watch": "jest --config jest.config.cjs --watch",
+    "test:coverage": "jest --config jest.config.cjs --coverage",
+    "test:ci": "jest --config jest.config.cjs --ci --coverage",
     "check-types": "tsc -p tsconfig.app.json --pretty false && tsc -p tsconfig.node.json --pretty false"
   },
   "dependencies": {
