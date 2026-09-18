@@ -14,7 +14,6 @@ import { Button, ButtonLink } from "./ui/Button";
 const NAV_ITEMS = [
   { label: "축제랑 소개", href: "/" },
   { label: "축제 일정", href: "/schedule" },
-  { label: "실시간 랭킹", href: "/ranking" },
   { label: "FAQ", href: "/faq" },
   { label: "Blog", href: "/blog" },
 ];
