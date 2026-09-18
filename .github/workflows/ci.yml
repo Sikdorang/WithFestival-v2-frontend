@@ -46,7 +46,15 @@ jobs:
           FORCE_COLOR: "0"
 
       - name: Typecheck
-        run: pnpm check-types
+        run: |
+          set -eux
+          pnpm --filter @repo/ui run check-types
+          pnpm --filter app run check-types
+          pnpm --filter www run check-types
+        env:
+          CI: "true"
+          TURBO_UI: stream
+          FORCE_COLOR: "0"
 
       - name: Test (app, coverage gate 90%)
         run: pnpm test:ci
