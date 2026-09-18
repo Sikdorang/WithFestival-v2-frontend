@@ -75,10 +75,16 @@ jobs:
           if-no-files-found: ignore
 
       - name: Build
-        run: pnpm build
+        run: |
+          set -eux
+          pnpm --filter app run build
+          pnpm --filter www run build
         env:
           # www/app builds must not require real secrets in CI
           NEXT_PUBLIC_API_URL: http://api.test
           VITE_API_URL: http://api.test
           VITE_SOCKET_URL: http://socket.test
           SENTRY_AUTH_TOKEN: ""
+          CI: "true"
+          TURBO_UI: stream
+          FORCE_COLOR: "0"
