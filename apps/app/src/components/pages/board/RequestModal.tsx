@@ -4,7 +4,6 @@ import MessageImage from '@/assets/images/img_post.png';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import Navigator from '@/components/common/layouts/Navigator';
-import { useOrder } from '@/hooks/useOrder';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 
@@ -15,8 +14,6 @@ interface Props {
 }
 
 export default function RequestModal({ open, onClose, type }: Props) {
-  const {} = useOrder();
-
   const [inputValue, setInputValue] = useState('');
   const handleSubmit = () => {
     // if (type === 'message') {

@@ -121,7 +121,7 @@ export const useMenuForm = (menuId: number) => {
         await fetchMenu();
       }
       return true;
-    } catch (error) {
+    } catch {
       return false;
     } finally {
       setIsSaving(false);

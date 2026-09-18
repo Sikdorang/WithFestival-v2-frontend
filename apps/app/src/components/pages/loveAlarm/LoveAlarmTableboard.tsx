@@ -119,7 +119,9 @@ export default function LoveAlarmTableboard({
 
       toast.success(`${targetUser.name}님에게 마음을 보냈어요! 💖`);
       fetchStoreLikes(storeId);
-    } catch (error) {}
+    } catch {
+      // like request failed; toast already handled upstream when needed
+    }
   };
 
   return (

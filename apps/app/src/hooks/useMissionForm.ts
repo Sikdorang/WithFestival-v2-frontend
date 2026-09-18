@@ -62,7 +62,7 @@ export const useMissionForm = (missionId: number) => {
         await fetchMissions();
       }
       return true;
-    } catch (error) {
+    } catch {
       return false;
     } finally {
       setIsSaving(false);

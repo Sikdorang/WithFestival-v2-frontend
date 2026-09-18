@@ -5,10 +5,11 @@ interface PaymentProgressProps {
 }
 
 export default function PaymentProgress({ step }: PaymentProgressProps) {
+  const { t } = useTranslation();
+  const isDepositorStep = step === 'depositor';
+
   if (step === 'complete') return null;
 
-  const isDepositorStep = step === 'depositor';
-  const { t } = useTranslation();
   return (
     <div className="flex w-full items-start justify-center pt-2">
       <div className="flex flex-col items-center gap-2">

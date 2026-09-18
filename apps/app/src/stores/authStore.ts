@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       try {
         // 로그인 성공 직후 내 스토어 정보를 가져와 상태 동기화
         await get().checkAuthStatus();
-      } catch (error) {
+      } catch {
         sessionStorage.removeItem(KEYS.ACCESS_TOKEN);
         throw new Error('스토어 정보를 불러오는데 실패했습니다.');
       }
