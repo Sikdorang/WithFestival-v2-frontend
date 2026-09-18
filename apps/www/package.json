@@ -10,7 +10,6 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@notionhq/client": "^5.20.0",
     "@repo/tailwind-config": "workspace:*",
     "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",

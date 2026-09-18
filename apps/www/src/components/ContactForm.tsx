@@ -1,91 +1,97 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Button } from "./ui/Button";
 
-type Status = "idle" | "submitting" | "success" | "error";
+type Status = "idle" | "success";
 
 const TYPES = ["도입 문의", "가격 문의", "제휴", "기타"] as const;
 
-function createClientIdempotencyKey() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return `contact_${crypto.randomUUID()}`;
-  }
-  return `contact_${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+const CONTACT_EMAIL = "sikdorang2026@gmail.com";
+const INSTAGRAM_URL = "https://www.instagram.com/with.festival/";
+
+function buildMailto(fields: {
+  name: string;
+  email: string;
+  phone: string;
+  organization: string;
+  type: string;
+  message: string;
+}) {
+  const typeLabel = fields.type || "일반";
+  const subject = encodeURIComponent(
+    `[축제랑 문의] ${typeLabel} — ${fields.name}`,
+  );
+  const lines = [
+    "축제랑 도입 문의입니다.",
+    "",
+    `이름: ${fields.name}`,
+    `회신 이메일: ${fields.email}`,
+    fields.phone ? `연락처: ${fields.phone}` : null,
+    fields.organization ? `소속/학교: ${fields.organization}` : null,
+    `문의 유형: ${typeLabel}`,
+    "",
+    "메시지:",
+    fields.message,
+  ].filter((line): line is string => line !== null);
+
+  const body = encodeURIComponent(lines.join("\n"));
+  return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState<string>("");
   const [isValid, setIsValid] = useState(false);
-  const inFlightRef = useRef(false);
 
   function handleInput(e: FormEvent<HTMLFormElement>) {
     setIsValid(e.currentTarget.checkValidity());
   }
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (inFlightRef.current || status === "submitting") return;
-
     const form = e.currentTarget;
-    inFlightRef.current = true;
-    setStatus("submitting");
-    setErrorMsg("");
+    if (!form.checkValidity()) return;
 
     const fd = new FormData(form);
-    const payload = {
-      name: fd.get("name"),
-      email: fd.get("email"),
-      phone: fd.get("phone"),
-      organization: fd.get("organization"),
-      type: fd.get("type"),
-      message: fd.get("message"),
-    };
-    const idempotencyKey = createClientIdempotencyKey();
+    const mailto = buildMailto({
+      name: String(fd.get("name") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      phone: String(fd.get("phone") ?? "").trim(),
+      organization: String(fd.get("organization") ?? "").trim(),
+      type: String(fd.get("type") ?? "").trim(),
+      message: String(fd.get("message") ?? "").trim(),
+    });
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Idempotency-Key": idempotencyKey,
-        },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setStatus("error");
-        setErrorMsg(json.error ?? "전송에 실패했습니다.");
-        return;
-      }
-      form.reset();
-      setStatus("success");
-    } catch {
-      setStatus("error");
-      setErrorMsg("네트워크 오류가 발생했습니다.");
-    } finally {
-      inFlightRef.current = false;
-    }
+    window.location.href = mailto;
+    form.reset();
+    setIsValid(false);
+    setStatus("success");
   }
 
   if (status === "success") {
     return (
       <div className="rounded-[24px] border border-[#36383e1a] bg-[#f7f8fa] p-10 text-center md:p-14">
         <p className="text-2xl font-semibold tracking-[-0.01em] text-[#292a2e]">
-          문의가 정상 접수되었습니다.
+          메일 앱이 열렸습니다
         </p>
-        <p className="mt-3 text-[15px] text-[#5f616a]">
-          담당자가 영업일 기준 1~2일 내로 회신드릴게요.
+        <p className="mt-3 text-[15px] leading-relaxed text-[#5f616a]">
+          작성된 내용을 확인한 뒤 <strong>전송</strong>을 눌러 주세요.
+          <br />
+          수신 주소는{" "}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="font-medium text-[#292a2e] underline underline-offset-2"
+          >
+            {CONTACT_EMAIL}
+          </a>
+          입니다.
         </p>
+        <InstagramHint className="mt-6" />
         <Button
           type="button"
           variant="secondary"
           size="md"
-          onClick={() => {
-            setIsValid(false);
-            setStatus("idle");
-          }}
+          onClick={() => setStatus("idle")}
           className="mt-8"
         >
           새 문의 작성
@@ -158,23 +164,17 @@ export default function ContactForm() {
         />
       </Field>
 
-      {status === "error" && (
-        <p className="rounded-2xl bg-[#fff0f0] px-4 py-3 text-sm font-medium text-[#de5252]">
-          {errorMsg}
-        </p>
-      )}
-
       <Button
         type="submit"
         variant="primary"
         size="lg"
-        loading={status === "submitting"}
-        loadingLabel="전송 중"
-        disabled={!isValid || status === "submitting"}
+        disabled={!isValid}
         className="mt-2"
       >
-        문의 보내기
+        메일로 문의 보내기
       </Button>
+
+      <InstagramHint className="mt-2 text-center" />
 
       <style jsx>{`
         :global(.form-input) {
@@ -218,6 +218,23 @@ export default function ContactForm() {
         }
       `}</style>
     </form>
+  );
+}
+
+function InstagramHint({ className = "" }: { className?: string }) {
+  return (
+    <p className={`text-sm leading-relaxed text-[#5f616a] ${className}`}>
+      다르게 문의하고 싶다면{" "}
+      <a
+        href={INSTAGRAM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-[#292a2e] underline underline-offset-2 transition-colors hover:text-[#5f616a]"
+      >
+        인스타그램 DM
+      </a>
+      으로도 연락할 수 있어요.
+    </p>
   );
 }
 

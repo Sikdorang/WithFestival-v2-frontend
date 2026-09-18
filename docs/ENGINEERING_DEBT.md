@@ -59,7 +59,7 @@ Saying “90% coverage” in reviews means **90% of the scoped surface above**, 
 | `POST /orders` | Duplicate paid orders | Debounce only; no key; `isLoading` not on Depositor CTA | In-flight lock + `Idempotency-Key` + CTA loading |
 | `POST .../waitings` | Duplicate queue entries | Debounce + stale `isLoading` check | Lock at form + hook + `Idempotency-Key` |
 | `POST .../reservations` | Duplicate bookings | `isSubmitting` race | Lock + `Idempotency-Key` |
-| `POST /api/contact` | Duplicate Notion rows | Button loading only | Client key + in-memory replay cache |
+| `Contact form` | — | Notion POST | Client `mailto:` → `sikdorang2026@gmail.com` (+ Instagram DM alt) |
 | Admin PATCH toggles | Low (mostly idempotent states) | Debounce | Unchanged (debt) |
 | Login / menu CRUD | Medium–low | Loading flags | Unchanged |
 
@@ -69,4 +69,4 @@ Saying “90% coverage” in reviews means **90% of the scoped surface above**, 
 
 - [ ] Backend: store key → response for create order / waiting / reservation (TTL ≥ 24h recommended)
 - [ ] Extend keys to menu create, dating profile, coupon issue if product requires
-- [ ] Contact: durable store (Redis/KV) — current Map is best-effort per process
+- [x] Contact: Notion 제거 → `mailto:sikdorang2026@gmail.com` + Instagram DM 대안

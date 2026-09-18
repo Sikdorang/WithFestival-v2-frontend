@@ -3,7 +3,6 @@ import Link from "next/link";
 const FOOTER_LINKS = [
   { label: "축제랑 소개", href: "/" },
   { label: "축제 일정", href: "/schedule" },
-  { label: "실시간 랭킹", href: "/ranking" },
   { label: "FAQ", href: "/faq" },
   { label: "Blog", href: "/blog" },
   { label: "개인정보처리방침", href: "/privacy" },
@@ -41,18 +40,24 @@ export default function Footer() {
             <span>서울특별시 성동구</span>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-1">
-            <span>대표자: 전진현</span>
-            <span>대표이메일: u.lento25@gmail.com</span>
+            <span>대표자: 이상현</span>
+            <span>
+              대표이메일:{" "}
+              <a
+                href="mailto:sikdorang2026@gmail.com"
+                className="transition-colors hover:text-[#5f616a]"
+              >
+                sikdorang2026@gmail.com
+              </a>
+            </span>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-6 sm:flex-row">
-          <span className="text-sm text-[#9b9da3]">
-            © 2026 축제랑. All rights reserved.
-          </span>
+          <span className="text-sm text-[#9b9da3]">© 2026 Sikdorang.</span>
 
           <a
-            href="https://www.instagram.com/with.festival?igsh=amZ1MHJxcTNoaWho"
+            href="https://www.instagram.com/with.festival/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
