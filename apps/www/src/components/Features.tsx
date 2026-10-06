@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
+import MoreFeatures from "./MoreFeatures";
 
 type FeatureRowProps = {
   eyebrowIcon: string;
@@ -100,26 +101,7 @@ export default function Features() {
           </div>
         </div>
 
-        <div className="mt-24 flex flex-col items-center gap-5 md:mt-32 md:gap-6">
-          <div className="flex items-end gap-1.5">
-            {[0, 1, 2].map((i) => (
-              <motion.span
-                key={i}
-                className="h-2 w-2 rounded-full bg-[#c4c6cc] md:h-2.5 md:w-2.5"
-                animate={{ opacity: [0.3, 1, 0.3], y: [0, -6, 0] }}
-                transition={{
-                  duration: 1.2,
-                  repeat: Infinity,
-                  delay: i * 0.18,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-          </div>
-          <p className="text-base leading-[1.7] text-[#7b7d85] md:text-xl">
-            더 많은 기능들이 축제랑에 존재해요
-          </p>
-        </div>
+        <MoreFeatures />
 
         <div className="mt-24 flex flex-col items-center text-center md:mt-32">
           <img

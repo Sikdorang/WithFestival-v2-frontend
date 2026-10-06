@@ -104,7 +104,7 @@ export default function Hero() {
         <div className="flex items-start justify-center gap-10 md:gap-16">
           <div className="flex flex-col items-center gap-3 text-center">
             <span className="flex items-baseline text-3xl font-semibold tracking-[-0.01em] text-[#292a2e] md:text-5xl">
-              <CountUp to={289} duration={2} className="font-semibold" />
+              <CountUp to={500} duration={2} className="font-semibold" />
               <span className="ml-1 text-[24px]">+</span>
             </span>
             <span className="text-xs font-medium tracking-[-0.01em] text-[#92949d] md:text-sm">
@@ -113,7 +113,7 @@ export default function Hero() {
           </div>
           <div className="flex flex-col items-center gap-3 text-center">
             <span className="flex items-baseline text-3xl font-semibold tracking-[-0.01em] text-[#292a2e] md:text-5xl">
-              <CountUp to={13} duration={2} className="font-semibold" />
+              <CountUp to={85} duration={2} className="font-semibold" />
               <span className="ml-1 text-[24px]">%</span>
             </span>
             <span className="text-xs font-medium tracking-[-0.01em] text-[#92949d] md:text-sm">
@@ -122,7 +122,7 @@ export default function Hero() {
           </div>
           <div className="flex flex-col items-center gap-3 text-center">
             <span className="flex items-baseline text-3xl font-semibold tracking-[-0.01em] text-[#292a2e] md:text-5xl">
-              <CountUp to={42} duration={2} className="font-semibold" />
+              <CountUp to={3} duration={2} className="font-semibold" />
               <span className="ml-1 text-[24px]">초</span>
             </span>
             <span className="text-xs font-medium tracking-[-0.01em] text-[#92949d] md:text-sm">
