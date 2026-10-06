@@ -5,6 +5,7 @@ import { ROUTES } from '@/constants/routes';
 import History from '@/pages/admin/History';
 import ManageMenuDetail from '@/pages/admin/ManageMenuDetail';
 import ManageMissionDetail from '@/pages/admin/ManageMissionDetail';
+import ManagePayment from '@/pages/admin/ManagePayment';
 import ManageQr from '@/pages/admin/ManageQr';
 import ManageReserve from '@/pages/admin/ManageReserve';
 import ManageReserveDetail from '@/pages/admin/ManageReserveDetail';
@@ -136,6 +137,11 @@ const router = createBrowserRouter([
   {
     path: ROUTES.ORDERING,
     element: <Ordering />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.MANAGE_PAYMENT,
+    element: <ManagePayment />,
     errorElement: <ErrorBoundary />,
   },
   {

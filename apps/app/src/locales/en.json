@@ -74,14 +74,24 @@
       "orderHistory": "Order History",
       "totalAmount": "Total {{amount}} KRW",
       "remitButton": "Send Money",
-      "srRemitOrDeposit": "Send money or enter depositor name",
+      "payButton": "Pay",
+      "srRemitOrDeposit": "Easy pay or bank transfer",
       "completeTitle": "Order Complete",
+      "pgTitle": "Pay",
       "remitTitle": "Send Money",
       "depositTitle": "Depositor Name",
       "progress": {
         "step1": "Bank Transfer",
         "step2": "Depositor Name"
       }
+    },
+    "pg": {
+      "amountLabel": "Amount",
+      "amount": "{{amount}} KRW",
+      "easy": "Easy pay",
+      "remit": "Bank transfer",
+      "pay": "Pay now",
+      "paying": "Processing..."
     },
     "remit": {
       "toast": {

@@ -74,14 +74,24 @@
       "orderHistory": "注文履歴",
       "totalAmount": "合計 {{amount}}ウォン",
       "remitButton": "送金する",
-      "srRemitOrDeposit": "送金または入金者名の入力",
+      "payButton": "決済する",
+      "srRemitOrDeposit": "簡単決済または口座送金",
       "completeTitle": "注文完了",
+      "pgTitle": "決済する",
       "remitTitle": "送金する",
       "depositTitle": "入金者名の入力",
       "progress": {
         "step1": "口座入金",
         "step2": "入金者名の入力"
       }
+    },
+    "pg": {
+      "amountLabel": "決済金額",
+      "amount": "{{amount}}ウォン",
+      "easy": "簡単決済",
+      "remit": "口座送金",
+      "pay": "決済する",
+      "paying": "決済中..."
     },
     "remit": {
       "toast": {

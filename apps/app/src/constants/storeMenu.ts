@@ -23,6 +23,11 @@ export const STORE_MANAGEMENT_MENUS: StoreMenuConfig[] = [
     route: ROUTES.MANAGE_QR,
   },
   {
+    id: 'payment',
+    label: '결제 설정',
+    route: ROUTES.MANAGE_PAYMENT,
+  },
+  {
     id: 'mission',
     label: '미션 관리',
     route: ROUTES.MANAGE_MISSIONS.ROOT,

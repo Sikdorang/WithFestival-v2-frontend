@@ -74,14 +74,24 @@
       "orderHistory": "주문 내역",
       "totalAmount": "총 {{amount}}원",
       "remitButton": "송금하기",
-      "srRemitOrDeposit": "송금하기 또는 입금자명 입력",
+      "payButton": "결제하기",
+      "srRemitOrDeposit": "간편결제 또는 계좌 송금",
       "completeTitle": "주문 완료",
+      "pgTitle": "결제하기",
       "remitTitle": "송금하기",
       "depositTitle": "입금자명 입력",
       "progress": {
         "step1": "계좌 입금",
         "step2": "입금자명 입력"
       }
+    },
+    "pg": {
+      "amountLabel": "결제 금액",
+      "amount": "{{amount}}원",
+      "easy": "간편결제",
+      "remit": "계좌 송금",
+      "pay": "결제하기",
+      "paying": "결제 중..."
     },
     "remit": {
       "toast": {

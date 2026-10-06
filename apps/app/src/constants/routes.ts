@@ -31,6 +31,7 @@ export const ROUTES = {
     DETAIL: (slotId: string | number) => `/manage-reserve/detail/${slotId}`,
   },
   MANAGE_QR: '/manage-qr',
+  MANAGE_PAYMENT: '/manage-payment',
   ORDER: '/order',
   HISTORY: '/history',
   STORE: '/store',

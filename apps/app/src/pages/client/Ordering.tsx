@@ -4,41 +4,97 @@ import Navigator from '@/components/common/layouts/Navigator';
 import CompleteStep from '@/components/pages/ordering/CompleteStep';
 import DepositorStep from '@/components/pages/ordering/DepositorStep';
 import OrderingMenuList from '@/components/pages/ordering/OrderingMenuList';
+import PaymentChoice from '@/components/pages/ordering/PaymentChoice';
 import PaymentProgress from '@/components/pages/ordering/PaymentProgress';
+import PgPayStep from '@/components/pages/ordering/PgPayStep';
 import RemitStep from '@/components/pages/ordering/RemitStep';
 import { ROUTES } from '@/constants/routes';
 import { useCustomerMenuQuery } from '@/hooks/useMenuQuery';
 import { useOrder } from '@/hooks/useOrder';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import {
   LEADING_SUBMIT_OPTIONS,
   SUBMIT_GUARD_MS,
 } from '@/shared/lib/idempotency';
+import {
+  getPaymentMethodSettings,
+  type PaymentMethodSettings,
+} from '@/shared/lib/payment-methods';
 import { useDebouncedCallback } from 'use-debounce';
+
+type PayStep = 'choose' | 'pg' | 'remit' | 'depositor' | 'complete';
+
+function openingStep(settings: PaymentMethodSettings): PayStep {
+  if (settings.easyPayEnabled && settings.remitEnabled) return 'choose';
+  if (settings.easyPayEnabled) return 'pg';
+  return 'remit';
+}
+
+const PREVIEW_ORDER_ITEMS = [
+  {
+    id: 1,
+    name: '매콤달콤 떡볶이',
+    price: 4500,
+    quantity: 1,
+    image: '',
+  },
+  {
+    id: 2,
+    name: '모짜렐라 치즈피자',
+    price: 7000,
+    quantity: 1,
+    image: '',
+  },
+];
+
+function readStoredUser() {
+  try {
+    const stored = sessionStorage.getItem('userData');
+    return stored && stored !== 'undefined' ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
+function isPgPreviewRequest() {
+  if (new URLSearchParams(window.location.search).get('pay') !== 'pg') {
+    return false;
+  }
+  const stored = readStoredUser();
+  return stored?.userId === undefined;
+}
 
 export default function Ordering() {
   const location = useLocation();
   const { t, i18n } = useTranslation();
 
+  const isPgPreview = isPgPreviewRequest();
+  if (isPgPreview && useOrderStore.getState().orderItems.length === 0) {
+    PREVIEW_ORDER_ITEMS.forEach((item) =>
+      useOrderStore.getState().addItem(item),
+    );
+  }
+
   const userData = useMemo(() => {
     if (location.state?.userData) return location.state.userData;
-    try {
-      const stored = sessionStorage.getItem('userData');
-      return stored && stored !== 'undefined' ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  }, [location.state?.userData]);
+    const stored = readStoredUser();
+    if (stored?.userId !== undefined) return stored;
+    if (isPgPreview) return { userId: 'preview', tableId: '3' };
+    return {};
+  }, [location.state?.userData, isPgPreview]);
   const navigate = useNavigate();
   const { orderItems } = useOrderStore();
   const { createOrder, isLoading: isCreatingOrder } = useOrder();
 
   const storeId = userData?.userId || userData?.id;
-  const { data: menus } = useCustomerMenuQuery(storeId, true);
+  const { data: menus } = useCustomerMenuQuery(
+    isPgPreview ? undefined : storeId,
+    !isPgPreview,
+  );
 
   const localizedOrderItems = useMemo(() => {
     return orderItems.map((item) => {
@@ -59,10 +115,19 @@ export default function Ordering() {
     });
   }, [orderItems, menus, i18n.language]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalStep, setModalStep] = useState<
-    'remit' | 'depositor' | 'complete'
-  >('remit');
+  const paymentStoreId = isPgPreview ? 'preview' : userData.userId;
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethodSettings>(
+    () => getPaymentMethodSettings(paymentStoreId ?? 'preview'),
+  );
+
+  useEffect(() => {
+    if (paymentStoreId === undefined) return;
+    setPaymentMethods(getPaymentMethodSettings(paymentStoreId));
+  }, [paymentStoreId]);
+  const [isModalOpen, setIsModalOpen] = useState(isPgPreview);
+  const [modalStep, setModalStep] = useState<PayStep>(() =>
+    openingStep(getPaymentMethodSettings('preview')),
+  );
   const [depositorName, setDepositorName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -86,12 +151,32 @@ export default function Ordering() {
     LEADING_SUBMIT_OPTIONS,
   );
 
+  const handlePgPay = async () => {
+    if (userData.userId === 'preview') {
+      setModalStep('complete');
+      return;
+    }
+
+    const isSuccess = await createOrder('간편결제', '');
+    if (isSuccess) setModalStep('complete');
+  };
+
   if (userData.userId === undefined) {
     return <Navigate to={ROUTES.NOT_FOUND} replace />;
   }
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog.Root
+      open={isModalOpen}
+      onOpenChange={(open) => {
+        setIsModalOpen(open);
+        if (open) {
+          const next = getPaymentMethodSettings(paymentStoreId ?? 'preview');
+          setPaymentMethods(next);
+          setModalStep(openingStep(next));
+        }
+      }}
+    >
       <Navigator
         left={<GoBackIcon />}
         onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
@@ -118,7 +203,7 @@ export default function Ordering() {
 
           <Dialog.Trigger asChild>
             <button className="bg-primary-300 text-b-1 flex-1 rounded-2xl py-4 text-center text-black">
-              {t('customer.ordering.remitButton')}
+              {t('customer.ordering.payButton')}
             </button>
           </Dialog.Trigger>
         </footer>
@@ -146,19 +231,42 @@ export default function Ordering() {
               left={<GoBackIcon />}
               onLeftPress={() => {
                 if (modalStep === 'depositor') setModalStep('remit');
-                else setIsModalOpen(false);
+                else if (
+                  (modalStep === 'remit' || modalStep === 'pg') &&
+                  paymentMethods.remitEnabled &&
+                  paymentMethods.easyPayEnabled
+                ) {
+                  setModalStep('choose');
+                } else setIsModalOpen(false);
               }}
               center={
                 <div className="text-st-1">
-                  {modalStep === 'remit'
-                    ? t('customer.ordering.remitTitle')
-                    : t('customer.ordering.depositTitle')}
+                  {modalStep === 'pg' || modalStep === 'choose'
+                    ? t('customer.ordering.pgTitle')
+                    : modalStep === 'remit'
+                      ? t('customer.ordering.remitTitle')
+                      : t('customer.ordering.depositTitle')}
                 </div>
               }
             />
           )}
-          <PaymentProgress step={modalStep} />
-          {modalStep === 'remit' ? (
+          {(modalStep === 'remit' || modalStep === 'depositor') && (
+            <PaymentProgress step={modalStep} />
+          )}
+          {modalStep === 'choose' ? (
+            <PaymentChoice
+              remitEnabled={paymentMethods.remitEnabled}
+              easyPayEnabled={paymentMethods.easyPayEnabled}
+              onEasyPay={() => setModalStep('pg')}
+              onRemit={() => setModalStep('remit')}
+            />
+          ) : modalStep === 'pg' ? (
+            <PgPayStep
+              totalAmount={totalAmount}
+              onPay={handlePgPay}
+              isLoading={isCreatingOrder}
+            />
+          ) : modalStep === 'remit' ? (
             <RemitStep
               totalAmount={totalAmount}
               onNext={() => setModalStep('depositor')}
