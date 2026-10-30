@@ -117,16 +117,22 @@ export const useStore = () => {
   };
 
   // 공지 수정
+  // 서버가 공지 저장 중 다국어 번역까지 처리해 응답이 느리므로 화면에는 먼저 반영한다.
   const updateStoreNotice = async (newNotice: string) => {
+    const previousNotice = notice;
+    setNotice(newNotice);
     setIsLoading(true);
     setError(null);
 
     try {
       await storeAPI.updateStoreNotice(newNotice);
-      setNotice(newNotice);
       toast.success(SUCCESS_MESSAGES.storeNoticeUpdateSuccess);
       return true;
     } catch (err) {
+      // 그 사이 다른 값으로 다시 저장했다면 그 값을 덮어쓰지 않는다.
+      setNotice((current) =>
+        current === newNotice ? previousNotice : current,
+      );
       handelError(err);
       return false;
     } finally {
