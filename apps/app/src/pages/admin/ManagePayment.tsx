@@ -4,6 +4,7 @@ import Navigator from '@/components/common/layouts/Navigator';
 import { KEYS } from '@/constants/storage';
 import { useStore } from '@/hooks/useStore';
 import {
+  EASY_PAY_AVAILABLE,
   getPaymentMethodSettings,
   setPaymentMethodSettings,
   type PaymentMethodSettings,
@@ -62,9 +63,13 @@ export default function ManagePayment() {
           description="방문객이 간편결제로 주문 금액을 결제합니다."
           enabled={settings.easyPayEnabled}
           lockedOn={settings.easyPayEnabled && !settings.remitEnabled}
-          onToggle={() =>
-            update({ ...settings, easyPayEnabled: !settings.easyPayEnabled })
-          }
+          onToggle={() => {
+            if (!settings.easyPayEnabled && !EASY_PAY_AVAILABLE) {
+              toast('준비중입니다. 관리자에게 문의해주세요!');
+              return;
+            }
+            update({ ...settings, easyPayEnabled: !settings.easyPayEnabled });
+          }}
         />
         <p className="px-1 pt-2 text-xs text-gray-400">
           계좌 송금과 간편결제 중 최소 1개는 켜 두어야 합니다.

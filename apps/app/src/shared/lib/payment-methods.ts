@@ -3,9 +3,15 @@ export type PaymentMethodSettings = {
   easyPayEnabled: boolean;
 };
 
+/**
+ * Easy pay is not open to booths yet. While false, it is always off
+ * (even if a device saved `true` earlier) and the admin toggle is blocked.
+ */
+export const EASY_PAY_AVAILABLE = false;
+
 const DEFAULT_SETTINGS: PaymentMethodSettings = {
   remitEnabled: true,
-  easyPayEnabled: true,
+  easyPayEnabled: false,
 };
 
 function storageKey(storeId: string | number) {
@@ -20,7 +26,7 @@ export function getPaymentMethodSettings(
     if (!raw) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(raw) as Partial<PaymentMethodSettings>;
     const remitEnabled = parsed.remitEnabled !== false;
-    const easyPayEnabled = parsed.easyPayEnabled !== false;
+    const easyPayEnabled = EASY_PAY_AVAILABLE && parsed.easyPayEnabled === true;
     if (!remitEnabled && !easyPayEnabled) return DEFAULT_SETTINGS;
     return { remitEnabled, easyPayEnabled };
   } catch {
