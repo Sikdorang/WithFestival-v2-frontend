@@ -2,9 +2,8 @@ import LanguageSelector from '@/components/common/buttons/LanguageSelector';
 import { useLogs } from '@/hooks/common/useLogs';
 import { SupportedLanguage } from '@/types/log';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../constants/routes';
 import CtaButton from '../../common/buttons/CtaButton';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
@@ -41,7 +40,6 @@ export default function StoreBanner({
   const { t, i18n } = useTranslation();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType] = useState<'message' | 'call'>('message');
-  const navigate = useNavigate();
 
   const [currentLang, setCurrentLang] = useState(i18n.language);
   const { sendLog } = useLogs();
@@ -69,7 +67,8 @@ export default function StoreBanner({
   }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
   const handleBlindDateClick = () => {
-    navigate(ROUTES.BLIND_PHONENUMBER_DATE);
+    // 소개팅 기능 오픈 전까지 페이지 대신 안내만 띄운다.
+    toast(t('customer.blindDate.ui.comingSoon'));
   };
 
   const renderStatusText = () => {

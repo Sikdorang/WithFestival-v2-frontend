@@ -1,6 +1,6 @@
+import GameIcon from '@/assets/icons/ic_bomb.svg?react';
 import CalendarIcon from '@/assets/icons/ic_calendar.svg?react';
 import DateIcon from '@/assets/icons/ic_heart_fill.svg?react';
-import RankingIcon from '@/assets/icons/ic_ranking.svg?react';
 import ShoppingBagIcon from '@/assets/icons/ic_speed_bag.svg?react';
 import TimerIcon from '@/assets/icons/ic_timer.svg?react';
 import SchoolIcon from '@/assets/icons/ic_university.svg?react';
@@ -79,11 +79,11 @@ export const getBoothLinks = ({
     enabled: true,
   },
   {
-    id: 'pub-ranking',
-    title: t('customer.portal.links.ranking.title'),
-    subtitle: t('customer.portal.links.ranking.sub'),
-    icon: <RankingIcon width={20} height={20} />,
-    path: 'https://withfestival.site/ranking',
+    id: 'mini-game',
+    title: t('customer.portal.links.miniGame.title'),
+    subtitle: t('customer.portal.links.miniGame.sub'),
+    icon: <GameIcon width={20} height={20} />,
+    path: 'https://hanwoolinsnight.soosmartssh12.chatgpt.site',
     iconBg: 'bg-gray-500-5',
     iconColor: 'text-[#47A368]',
     enabled: true,

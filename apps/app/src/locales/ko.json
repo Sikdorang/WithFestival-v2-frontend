@@ -24,9 +24,9 @@
           "title": "타 대학 축제 현황",
           "sub": "다른 대학의 축제 현황보기"
         },
-        "ranking": {
-          "title": "실시간 학교 주점 랭킹",
-          "sub": "주점 별로 순위 확인해보기"
+        "miniGame": {
+          "title": "미니 게임",
+          "sub": "미니 게임 즐기러 가기"
         },
         "blindDate": {
           "title": "즉석 번호팅",
@@ -205,6 +205,7 @@
         "submitLoading": "등록 중...",
         "submitDefault": "프로필 등록하기",
         "toastSuccess": "이번 축제, 나의 운명의 상대는?",
+        "comingSoon": "준비중입니다!",
         "toastError": "등록에 실패했습니다. 다시 시도해주세요."
       },
       "mbti": {

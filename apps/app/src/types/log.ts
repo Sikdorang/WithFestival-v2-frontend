@@ -8,7 +8,7 @@ export const LOG_ACTIONS = {
   PORTAL_RESERVATION: 'customer.portal.click.reservation',
   PORTAL_TAKEOUT: 'customer.portal.click.takeout',
   PORTAL_SCHEDULE: 'customer.portal.click.festival-schedule',
-  PORTAL_RANKING: 'customer.portal.click.pub-ranking',
+  PORTAL_MINI_GAME: 'customer.portal.click.mini-game',
   PORTAL_PREVIEW: 'customer.portal.click.preview',
   PORTAL_BLIND_DATE: 'customer.portal.click.blind-date',
 

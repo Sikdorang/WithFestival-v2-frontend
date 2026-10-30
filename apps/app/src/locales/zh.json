@@ -24,9 +24,9 @@
           "title": "其他大学庆典现状",
           "sub": "查看其他大学的庆典现状"
         },
-        "ranking": {
-          "title": "实时酒馆排名",
-          "sub": "查看各酒馆的排名"
+        "miniGame": {
+          "title": "迷你游戏",
+          "sub": "去玩迷你游戏"
         },
         "blindDate": {
           "title": "庆典随机速配",
@@ -205,6 +205,7 @@
         "submitLoading": "注册中...",
         "submitDefault": "注册个人资料",
         "toastSuccess": "这次庆典，我的命中注定是谁呢？",
+        "comingSoon": "敬请期待！",
         "toastError": "注册失败，请重试。"
       },
       "mbti": {

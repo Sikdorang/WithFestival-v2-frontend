@@ -9,6 +9,7 @@ import { useStore } from '@/hooks/useStore';
 import { SupportedLanguage } from '@/types/log';
 import { encodeAccessPayload } from '@/utils/crypto';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -79,6 +80,12 @@ export default function BoothPortal() {
   }).filter((link) => link.enabled);
 
   const handleLinkClick = (link: any) => {
+    // 소개팅 기능 오픈 전까지 페이지 대신 안내만 띄운다.
+    if (link.id === 'blind-date') {
+      toast(t('customer.blindDate.ui.comingSoon'));
+      return;
+    }
+
     if (link.id === 'preview') {
       localStorage.setItem('preview', '1');
       navigate(link.path);

@@ -24,9 +24,9 @@
           "title": "Other Univ. Festivals",
           "sub": "Check the status of other festivals"
         },
-        "ranking": {
-          "title": "Real-time Pub Ranking",
-          "sub": "Check rankings by pub"
+        "miniGame": {
+          "title": "Mini Game",
+          "sub": "Go play mini games"
         },
         "blindDate": {
           "title": "Festival Blind Date",
@@ -205,6 +205,7 @@
         "submitLoading": "Registering...",
         "submitDefault": "Register Profile",
         "toastSuccess": "Who is my destined match for this festival?",
+        "comingSoon": "Coming soon!",
         "toastError": "Registration failed. Please try again."
       },
       "mbti": {
