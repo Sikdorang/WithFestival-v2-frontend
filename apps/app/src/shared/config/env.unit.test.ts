@@ -7,6 +7,13 @@ describe('shared/config/env (unit)', () => {
     expect(env.VITE_SENTRY_DSN).toBe('');
   });
 
+  it('treats VITE_USE_MOCK as a boolean flag', () => {
+    expect(env.VITE_USE_MOCK).toBe(false);
+    process.env.VITE_USE_MOCK = 'true';
+    expect(env.VITE_USE_MOCK).toBe(true);
+    delete process.env.VITE_USE_MOCK;
+  });
+
   it('returns empty string for missing keys', () => {
     expect(getEnv('MISSING_KEY_FOR_TEST', {})).toBe('');
     expect(getEnv('MISSING_KEY_FOR_TEST', { OTHER: 'x' })).toBe('');

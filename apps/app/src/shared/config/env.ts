@@ -19,4 +19,8 @@ export const env = {
   get VITE_SENTRY_DSN() {
     return getEnv('VITE_SENTRY_DSN');
   },
+  /** Dev-only: serve API calls from src/mocks instead of the backend. */
+  get VITE_USE_MOCK() {
+    return getEnv('VITE_USE_MOCK') === 'true';
+  },
 };

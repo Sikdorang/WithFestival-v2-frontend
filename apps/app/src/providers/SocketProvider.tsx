@@ -20,7 +20,8 @@ export function SocketProvider({ children }: Props) {
   useEffect(() => {
     const accessToken = sessionStorage.getItem(KEYS.ACCESS_TOKEN);
 
-    if (user) {
+    // Mock mode has no socket server; pages already handle a null socket.
+    if (user && !env.VITE_USE_MOCK) {
       const newSocket = io(SOCKET_URL, {
         path: '/socket.io',
         transports: ['websocket'],

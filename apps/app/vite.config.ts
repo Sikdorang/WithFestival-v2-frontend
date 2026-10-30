@@ -8,12 +8,14 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  const useMock = env.VITE_USE_MOCK === 'true';
 
   return {
   define: {
     'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL ?? ''),
     'process.env.VITE_SOCKET_URL': JSON.stringify(env.VITE_SOCKET_URL ?? ''),
     'process.env.VITE_SENTRY_DSN': JSON.stringify(env.VITE_SENTRY_DSN ?? ''),
+    'process.env.VITE_USE_MOCK': JSON.stringify(env.VITE_USE_MOCK ?? ''),
   },
   plugins: [
     react(),
@@ -106,7 +108,8 @@ export default defineConfig(({ mode }) => {
   },
 
   server: {
-    proxy: {
+    // Mock mode must never reach the real backend (e.g. sendBeacon logs to /api).
+    proxy: useMock ? undefined : {
       '/api': {
         target: 'http://15.135.171.37:4000',
         changeOrigin: true,

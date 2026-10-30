@@ -30,8 +30,19 @@ if (sentryDsn) {
   });
 }
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+async function bootstrap() {
+  // `import.meta.env.DEV` is statically false in production builds,
+  // so the mock module is never bundled there.
+  if (import.meta.env.DEV && env.VITE_USE_MOCK) {
+    const { setupMockApi } = await import('./mocks');
+    setupMockApi();
+  }
+
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+}
+
+bootstrap();
