@@ -1,7 +1,7 @@
 import { handelError } from '@/apis/errorhandler';
 import { storeAPI } from '@/apis/store';
 import { SUCCESS_MESSAGES } from '@/constants/message';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 export const useStore = () => {
@@ -22,7 +22,8 @@ export const useStore = () => {
   const [error, setError] = useState<string | null>(null);
 
   // 내 스토어 정보 조회 (관리자용)
-  const getMyStoreInfo = async () => {
+  // useCallback: 페이지 effect 의존성에 들어가므로 참조가 고정돼야 무한 요청이 안 생긴다.
+  const getMyStoreInfo = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -48,10 +49,10 @@ export const useStore = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   // 스토어 공개 정보 조회 (고객용)
-  const getStorePublicInfo = async (storeId: number) => {
+  const getStorePublicInfo = useCallback(async (storeId: number) => {
     setIsLoading(true);
     setError(null);
 
@@ -77,7 +78,7 @@ export const useStore = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   // 계좌 번호 수정
   const updateStoreAccount = async (accountNumber: string) => {
