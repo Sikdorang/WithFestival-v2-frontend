@@ -1,10 +1,11 @@
 import GameIcon from '@/assets/icons/ic_bomb.svg?react';
 import CalendarIcon from '@/assets/icons/ic_calendar.svg?react';
-import DateIcon from '@/assets/icons/ic_heart_fill.svg?react';
+// import DateIcon from '@/assets/icons/ic_heart_fill.svg?react';
 import ShoppingBagIcon from '@/assets/icons/ic_speed_bag.svg?react';
 import TimerIcon from '@/assets/icons/ic_timer.svg?react';
-import SchoolIcon from '@/assets/icons/ic_university.svg?react';
+// import SchoolIcon from '@/assets/icons/ic_university.svg?react';
 import { ROUTES } from '@/constants/routes';
+import { MINI_GAME_URL } from '@/constants/externalLinks';
 import { TFunction } from 'i18next';
 
 interface BoothLinkParams {
@@ -38,16 +39,16 @@ export const getBoothLinks = ({
     iconColor: 'text-[#D28A5B]',
     enabled: reservationEnabled,
   },
-  {
-    id: 'takeout',
-    title: t('customer.portal.links.takeout.title'),
-    subtitle: t('customer.portal.links.takeout.sub'),
-    icon: <ShoppingBagIcon width={20} height={20} />,
-    path: ROUTES.MENU_BOARD,
-    iconBg: 'bg-gray-500-5',
-    iconColor: 'text-[#47A368]',
-    enabled: true,
-  },
+  //   {
+  //     id: 'takeout',
+  //     title: t('customer.portal.links.takeout.title'),
+  //     subtitle: t('customer.portal.links.takeout.sub'),
+  //     icon: <ShoppingBagIcon width={20} height={20} />,
+  //     path: ROUTES.MENU_BOARD,
+  //     iconBg: 'bg-gray-500-5',
+  //     iconColor: 'text-[#47A368]',
+  //     enabled: true,
+  //   },
   {
     id: 'preview',
     title: t('customer.portal.links.preview.title'),
@@ -58,32 +59,32 @@ export const getBoothLinks = ({
     iconColor: 'text-[#508CAE]',
     enabled: true,
   },
-  {
-    id: 'blind-date',
-    title: t('customer.portal.links.blindDate.title'),
-    subtitle: t('customer.portal.links.blindDate.sub'),
-    icon: <DateIcon width={20} height={20} />,
-    path: ROUTES.BLIND_PHONENUMBER_DATE,
-    iconBg: 'bg-gray-500-5',
-    iconColor: 'text-[#47A368]',
-    enabled: true,
-  },
-  {
-    id: 'festival-schedule',
-    title: t('customer.portal.links.schedule.title'),
-    subtitle: t('customer.portal.links.schedule.sub'),
-    icon: <SchoolIcon width={20} height={20} />,
-    path: 'https://withfestival.site/schedule',
-    iconBg: 'bg-gray-500-5',
-    iconColor: 'text-[#47A368]',
-    enabled: true,
-  },
+  //   {
+  //     id: 'blind-date',
+  //     title: t('customer.portal.links.blindDate.title'),
+  //     subtitle: t('customer.portal.links.blindDate.sub'),
+  //     icon: <DateIcon width={20} height={20} />,
+  //     path: ROUTES.BLIND_PHONENUMBER_DATE,
+  //     iconBg: 'bg-gray-500-5',
+  //     iconColor: 'text-[#47A368]',
+  //     enabled: true,
+  //   },
+  //   {
+  //     id: 'festival-schedule',
+  //     title: t('customer.portal.links.schedule.title'),
+  //     subtitle: t('customer.portal.links.schedule.sub'),
+  //     icon: <SchoolIcon width={20} height={20} />,
+  //     path: 'https://withfestival.site/schedule',
+  //     iconBg: 'bg-gray-500-5',
+  //     iconColor: 'text-[#47A368]',
+  //     enabled: true,
+  //   },
   {
     id: 'mini-game',
     title: t('customer.portal.links.miniGame.title'),
     subtitle: t('customer.portal.links.miniGame.sub'),
     icon: <GameIcon width={20} height={20} />,
-    path: 'https://hanwoolinsnight.soosmartssh12.chatgpt.site',
+    path: MINI_GAME_URL,
     iconBg: 'bg-gray-500-5',
     iconColor: 'text-[#47A368]',
     enabled: true,

@@ -1,8 +1,8 @@
 import LanguageSelector from '@/components/common/buttons/LanguageSelector';
+import { MINI_GAME_URL } from '@/constants/externalLinks';
 import { useLogs } from '@/hooks/common/useLogs';
-import { SupportedLanguage } from '@/types/log';
+import { LOG_ACTIONS, SupportedLanguage } from '@/types/log';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import CtaButton from '../../common/buttons/CtaButton';
 import NoticeView from './NoticeView';
@@ -66,9 +66,8 @@ export default function StoreBanner({
     return notice;
   }, [currentLang, notice, noticeEn, noticeZh, noticeJa]);
 
-  const handleBlindDateClick = () => {
-    // 소개팅 기능 오픈 전까지 페이지 대신 안내만 띄운다.
-    toast(t('customer.blindDate.ui.comingSoon'));
+  const handleMiniGameClick = () => {
+    window.open(MINI_GAME_URL, '_blank', 'noopener,noreferrer');
   };
 
   const renderStatusText = () => {
@@ -97,15 +96,15 @@ export default function StoreBanner({
             <div className="mr-2 flex items-center gap-4">
               <div
                 className="relative"
-                data-log-action="customer.board.click.blindDate"
+                data-log-action={LOG_ACTIONS.BOARD_MINI_GAME}
                 data-log-store-id={storeId}
               >
                 <CtaButton
-                  text={t('customer.storeBanner.blindDate')}
+                  text={t('customer.portal.links.miniGame.title')}
                   color="lightRed"
                   width="fit"
                   size="small"
-                  onClick={handleBlindDateClick}
+                  onClick={handleMiniGameClick}
                 />
               </div>
               <LanguageSelector />

@@ -14,6 +14,7 @@ export const LOG_ACTIONS = {
 
   // Board Click
   BOARD_BLIND_DATE: 'customer.board.click.blindDate',
+  BOARD_MINI_GAME: 'customer.board.click.mini-game',
 
   // Admin Management Click
   ADMIN_BOOTH_INFO: 'admin.management.click.boothInfo',
